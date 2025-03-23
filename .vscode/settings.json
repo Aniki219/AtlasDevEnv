@@ -81,5 +81,5 @@
         "Assets/_Project/Scrip[!t]*/**": true,
         "Assets/_Project/Script[!s]*/**": true
     },
-    "dotnet.defaultSolution": "My project.sln"
+    "dotnet.defaultSolution": "AtlasDevEnv.sln"
 }
