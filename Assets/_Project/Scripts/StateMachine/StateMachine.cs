@@ -43,7 +43,9 @@ public class StateMachine : MonoBehaviour
     {
         foreach (State state in states)
         {
-            state.gameObject.SetActive(state.Equals(currentState));
+            bool isCurrentState = state.Equals(currentState);
+            bool isParentState = state.transform.Find(currentState.gameObject.name);
+            state.gameObject.SetActive(isCurrentState || isParentState);
         }
         behaviors = GetComponentsInChildren<IStateBehavior>().ToList();
         transitions = GetComponentsInChildren<IStateTransition>().ToList();
