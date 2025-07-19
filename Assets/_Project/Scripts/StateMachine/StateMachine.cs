@@ -44,11 +44,30 @@ public class StateMachine : MonoBehaviour
         foreach (State state in states)
         {
             bool isCurrentState = state.Equals(currentState);
-            bool isParentState = state.transform.Find(currentState.gameObject.name);
-            state.gameObject.SetActive(isCurrentState || isParentState);
+            if (isCurrentState)
+            {
+                activateParents(state.transform.parent);
+            }
+            state.gameObject.SetActive(isCurrentState);
         }
         behaviors = GetComponentsInChildren<IStateBehavior>().ToList();
         transitions = GetComponentsInChildren<IStateTransition>().ToList();
+    }
+
+    private void activateParents(Transform go)
+    {
+        if (go == null)
+        {
+            throw new Exception(
+                $"State {currentState.name} is not a child of a StateMachine"
+            );
+        }
+        if (go.GetComponent<StateMachine>())
+        {
+            return;
+        }
+        go.gameObject.SetActive(true);
+        activateParents(go.parent);
     }
 
     private void checkTransitions()
