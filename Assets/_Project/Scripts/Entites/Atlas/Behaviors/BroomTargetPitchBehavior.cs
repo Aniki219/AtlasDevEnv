@@ -16,8 +16,10 @@ public class BroomTargetPitchBehavior : StateBehavior, IStateBehavior
 
     public void StartState()
     {
+        float pitch = broomBehaviorRef.pitchLerper.Value();
+
         broomBehaviorRef.pitchLerper = new RateLerper(
-            broomBehaviorRef.pitchLerper.Value(),
+            pitch,
             targetPitch,
             broomBehaviorRef.pitchRate,
             Time.time

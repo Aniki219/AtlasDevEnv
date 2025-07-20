@@ -14,8 +14,8 @@ public class StateMachine : MonoBehaviour
     public Transform anyState;
 
     public List<State> states;
-    public List<IStateBehavior> behaviors;
-    public List<IStateTransition> transitions;
+    public List<StateBehavior> behaviors;
+    public List<StateTransition> transitions;
 
     void Start()
     {
@@ -50,8 +50,8 @@ public class StateMachine : MonoBehaviour
             }
             state.gameObject.SetActive(isCurrentState);
         }
-        behaviors = GetComponentsInChildren<IStateBehavior>().ToList();
-        transitions = GetComponentsInChildren<IStateTransition>().ToList();
+        behaviors = GetComponentsInChildren<StateBehavior>().ToList();
+        transitions = GetComponentsInChildren<StateTransition>().ToList();
     }
 
     private void activateParents(Transform go)

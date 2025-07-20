@@ -616,6 +616,8 @@ MonoBehaviour:
   currentState: {fileID: 554771326814560057}
   anyState: {fileID: 466350748385831422}
   states: []
+  behaviors: []
+  transitions: []
 --- !u!1 &1135304515499783985
 GameObject:
   m_ObjectHideFlags: 0
@@ -2562,8 +2564,11 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  thrust: 0
   thrustRate: 8
-  pitchRate: 60
+  initialThrust: 4
+  maxThrust: 14
+  pitchRate: 110
 --- !u!1 &5341917243299780055
 GameObject:
   m_ObjectHideFlags: 0
@@ -3530,9 +3535,9 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7723501602533022778}
-  - {fileID: 5210522286491089986}
-  - {fileID: 1049454876545975253}
   - {fileID: 7448061831384890241}
+  - {fileID: 1049454876545975253}
+  - {fileID: 5210522286491089986}
   m_Father: {fileID: 1401133663993055359}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4904063878483823477
@@ -4505,6 +4510,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LiftSlider
       objectReference: {fileID: 0}
+    - target: {fileID: 4733912182372396550, guid: 99186e2545278d642b5a594d1b6fe6da, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5676259383382273146, guid: 99186e2545278d642b5a594d1b6fe6da, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -4587,11 +4596,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6755458737896529554, guid: 99186e2545278d642b5a594d1b6fe6da, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6755458737896529554, guid: 99186e2545278d642b5a594d1b6fe6da, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5245,7 +5254,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1316967956509451892, guid: cddeb13ae5b892c478d62d2c15aef8f9, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5812931386213325472, guid: cddeb13ae5b892c478d62d2c15aef8f9, type: 3}
       propertyPath: m_PresetInfoIsWorld
@@ -5859,11 +5868,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6755458737896529554, guid: 99186e2545278d642b5a594d1b6fe6da, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6755458737896529554, guid: 99186e2545278d642b5a594d1b6fe6da, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -983,15 +983,15 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.06331878
+    x: 0.009791922
     y: 0
-    width: 0.8733625
+    width: 0.9791922
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 5.75
+  orthographic size: 5.5833335
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -4404,41 +4404,21 @@ PrefabInstance:
       propertyPath: input
       value: 
       objectReference: {fileID: 1531373589}
-    - target: {fileID: 2941847409242761883, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3724480009697149007, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
-      propertyPath: maxThrust
-      value: 14
-      objectReference: {fileID: 0}
-    - target: {fileID: 3724480009697149007, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
-      propertyPath: pitchRate
-      value: 110
+    - target: {fileID: 3184913113025941480, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
+      propertyPath: targetPitch
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 3724480009697149007, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
       propertyPath: initialThrust
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 4921258346870632105, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4921258346870632105, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6100663377661742451, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
       propertyPath: m_Name
       value: Atlas
       objectReference: {fileID: 0}
-    - target: {fileID: 6216714084656857666, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
-      propertyPath: controlThrust
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6357353717820595773, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
-      propertyPath: m_IsActive
-      value: 0
+    - target: {fileID: 9132490592882349917, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
+      propertyPath: targetPitch
+      value: -45
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

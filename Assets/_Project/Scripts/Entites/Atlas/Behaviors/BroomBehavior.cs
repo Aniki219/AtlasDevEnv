@@ -10,11 +10,14 @@ public class BroomBehavior : StateBehavior, IStateBehavior
     public Transform spriteTransform;
     public Slider thrustSlider;
 
+    public float fuck = 2f;
+
     [SerializeField] float minThrust;
 
     public UnityEvent OnCancelBroom;
 
     public float thrust;
+    public float lift;
     public float thrustRate;
     public float initialThrust;
     public float maxThrust;
@@ -33,17 +36,26 @@ public class BroomBehavior : StateBehavior, IStateBehavior
         float pitch = (pitchLerper != null) ? pitchLerper.Value() : 0;
 
         Vector2 trajectory = new Vector2(
-            Cos(pitch * Deg2Rad),
+            Cos(pitch * Deg2Rad) * entity.facing,
             Sin(pitch * Deg2Rad)
         );
 
-        thrust += Vector2.Dot(
+        float dThrust = Vector2.Dot(
                 trajectory,
                 Vector2.down
             ) * thrustRate * Time.deltaTime;
-        thrust = Clamp(thrust, 0, maxThrust);
 
-        body.velocity = thrust * trajectory;
+        thrust += dThrust;
+        lift += dThrust;
+
+        thrust = Clamp(thrust, 0, maxThrust);
+        lift = thrust;
+        //lift = Clamp(lift, 0, thrust - 2f);
+
+        body.velocity = new Vector2(
+            thrust * trajectory.x,
+            lift * trajectory.y
+        );
 
         SetSprite();
         SetSliders();

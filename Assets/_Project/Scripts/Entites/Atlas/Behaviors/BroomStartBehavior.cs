@@ -24,6 +24,7 @@ public class BroomStartBehavior : StateBehavior, IStateBehavior
     {
         sprite.transform.eulerAngles = Vector3.zero;
         broomBehavior.thrust = broomBehavior.initialThrust;
+        broomBehavior.lift = broomBehavior.initialThrust;
         body.canGravity = true;
     }
 }
