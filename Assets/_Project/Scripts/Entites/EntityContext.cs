@@ -7,4 +7,5 @@ public class EntityContext : MonoBehaviour
     public EntityController controller;
     public PlayerCanvasController canvas;
     public InputManager input;
+    public StateMachine stateMachine;
 }

@@ -983,15 +983,15 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.009791922
+    x: 0.029411763
     y: 0
-    width: 0.9791922
+    width: 0.9411764
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 5.5833335
+  orthographic size: 4.979167
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -4404,21 +4404,21 @@ PrefabInstance:
       propertyPath: input
       value: 
       objectReference: {fileID: 1531373589}
-    - target: {fileID: 3184913113025941480, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
-      propertyPath: targetPitch
-      value: 35
+    - target: {fileID: 3724480009697149007, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
+      propertyPath: maxThrust
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 3724480009697149007, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
-      propertyPath: initialThrust
-      value: 6
+      propertyPath: pitchRate
+      value: 160
+      objectReference: {fileID: 0}
+    - target: {fileID: 3724480009697149007, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
+      propertyPath: thrustRate
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6100663377661742451, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
       propertyPath: m_Name
       value: Atlas
-      objectReference: {fileID: 0}
-    - target: {fileID: 9132490592882349917, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
-      propertyPath: targetPitch
-      value: -45
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

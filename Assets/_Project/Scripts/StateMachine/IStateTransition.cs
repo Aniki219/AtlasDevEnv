@@ -17,6 +17,7 @@ public abstract class StateTransition : MonoBehaviour, IStateTransition
     protected SpriteController sprite;
     protected InputManager input;
     protected State state;
+    protected StateMachine stateMachine;
 
     private void Awake()
     {
@@ -26,6 +27,7 @@ public abstract class StateTransition : MonoBehaviour, IStateTransition
         body = ctx.body;
         sprite = ctx.sprite;
         input = ctx.input;
+        stateMachine = ctx.stateMachine;
         state = GetComponentInParent<State>();
     }
 

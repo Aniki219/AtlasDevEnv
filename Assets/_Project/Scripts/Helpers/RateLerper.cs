@@ -56,9 +56,8 @@ public class RateLerper
             return startValue;
         }
         float t = (time - startTime) / totalTime;
-        return forwards ?
-            Mathf.Lerp(startValue, targetValue, t) :
-            Mathf.Lerp(targetValue, startValue, t);
+        if (t >= 1) return targetValue;
+        return Mathf.Lerp(startValue, targetValue, t);
     }
 
     public float DeltaValue(float deltaTime)
