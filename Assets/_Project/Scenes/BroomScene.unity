@@ -983,15 +983,15 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.029411763
+    x: 0.009803922
     y: 0
-    width: 0.9411764
+    width: 0.98039216
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 4.979167
+  orthographic size: 4.7777777
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -4340,6 +4340,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 69098974045768162, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
+      propertyPath: stateAnimation
+      value: 
+      objectReference: {fileID: 1647971169402146592, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
     - target: {fileID: 180565255095774622, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
       propertyPath: gameManager
       value: 
@@ -4348,6 +4352,10 @@ PrefabInstance:
       propertyPath: playerManager
       value: 
       objectReference: {fileID: 1531373584}
+    - target: {fileID: 184040141115162742, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
+      propertyPath: stateAnimation
+      value: 
+      objectReference: {fileID: -8119383505577889395, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
     - target: {fileID: 371519189568662977, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
       propertyPath: roomBounds
       value: 
@@ -4414,7 +4422,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3724480009697149007, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
       propertyPath: thrustRate
-      value: 4
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3973784298586937001, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
+      propertyPath: stateAnimation
+      value: 
+      objectReference: {fileID: 1647971169402146592, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
+    - target: {fileID: 4577202521482132371, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
+      propertyPath: stateAnimation
+      value: 
+      objectReference: {fileID: -8119383505577889395, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
+    - target: {fileID: 5501061414315962123, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
+      propertyPath: breakpointThreshold
+      value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 6100663377661742451, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
       propertyPath: m_Name

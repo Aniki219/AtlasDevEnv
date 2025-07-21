@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Assertions.Must;
+
+using Try = System.Func<State>;
+using Can = System.Collections.Generic.List<System.Func<State>>;
 
 public class BroomSubstateManager : StateTransition
 {
@@ -22,26 +26,25 @@ public class BroomSubstateManager : StateTransition
 
     [SerializeField] float angleWrapCutoff;
     [SerializeField] float breakpointThreshold;
-    [SerializeField] float sinPitch;
-    [SerializeField] float targetPitch;
-    [SerializeField] bool UP;
-    [SerializeField] bool DOWN;
-    [SerializeField] bool BACK;
-    [SerializeField] bool FORWARD;
 
-    State TryStraight => sinPitch == 0 ? Straight : null;
-    State TryPitchUpRaising => sinPitch >= 0 && UP ? PitchUpRaising : null;
-    State TryPitchUpFalling => sinPitch > 0 && !UP ? PitchUpFalling : null;
-    State TryPitchDownFalling => sinPitch <= 0 && DOWN ? PitchDownFalling : null;
-    State TryPitchDownRaising => sinPitch < 0 && !DOWN ? PitchDownRaising : null;
-    State TryPitchUpFull => sinPitch >= PitchBreakpoint(PitchUpRaising) && BACK && UP ? PitchUpFull : null;
-    State TryUpsideDown => sinPitch >= PitchBreakpoint(PitchUpFull) && BACK && !UP ? UpsideDown : null;
-    State TryUpsideDownFalling => sinPitch <= PitchBreakpoint(UpsideDown) && DOWN ? UpsideDownFalling : null;
-    State TryAngleWrap => isPassedWrapAngle() ? PitchDownRaising : null;
-    //State TryRollOver => ? RollOver : null;
-    State TryStraightHoldBack => sinPitch == 0 && BACK ? StraightHoldBack : null;
-    State TryPitchDownHoldBack => sinPitch < 0 && BACK ? PitchDownHoldBack : null;
-    //State TryTurnAround => ? TurnAround : null;
+    private float SinPitch => Mathf.Sin(beh.pitchLerper.Value() * Mathf.Deg2Rad);
+    private bool Up => input.Up(ButtonState.DOWN);
+    private bool Down => input.Down(ButtonState.DOWN);
+    private bool Back => input.Back();
+
+    Try ToStraight          => () => Mathf.Approximately(SinPitch, 0f) ? Straight : null;
+    Try ToPitchUpRaising    => () => SinPitch >= 0 && Up ? PitchUpRaising : null;
+    Try ToPitchUpFalling    => () => SinPitch > 0 && !Up ? PitchUpFalling : null;
+    Try ToPitchDownFalling  => () => SinPitch <= 0 && Down ? PitchDownFalling : null;
+    Try ToPitchDownRaising  => () => SinPitch < 0 && !Down ? PitchDownRaising : null;
+    Try ToPitchUpFull       => () => SinPitch >= PitchBreakpoint(PitchUpRaising) && Back && Up ? PitchUpFull : null;
+    Try ToUpsideDown        => () => SinPitch >= PitchBreakpoint(PitchUpFull) && Back && !Up ? UpsideDown : null;
+    Try ToUpsideDownFalling => () => SinPitch <= PitchBreakpoint(UpsideDown) && Down ? UpsideDownFalling : null;
+    Try ToAngleWrap         => () => isPassedWrapAngle() ? PitchDownRaising : null;
+    // Try ToRollOver          => () => ? RollOver : null;
+    Try ToStraightHoldBack  => () => SinPitch == 0 && Back ? StraightHoldBack : null;
+    Try ToPitchDownHoldBack => () => SinPitch < 0 && Back ? PitchDownHoldBack : null;
+    // Try ToTurnAround        => () => ? TurnAround : null;
 
 
     float PitchBreakpoint(State state)
@@ -51,25 +54,25 @@ public class BroomSubstateManager : StateTransition
         return Mathf.Sin(comp.targetPitch * Mathf.Deg2Rad) * breakpointThreshold;
     }
 
-    Dictionary<State, List<State>> Transitions = new Dictionary<State, List<State>>();
+    private Dictionary<State, Can> Transitions = new Dictionary<State, Can>();
 
-    public void Update()
+    
+    public void Start()
     {
-        updateStateVariables();
-        Transitions = new Dictionary<State, List<State>>()
+        Transitions = new Dictionary<State, Can>()
         {
-            [Straight]          = new List<State> { TryPitchUpRaising,   TryPitchDownFalling                     },
-            [PitchUpRaising]    = new List<State> { TryPitchUpFull,      TryPitchUpFalling,  TryPitchDownFalling },
-            [PitchUpFalling]    = new List<State> { TryPitchUpRaising,   TryStraight,        TryPitchDownFalling },
-            [PitchDownFalling]  = new List<State> { TryPitchDownRaising, TryPitchUpRaising                       },
-            [PitchDownRaising]  = new List<State> { TryPitchDownFalling, TryStraight,        TryPitchUpRaising   },
-            [PitchUpFull]       = new List<State> { TryPitchUpFalling,   TryUpsideDown                           },
-            [UpsideDown]        = new List<State> { TryUpsideDownFalling                                         },
-            [UpsideDownFalling] = new List<State> { TryAngleWrap                                                 },
-            //[RollOver]        = new List<State> { },
-            [StraightHoldBack]  = new List<State> { },
-            [PitchDownHoldBack] = new List<State> { },
-            //[TurnAround]      = new List<State> { },
+            [Straight] = new Can { ToPitchUpRaising, ToPitchDownFalling },
+            [PitchUpRaising] = new Can { ToPitchUpFull, ToPitchUpFalling, ToPitchDownFalling },
+            [PitchUpFalling] = new Can { ToPitchUpRaising, ToStraight, ToPitchDownFalling },
+            [PitchDownFalling] = new Can { ToPitchDownRaising, ToPitchUpRaising },
+            [PitchDownRaising] = new Can { ToPitchDownFalling, ToStraight, ToPitchUpRaising },
+            [PitchUpFull] = new Can { ToUpsideDown, ToPitchUpFalling },
+            [UpsideDown] = new Can { ToUpsideDownFalling },
+            [UpsideDownFalling] = new Can { ToAngleWrap },
+            //[RollOver]        = new List<Func<State>> { },
+            [StraightHoldBack] = new Can { },
+            [PitchDownHoldBack] = new Can { },
+            //[TurnAround]      = new List<Func<State>> { },
         };
     }
 
@@ -86,23 +89,10 @@ public class BroomSubstateManager : StateTransition
 
     public override bool CheckCondition()
     {
-        to = null;
-
-        List<State> transitions = new List<State>();
-        if (Transitions.TryGetValue(stateMachine.currentState, out transitions))
-        {
-            transitions.ForEach(transition => { if (transition) to = transition; });
-        }
+        to = Transitions.GetValueOrDefault(stateMachine.currentState)
+        ?.Select(transition => transition())
+        .FirstOrDefault(result => result != null);
 
         return to != null && !Equals(to, state);
-    }
-
-    private void updateStateVariables()
-    {
-        sinPitch = Mathf.Sin(beh.pitchLerper.Value() * Mathf.Deg2Rad);
-        UP = input.Up(ButtonState.DOWN);
-        DOWN = input.Down(ButtonState.DOWN);
-        BACK = input.Back();
-        FORWARD = input.Forward();
     }
 }
