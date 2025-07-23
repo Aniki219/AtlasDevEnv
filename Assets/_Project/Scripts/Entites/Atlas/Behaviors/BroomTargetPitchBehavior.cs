@@ -3,6 +3,7 @@ using UnityEngine;
 public class BroomTargetPitchBehavior : StateBehavior, IStateBehavior
 {
     public float targetPitch;
+    public float thrustDrag;
 
     [SerializeField] BroomBehavior broomBehaviorRef;
 
@@ -28,5 +29,6 @@ public class BroomTargetPitchBehavior : StateBehavior, IStateBehavior
 
     public void UpdateState()
     {
+        broomBehaviorRef.thrust -= thrustDrag * Time.deltaTime;
     }
 }
