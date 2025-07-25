@@ -33,7 +33,10 @@ public class BroomSubstateManager : StateTransition
     private bool Down       => input.Down(ButtonState.DOWN);
     private bool Back       => input.Back();
 
-    Try ToStraight          => () => Mathf.Approximately(SinPitch, 0f) && !Back ? Straight : null;
+    public bool showBack;
+    public State showStateBack;
+
+    Try ToStraight          => () => Mathf.Approximately(SinPitch, 0f) ? Straight : null;
     Try ToPitchUpRaising    => () => SinPitch >= 0 && Up ? PitchUpRaising : null;
     Try ToPitchUpFalling    => () => SinPitch > 0 && !Up ? PitchUpFalling : null;
     Try ToPitchDownFalling  => () => SinPitch <= 0 && Down && !Back ? PitchDownFalling : null;
@@ -43,31 +46,34 @@ public class BroomSubstateManager : StateTransition
     Try ToUpsideDownFalling => () => SinPitch <= PitchBreakpoint(UpsideDown) && Down ? UpsideDownFalling : null;
     Try ToAngleWrap         => () => isPassedWrapAngle() ? PitchDownRaising : null;
     Try ToRollOver          => () => InStateForSeconds(1.0f) ? RollOver : null;
-    Try ToStraightHoldBack  => () => Mathf.Approximately(SinPitch, 0f) && Back ? StraightHoldBack : null;
+    Try ToStraightHoldBack  => () => Mathf.Approximately(SinPitch, 0f) && showBack ? StraightHoldBack : null;
     Try ToPitchDownHoldBack => () => SinPitch < 0 && Back ? PitchDownHoldBack : null;
     Try ToTurnAround        => () => InStateForSeconds(0.5f) && Back ? TurnAround : null;
+    Try ToDiveTurnAround    => () => InStateForSeconds(0.1f) && Back ? TurnAround : null;
 
     public void Start()
     {
         Transitions = new Dictionary<State, Can>()
         {
-            [Straight]          = new Can { ToStraightHoldBack, ToPitchUpRaising, ToPitchDownFalling },
-            [PitchUpRaising]    = new Can { ToPitchUpFull, ToPitchUpFalling, ToPitchDownFalling },
-            [PitchUpFalling]    = new Can { ToPitchUpRaising, ToStraight, ToPitchDownFalling },
-            [PitchDownFalling]  = new Can { ToPitchDownRaising, ToPitchUpRaising, ToPitchDownHoldBack },
-            [PitchDownRaising]  = new Can { ToPitchDownFalling, ToStraight, ToPitchUpRaising },
-            [PitchUpFull]       = new Can { ToUpsideDown, ToPitchUpFalling },
-            [UpsideDown]        = new Can { ToUpsideDownFalling, ToRollOver },
+            [Straight] = new Can { ToStraightHoldBack, ToPitchUpRaising, ToPitchDownFalling },
+            [PitchUpRaising] = new Can { ToPitchUpFull, ToPitchUpFalling, ToPitchDownFalling },
+            [PitchUpFalling] = new Can { ToPitchUpRaising, ToStraight, ToPitchDownFalling },
+            [PitchDownFalling] = new Can { ToPitchDownHoldBack, ToPitchDownRaising, ToPitchUpRaising,  },
+            [PitchDownRaising] = new Can { ToPitchDownFalling, ToStraight, ToPitchUpRaising },
+            [PitchUpFull] = new Can { ToUpsideDown, ToPitchUpFalling },
+            [UpsideDown] = new Can { ToUpsideDownFalling, ToRollOver },
             [UpsideDownFalling] = new Can { ToAngleWrap },
-            [RollOver]          = new Can { ToStraight },
-            [StraightHoldBack]  = new Can { ToStraight, ToTurnAround, ToPitchDownHoldBack },
-            [PitchDownHoldBack] = new Can { ToStraightHoldBack, ToPitchDownFalling, ToPitchDownRaising, ToTurnAround },
-            [TurnAround]        = new Can { ToStraight, ToPitchDownFalling, ToPitchDownRaising },
+            [RollOver] = new Can { ToStraight },
+            [StraightHoldBack] = new Can { ToTurnAround, ToStraightHoldBack, ToStraight },
+            [PitchDownHoldBack] = new Can { ToStraightHoldBack, ToDiveTurnAround, ToPitchDownFalling, ToPitchDownRaising,  },
+            [TurnAround] = new Can { },
         };
     }
 
     public override bool CheckCondition()
     {
+        showBack = Back;
+        showStateBack = ToStraightHoldBack();
         to = Transitions.GetValueOrDefault(stateMachine.currentState)
         ?.Select(transition => transition())
         .FirstOrDefault(result => result != null);

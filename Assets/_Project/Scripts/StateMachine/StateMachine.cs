@@ -41,20 +41,20 @@ public class StateMachine : MonoBehaviour
 
     private void loadStateComponents()
     {
+        List<State> parentStates = getParentStates(currentState.transform.parent);
+
         foreach (State state in states)
         {
             bool isCurrentState = state.Equals(currentState);
-            if (isCurrentState)
-            {
-                activateParents(state.transform.parent);
-            }
-            state.gameObject.SetActive(isCurrentState);
+            bool isParentState = parentStates.Contains(state);
+
+            state.gameObject.SetActive(isCurrentState || isParentState);
         }
         behaviors = GetComponentsInChildren<StateBehavior>().ToList();
         transitions = GetComponentsInChildren<StateTransition>().ToList();
     }
 
-    private void activateParents(Transform go)
+    private List<State> getParentStates(Transform go)
     {
         if (go == null)
         {
@@ -64,10 +64,15 @@ public class StateMachine : MonoBehaviour
         }
         if (go.GetComponent<StateMachine>())
         {
-            return;
+            return new List<State>();
         }
-        go.gameObject.SetActive(true);
-        activateParents(go.parent);
+        
+        var states = new List<State>
+        {
+            go.GetComponent<State>()
+        };
+        states.AddRange(getParentStates(go.parent));
+        return states;
     }
 
     private void checkTransitions()

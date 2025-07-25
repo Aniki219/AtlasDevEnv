@@ -26,6 +26,9 @@ public class BroomBehavior : StateBehavior, IStateBehavior
     //dPitch = +/-k1
     //dThrust = k2 * pitch . right
 
+    public float yAngle = 0;
+    [field: SerializeField] public float pitch { get; private set; }
+
     public void StartState()
     {
         body.canGravity = false;
@@ -33,7 +36,7 @@ public class BroomBehavior : StateBehavior, IStateBehavior
 
     public void UpdateState()
     {
-        float pitch = (pitchLerper != null) ? pitchLerper.Value() : 0;
+        pitch = (pitchLerper != null) ? pitchLerper.Value() : 0;
 
         Vector2 trajectory = new Vector2(
             Cos(pitch * Deg2Rad) * entity.facing,
@@ -53,7 +56,7 @@ public class BroomBehavior : StateBehavior, IStateBehavior
         //lift = Clamp(lift, 0, thrust - 2f);
 
         body.velocity = new Vector2(
-            thrust * trajectory.x,
+            thrust * trajectory.x  * Cos(yAngle * Deg2Rad),
             lift * trajectory.y
         );
 
