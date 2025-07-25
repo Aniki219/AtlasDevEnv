@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "../../../../../../.."
+		},
+		{
+			"path": "../../../../../../Editor"
+		}
+	],
+	"settings": {
+		"dotnet.defaultSolution": "AtlasDevEnv.sln"
+	}
+}

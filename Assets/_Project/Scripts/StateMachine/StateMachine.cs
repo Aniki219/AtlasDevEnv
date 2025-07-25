@@ -14,8 +14,8 @@ public class StateMachine : MonoBehaviour
     public Transform anyState;
 
     public List<State> states;
-    public List<IStateBehavior> behaviors;
-    public List<IStateTransition> transitions;
+    public List<StateBehavior> behaviors;
+    public List<StateTransition> transitions;
 
     void Start()
     {
@@ -41,12 +41,38 @@ public class StateMachine : MonoBehaviour
 
     private void loadStateComponents()
     {
+        List<State> parentStates = getParentStates(currentState.transform.parent);
+
         foreach (State state in states)
         {
-            state.gameObject.SetActive(state.Equals(currentState));
+            bool isCurrentState = state.Equals(currentState);
+            bool isParentState = parentStates.Contains(state);
+
+            state.gameObject.SetActive(isCurrentState || isParentState);
         }
-        behaviors = GetComponentsInChildren<IStateBehavior>().ToList();
-        transitions = GetComponentsInChildren<IStateTransition>().ToList();
+        behaviors = GetComponentsInChildren<StateBehavior>().ToList();
+        transitions = GetComponentsInChildren<StateTransition>().ToList();
+    }
+
+    private List<State> getParentStates(Transform go)
+    {
+        if (go == null)
+        {
+            throw new Exception(
+                $"State {currentState.name} is not a child of a StateMachine"
+            );
+        }
+        if (go.GetComponent<StateMachine>())
+        {
+            return new List<State>();
+        }
+        
+        var states = new List<State>
+        {
+            go.GetComponent<State>()
+        };
+        states.AddRange(getParentStates(go.parent));
+        return states;
     }
 
     private void checkTransitions()

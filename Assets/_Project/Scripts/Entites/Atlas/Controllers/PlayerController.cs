@@ -199,7 +199,8 @@ public class PlayerController : EntityController
     //Flip horizontal without turn animation
     public void flipHorizontal()
     {
-        facing = -(int)Mathf.Sign(sprite.transform.localScale.x);
+        Debug.LogWarning("flipHorizontal is deprecated, use EntityController.SetFacing");
+        SetFacing(-(int)Mathf.Sign(sprite.transform.localScale.x));
         sprite.transform.localScale = new Vector3(Mathf.Abs(sprite.transform.localScale.x) * facing, 1, 1);
     }
 

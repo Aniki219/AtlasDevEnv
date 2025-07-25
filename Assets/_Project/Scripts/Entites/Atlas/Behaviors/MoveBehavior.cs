@@ -38,7 +38,7 @@ public class MoveBehavior : StateBehavior, IStateBehavior
         int newFacing = Sign(input.X);
         if (newFacing != 0)
         {
-            pc.facing = newFacing;
+            pc.SetFacing(newFacing);
             sprite.SetFacing(pc.facing);
         }
     }
