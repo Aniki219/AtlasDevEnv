@@ -4404,10 +4404,6 @@ PrefabInstance:
       propertyPath: input
       value: 
       objectReference: {fileID: 1531373589}
-    - target: {fileID: 5878795565357491659, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
-      propertyPath: stateAnimation
-      value: 
-      objectReference: {fileID: 3387261700586155531, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
     - target: {fileID: 6100663377661742451, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
       propertyPath: m_Name
       value: Atlas

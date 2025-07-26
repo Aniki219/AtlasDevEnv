@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(EntityContext))]
 public class EntityController : MonoBehaviour
@@ -10,6 +11,9 @@ public class EntityController : MonoBehaviour
     protected SpriteController sprite;
     protected PlayerCanvasController canvas;
 
+    private bool wasAnimEnd = false;
+    public UnityEvent OnAnimationEnd;
+
     public virtual void Awake()
     {
         ctx = GetComponent<EntityContext>();
@@ -18,11 +22,40 @@ public class EntityController : MonoBehaviour
         canvas = ctx.canvas;
     }
 
-    // This should be the only way to change the facing direction of the player
-    // We may need to rethink this- allowing facing and sprite x-scale to be different
+    public void Update()
+    {
+        CheckAnimEnd();
+    }
+    
+    /*
+        This should be the only way to change the facing direction of the player
+        We may need to rethink this- allowing facing and sprite x-scale to be different
+    */
     public void SetFacing(int to)
     {
         facing = to;
         sprite.SetFacing(to);
+    }
+
+    public void TurnAround()
+    {
+        SetFacing(facing * -1);
+    }
+
+    /*
+        Checks one for animation end using normalized time on the current clip.
+        Might be worth checking or returning information on whether this was an
+        override clip or not
+    */
+    private void CheckAnimEnd()
+    {
+        bool isAnimEnd = sprite.GetNormalizedTime() >= 1;
+
+        if (!wasAnimEnd && isAnimEnd)
+        {
+            OnAnimationEnd?.Invoke();
+        }
+
+        wasAnimEnd = isAnimEnd;
     }
 }

@@ -60,7 +60,6 @@ public class SpriteController : MonoBehaviour
 
     private void checkClearAnimOverride()
     {
-
         if (animOverrideClip && !holdOverrideClip && !anim.GetCurrentAnimatorStateInfo(0).loop)
         {
             if (GetNormalizedTime() >= 1)

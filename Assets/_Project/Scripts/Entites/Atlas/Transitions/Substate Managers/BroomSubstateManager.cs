@@ -45,7 +45,7 @@ public class BroomSubstateManager : StateTransition
     Try ToUpsideDown        => () => SinPitch >= PitchBreakpoint(PitchUpFull) && Back && !Up ? UpsideDown : null;
     Try ToUpsideDownFalling => () => SinPitch <= PitchBreakpoint(UpsideDown) && Down ? UpsideDownFalling : null;
     Try ToAngleWrap         => () => isPassedWrapAngle() ? PitchDownRaising : null;
-    Try ToRollOver          => () => InStateForSeconds(1.0f) ? RollOver : null;
+    Try ToRollOver          => () => InStateForSeconds(2.0f) ? RollOver : null;
     Try ToStraightHoldBack  => () => Mathf.Approximately(SinPitch, 0f) && showBack ? StraightHoldBack : null;
     Try ToPitchDownHoldBack => () => SinPitch < 0 && Back ? PitchDownHoldBack : null;
     Try ToTurnAround        => () => InStateForSeconds(0.5f) && Back ? TurnAround : null;
@@ -63,7 +63,7 @@ public class BroomSubstateManager : StateTransition
             [PitchUpFull] = new Can { ToUpsideDown, ToPitchUpFalling },
             [UpsideDown] = new Can { ToUpsideDownFalling, ToRollOver },
             [UpsideDownFalling] = new Can { ToAngleWrap },
-            [RollOver] = new Can { ToStraight },
+            [RollOver] = new Can { /* Transitions to Straight on AnimEnd */ },
             [StraightHoldBack] = new Can { ToTurnAround, ToStraightHoldBack, ToStraight },
             [PitchDownHoldBack] = new Can { ToStraightHoldBack, ToDiveTurnAround, ToPitchDownFalling, ToPitchDownRaising,  },
             [TurnAround] = new Can { },
