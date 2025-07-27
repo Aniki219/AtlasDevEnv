@@ -983,15 +983,15 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.0065789474
+    x: 0.083333336
     y: 0
-    width: 0.9868421
+    width: 0.8333334
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 4.75
+  orthographic size: 5.625
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1558,7 +1558,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &758723044
 Transform:
@@ -4404,9 +4404,17 @@ PrefabInstance:
       propertyPath: input
       value: 
       objectReference: {fileID: 1531373589}
+    - target: {fileID: 4097309566929883515, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6100663377661742451, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
       propertyPath: m_Name
       value: Atlas
+      objectReference: {fileID: 0}
+    - target: {fileID: 8410880325246647702, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -9,6 +9,7 @@ public class BroomBehavior : StateBehavior, IStateBehavior
     public new Transform transform;
     public Transform spriteTransform;
     public Slider thrustSlider;
+    public GameObject broomTrail;
 
     [SerializeField] float minThrust;
 
@@ -21,30 +22,62 @@ public class BroomBehavior : StateBehavior, IStateBehavior
     public float maxThrust;
     public RateLerper pitchLerper;
     public float pitchRate;
+    public bool pitchSpriteAngle = true;
     //dPitch = +/-k1
     //dThrust = k2 * pitch . right
 
     public float yAngle = 0;
     [field: SerializeField] public float pitch { get; private set; }
 
+    private void OnEnable()
+    {
+        broomTrail.SetActive(true);
+    }
+
+    private void OnDisable()
+    {
+        broomTrail.SetActive(false);
+    }
+
     public void StartState()
     {
         body.canGravity = false;
     }
 
+    /*
+        This Update behavior is intended to run for all substates.
+        This function uses:
+        
+        trajectory: A direction vector based on pitch angle and facing
+        
+        dThrust: The amount to change thrust based on the Dot of *trajectory*.
+                scaled by thrustRate.
+
+        thrust: Non-negative magnitude of Broom velocity
+        
+        yAngle: Used for turning around. We simulate rotating *velocity* around 
+                the y-axis then project this vector back onto the 2D plane.
+                This calculation boils down to multiplying vel.x by the cos(yAngle) 
+
+        velocity: The actual velocity is set to (Trajectory * Thrust rotated by yAngle)
+
+        pitch: Normalized around 0 degrees.
+               Determines trajectory, dThrust, and sprite angle
+    */
+
     public void UpdateState()
     {
         pitch = (pitchLerper != null) ? pitchLerper.Value() : 0;
 
+        // X is multiplied by facing because pitch is right-hemisphere normalized
         Vector2 trajectory = new Vector2(
             Cos(pitch * Deg2Rad) * entity.facing,
             Sin(pitch * Deg2Rad)
         );
 
-        float dThrust = Vector2.Dot(
-                trajectory,
-                Vector2.down
-            ) * thrustRate * Time.deltaTime;
+        // Thrust is modified based on pitch angle.
+        // A pitch above 0 degrees will decrease thrust, below will increase
+        float dThrust = Vector2.Dot(trajectory, Vector2.down) * thrustRate * Time.deltaTime;
 
         thrust += dThrust;
         lift += dThrust;
@@ -53,10 +86,17 @@ public class BroomBehavior : StateBehavior, IStateBehavior
         lift = thrust;
         //lift = Clamp(lift, 0, thrust - 2f);
 
-        body.velocity = new Vector2(
-            thrust * trajectory.x  * Cos(yAngle * Deg2Rad),
+        // Thrust * Velocity. Lift may one day be different than thrust
+        Vector2 thrustVector = new Vector2(
+            thrust * trajectory.x,
             lift * trajectory.y
         );
+
+        // Rotate the thrust vector around the yAxis to simulate turning around
+        Vector2 yRotationMatrix = new Vector2(Cos(yAngle * Deg2Rad), 1);
+        Vector2 rotatedThrustVector = Vector2.Scale(thrustVector, yRotationMatrix);
+
+        body.SetVelocity(rotatedThrustVector);
 
         SetSprite();
         SetSliders();
@@ -73,8 +113,14 @@ public class BroomBehavior : StateBehavior, IStateBehavior
         body.canGravity = true;
     }
 
+    /*
+        Sets the sprite rotation based on the pitch. This effect can be
+        turned on or off using the pitchSpriteAngle bool
+    */
     private void SetSprite()
     {
+        if (!pitchSpriteAngle) return;
+
         float sprAngle = (entity.facing > 0 ? 0 : 180) - Vector2.SignedAngle(body.velocity.normalized, Vector2.right);
 
         spriteTransform.eulerAngles = new Vector3(0, 0, sprAngle);

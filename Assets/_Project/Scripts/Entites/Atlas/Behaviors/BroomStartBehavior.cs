@@ -8,7 +8,7 @@ public class BroomStartBehavior : StateBehavior, IStateBehavior
 
     public void StartState()
     {
-        speed = 4; //broomBehavior.initialThrust;
+        speed = broomBehavior.initialThrust;
         body.canGravity = false;
     }
 

@@ -1247,7 +1247,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a51c3722e39b58246894269df838dbb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stateAnimation: {fileID: 3387261700586155531, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
+  stateAnimation: {fileID: -6302757567101595320, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
 --- !u!1 &2803880732275151661
 GameObject:
   m_ObjectHideFlags: 0
@@ -1408,7 +1408,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7146740108446881291
 Transform:
   m_ObjectHideFlags: 0
@@ -1418,11 +1418,11 @@ Transform:
   m_GameObject: {fileID: 3029869724498124356}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 9060217130561526044}
+  m_Father: {fileID: 6718429835966103978}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!198 &3662751201469383983
 ParticleSystem:
@@ -6565,7 +6565,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a51c3722e39b58246894269df838dbb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stateAnimation: {fileID: 3387261700586155531, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
+  stateAnimation: {fileID: 7489151234708153709, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
 --- !u!1 &3426415453312937501
 GameObject:
   m_ObjectHideFlags: 0
@@ -7435,7 +7435,7 @@ MonoBehaviour:
   transform: {fileID: 536989159156229736}
   spriteTransform: {fileID: 6718429835966103978}
   thrustSlider: {fileID: 7014098284201882292}
-  fuck: 2
+  broomTrail: {fileID: 3029869724498124356}
   minThrust: 3
   OnCancelBroom:
     m_PersistentCalls:
@@ -7458,6 +7458,7 @@ MonoBehaviour:
   initialThrust: 6
   maxThrust: 10
   pitchRate: 160
+  pitchSpriteAngle: 1
   yAngle: 0
   <pitch>k__BackingField: 0
 --- !u!1 &5341917243299780055
@@ -8433,7 +8434,6 @@ Transform:
   - {fileID: 7448061831384890241}
   - {fileID: 1049454876545975253}
   - {fileID: 5210522286491089986}
-  - {fileID: 7146740108446881291}
   m_Father: {fileID: 1401133663993055359}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4904063878483823477
@@ -9911,7 +9911,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 7878350319992209165, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7146740108446881291}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 2549968508848951391, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
       insertIndex: -1
@@ -9999,7 +10002,7 @@ MonoBehaviour:
   lastScale: 1
   lastDistanceThreshold: 8
   lastDecompose: 0
-  lastSprite: {fileID: 6530187813846611109, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
+  lastSprite: {fileID: 6102267068670486974, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   lastRect:
     serializedVersion: 2
     x: 42

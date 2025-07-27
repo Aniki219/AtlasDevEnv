@@ -1,6 +1,7 @@
 using UnityEngine;
 
-public class BroomTurnAroundBehavior : StateBehavior, IStateBehavior {
+public class BroomTurnAroundBehavior : StateBehavior, IStateBehavior
+{
 
     public float transitionTime;
     [SerializeField] BroomBehavior broomBehavior;
@@ -8,6 +9,7 @@ public class BroomTurnAroundBehavior : StateBehavior, IStateBehavior {
 
     public void StartState()
     {
+        broomBehavior.pitchSpriteAngle = false;
         if (transitionTime <= 0)
         {
             Destroy(gameObject);
@@ -28,12 +30,13 @@ public class BroomTurnAroundBehavior : StateBehavior, IStateBehavior {
         }
     }
 
-    public void FixedUpdateState() {}
+    public void FixedUpdateState() { }
 
     public void ExitState()
     {
         broomBehavior.yAngle = 0;
         broomBehavior.pitchLerper = new RateLerper();
         entity.SetFacing(-entity.facing);
+        broomBehavior.pitchSpriteAngle = true;
     }
 }
