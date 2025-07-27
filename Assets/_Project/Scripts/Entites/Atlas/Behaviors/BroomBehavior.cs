@@ -10,8 +10,6 @@ public class BroomBehavior : StateBehavior, IStateBehavior
     public Transform spriteTransform;
     public Slider thrustSlider;
 
-    public float fuck = 2f;
-
     [SerializeField] float minThrust;
 
     public UnityEvent OnCancelBroom;
