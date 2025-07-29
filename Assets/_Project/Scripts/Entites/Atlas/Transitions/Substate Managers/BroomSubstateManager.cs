@@ -32,26 +32,32 @@ public class BroomSubstateManager : StateTransition
 
     private Dictionary<State, Can> Transitions = new Dictionary<State, Can>();
 
-    private float SinPitch => Mathf.Sin(beh.pitchLerper.Value() * Mathf.Deg2Rad);
+    private float SinPitch => Mathf.Round(Mathf.Sin(beh.pitchLerper.Value() * Mathf.Deg2Rad));
     private bool Up => input.Up(ButtonState.DOWN);
     private bool Down => input.Down(ButtonState.DOWN);
     private bool Back => input.Back();
     private bool Forward => input.Forward();
 
     Try ToStraight => () => Mathf.Approximately(SinPitch, 0f) ? Straight : null;
+
     Try ToPitchUpRaising => () => SinPitch >= 0 && Up ? PitchUpRaising : null;
     Try ToPitchUpFalling => () => SinPitch > 0 && !Up ? PitchUpFalling : null;
     Try ToPitchDownFalling => () => SinPitch <= 0 && Down && !Back ? PitchDownFalling : null;
     Try ToPitchDownRaising => () => SinPitch < 0 && !Down ? PitchDownRaising : null;
     Try ToPitchUpFull => () => SinPitch >= PitchBreakpoint(PitchUpRaising) && Back && Up ? PitchUpFull : null;
+    Try ToPitchUpFullUpsideDown => () => SinPitch >= PitchBreakpoint(PitchUpRaising) && Forward && Up ? PitchUpFull : null;
+
     Try ToUpsideDown => () => SinPitch >= PitchBreakpoint(PitchUpFull) && Back && !Up ? UpsideDown : null;
+    Try ToUpsideDownNoBack => () => SinPitch >= PitchBreakpoint(PitchUpFull) && !Up ? UpsideDown : null;
     Try ToUpsideDownFalling => () => SinPitch <= PitchBreakpoint(UpsideDown) && Down ? UpsideDownFalling : null;
     Try ToUpsideDownRising => () => SinPitch < PitchBreakpoint(UpsideDown) && !Down ? UpsideDownRising : null;
     Try ToUpsideDownPitchUpRising => () => SinPitch >= PitchBreakpoint(UpsideDown) && Up ? UpsideDownPitchUpRising : null;
     Try ToUpsideDownPitchUpFalling => () => SinPitch > PitchBreakpoint(UpsideDown) && !Up ? UpsideDownPitchUpFalling : null;
+    Try ToRollOver => () => InStateForSeconds(2.0f) ? RollOver : null;
+
     Try ToCompleteLoop => () => SinPitch <= PitchBreakpoint(UpsideDownFalling) && Down && Forward ? CompleteLoop : null;
     Try ToAngleWrap => () => isPassedWrapAngle() ? PitchDownRaising : null;
-    Try ToRollOver => () => InStateForSeconds(2.0f) ? RollOver : null;
+
     Try ToStraightHoldBack => () => Mathf.Approximately(SinPitch, 0f) && Back ? StraightHoldBack : null;
     Try ToPitchDownHoldBack => () => SinPitch < 0 && Back ? PitchDownHoldBack : null;
     Try ToTurnAround => () => InStateForSeconds(0.5f) && Back ? TurnAround : null;
@@ -67,10 +73,10 @@ public class BroomSubstateManager : StateTransition
             [PitchDownFalling] = new Can { ToPitchDownHoldBack, ToPitchDownRaising, ToPitchUpRaising, },
             [PitchDownRaising] = new Can { ToPitchDownFalling, ToStraight, ToPitchUpRaising },
             [PitchUpFull] = new Can { ToUpsideDown, ToPitchUpFalling },
-            [UpsideDown] = new Can { ToUpsideDownFalling, ToUpsideDownPitchUpRising, ToRollOver },
-            [UpsideDownPitchUpRising] = new Can { ToUpsideDown, ToUpsideDownFalling, ToUpsideDownPitchUpFalling },
-            [UpsideDownPitchUpFalling] = new Can { ToUpsideDownPitchUpRising, ToUpsideDown },
-            [UpsideDownFalling] = new Can { ToUpsideDown, ToUpsideDownRising, ToCompleteLoop },
+            [UpsideDown] = new Can { ToRollOver, ToUpsideDownPitchUpRising, ToUpsideDownFalling },
+            [UpsideDownPitchUpRising] = new Can { ToUpsideDownFalling, ToUpsideDownNoBack, ToUpsideDownPitchUpFalling, ToPitchUpFullUpsideDown },
+            [UpsideDownPitchUpFalling] = new Can { ToUpsideDownFalling, ToUpsideDownNoBack, ToUpsideDownPitchUpRising },
+            [UpsideDownFalling] = new Can { ToUpsideDownRising, ToUpsideDown, ToCompleteLoop },
             [UpsideDownRising] = new Can { ToUpsideDown, ToUpsideDownPitchUpRising, ToUpsideDownFalling },
             [CompleteLoop] = new Can { ToAngleWrap },
             [RollOver] = new Can { /* Transitions to Straight on AnimEnd */ },
@@ -82,7 +88,6 @@ public class BroomSubstateManager : StateTransition
 
     public override bool CheckCondition()
     {
-        Debug.Log((SinPitch < PitchBreakpoint(UpsideDown)) + "|" + !Up);
         to = Transitions.GetValueOrDefault(stateMachine.currentState)
         ?.Select(transition => transition())
         .FirstOrDefault(result => result != null);
@@ -105,7 +110,7 @@ public class BroomSubstateManager : StateTransition
     {
         BroomTargetPitchBehavior comp = state.GetComponentInChildren<BroomTargetPitchBehavior>();
         if (!comp) return Mathf.Infinity;
-        return Mathf.Sin(comp.targetPitch * Mathf.Deg2Rad) * breakpointThreshold;
+        return Mathf.Round(Mathf.Sin(comp.targetPitch * Mathf.Deg2Rad) * breakpointThreshold);
     }
 
     private bool InStateForSeconds(float seconds)
