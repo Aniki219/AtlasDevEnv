@@ -4404,17 +4404,9 @@ PrefabInstance:
       propertyPath: input
       value: 
       objectReference: {fileID: 1531373589}
-    - target: {fileID: 4097309566929883515, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
-      propertyPath: m_Color.a
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6100663377661742451, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
       propertyPath: m_Name
       value: Atlas
-      objectReference: {fileID: 0}
-    - target: {fileID: 8410880325246647702, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
-      propertyPath: m_Enabled
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
