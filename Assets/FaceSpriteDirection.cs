@@ -7,6 +7,10 @@ public class FaceSpriteDirection : MonoBehaviour
 
     void Update()
     {
-        transform.localScale = new(AtlasHelpers.Sign(sprite.transform.localScale.x), 1, 1);
+        transform.localScale = new(
+            transform.localScale.x * AtlasHelpers.Sign(sprite.transform.localScale.x),
+            transform.localScale.y,
+            transform.localScale.z
+        );
     }
 }
