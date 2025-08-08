@@ -18,6 +18,7 @@ public abstract class StateBehavior : MonoBehaviour
     protected SpriteController sprite;
     protected InputManager input;
     protected State state;
+    protected StateMachine stateMachine;
 
     private void Awake()
     {
@@ -28,5 +29,6 @@ public abstract class StateBehavior : MonoBehaviour
         sprite = ctx.sprite;
         input = ctx.input;
         state = GetComponentInParent<State>();
+        stateMachine = ctx.stateMachine;
     }
 }
