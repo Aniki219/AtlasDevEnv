@@ -15,4 +15,16 @@ public static class AtlasHelpers
     {
         return Sign(a).Equals(Sign(b));
     }
+
+    public static void WarnOrThrow(bool shouldThrow, string message)
+    {
+        if (shouldThrow)
+        {
+            throw new System.Exception(message);
+        }
+        else
+        {
+            Debug.LogWarning(message);
+        }
+    }
 }

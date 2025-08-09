@@ -6,6 +6,7 @@ using UnityEngine.PlayerLoop;
 public class State : MonoBehaviour
 {
     public AnimationClip stateAnimation;
+    public StateType stateType;
 
     private float startTime;
 
