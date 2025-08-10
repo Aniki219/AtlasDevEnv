@@ -6,7 +6,8 @@ using UnityEngine;
 
 public class StateMachine : MonoBehaviour
 {
-    [NotNull] public SpriteController sprite;
+    [NotNull] public readonly SpriteController sprite;
+    [NotNull] public readonly StateRegistry stateRegistry;
 
     [NotNull]
     public State currentState;

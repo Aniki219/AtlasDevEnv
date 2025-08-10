@@ -18,6 +18,7 @@ public abstract class StateTransition : MonoBehaviour, IStateTransition
     protected InputManager input;
     protected State state;
     protected StateMachine stateMachine;
+    protected StateRegistry stateRegistry;
 
     private void Awake()
     {
@@ -29,6 +30,7 @@ public abstract class StateTransition : MonoBehaviour, IStateTransition
         input = ctx.input;
         stateMachine = ctx.stateMachine;
         state = GetComponentInParent<State>();
+        stateRegistry = stateMachine.stateRegistry;
     }
 
     public virtual bool CheckCondition()
