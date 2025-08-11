@@ -38,30 +38,30 @@ public class BroomSubstateManager : StateTransition
     private bool Back => input.Back();
     private bool Forward => input.Forward();
 
-    Try ToStraight => () => Mathf.Approximately(SinPitch, 0f) ? Straight : null;
+    Func<State> ToStraight => () => Mathf.Approximately(SinPitch, 0f) ? Straight : null;
 
-    Try ToPitchUpRaising => () => SinPitch >= 0 && Up ? PitchUpRaising : null;
-    Try ToPitchUpFalling => () => SinPitch > 0 && !Up ? PitchUpFalling : null;
-    Try ToPitchDownFalling => () => SinPitch <= 0 && Down && !Back ? PitchDownFalling : null;
-    Try ToPitchDownRaising => () => SinPitch < 0 && !Down ? PitchDownRaising : null;
-    Try ToPitchUpFull => () => SinPitch >= PitchBreakpoint(PitchUpRaising) && Back && Up ? PitchUpFull : null;
-    Try ToPitchUpFullUpsideDown => () => SinPitch >= PitchBreakpoint(PitchUpRaising) && Forward && Up ? PitchUpFull : null;
+    Func<State> ToPitchUpRaising => () => SinPitch >= 0 && Up ? PitchUpRaising : null;
+    Func<State> ToPitchUpFalling => () => SinPitch > 0 && !Up ? PitchUpFalling : null;
+    Func<State> ToPitchDownFalling => () => SinPitch <= 0 && Down && !Back ? PitchDownFalling : null;
+    Func<State> ToPitchDownRaising => () => SinPitch < 0 && !Down ? PitchDownRaising : null;
+    Func<State> ToPitchUpFull => () => SinPitch >= PitchBreakpoint(PitchUpRaising) && Back && Up ? PitchUpFull : null;
+    Func<State> ToPitchUpFullUpsideDown => () => SinPitch >= PitchBreakpoint(PitchUpRaising) && Forward && Up ? PitchUpFull : null;
 
-    Try ToUpsideDown => () => SinPitch >= PitchBreakpoint(PitchUpFull) && Back && !Up ? UpsideDown : null;
-    Try ToUpsideDownNoBack => () => SinPitch >= PitchBreakpoint(PitchUpFull) && !Up ? UpsideDown : null;
-    Try ToUpsideDownFalling => () => SinPitch <= PitchBreakpoint(UpsideDown) && Down ? UpsideDownFalling : null;
-    Try ToUpsideDownRising => () => SinPitch < PitchBreakpoint(UpsideDown) && !Down ? UpsideDownRising : null;
-    Try ToUpsideDownPitchUpRising => () => SinPitch >= PitchBreakpoint(UpsideDown) && Up ? UpsideDownPitchUpRising : null;
-    Try ToUpsideDownPitchUpFalling => () => SinPitch > PitchBreakpoint(UpsideDown) && !Up ? UpsideDownPitchUpFalling : null;
-    Try ToRollOver => () => InStateForSeconds(2.0f) ? RollOver : null;
+    Func<State> ToUpsideDown => () => SinPitch >= PitchBreakpoint(PitchUpFull) && Back && !Up ? UpsideDown : null;
+    Func<State> ToUpsideDownNoBack => () => SinPitch >= PitchBreakpoint(PitchUpFull) && !Up ? UpsideDown : null;
+    Func<State> ToUpsideDownFalling => () => SinPitch <= PitchBreakpoint(UpsideDown) && Down ? UpsideDownFalling : null;
+    Func<State> ToUpsideDownRising => () => SinPitch < PitchBreakpoint(UpsideDown) && !Down ? UpsideDownRising : null;
+    Func<State> ToUpsideDownPitchUpRising => () => SinPitch >= PitchBreakpoint(UpsideDown) && Up ? UpsideDownPitchUpRising : null;
+    Func<State> ToUpsideDownPitchUpFalling => () => SinPitch > PitchBreakpoint(UpsideDown) && !Up ? UpsideDownPitchUpFalling : null;
+    Func<State> ToRollOver => () => InStateForSeconds(2.0f) ? RollOver : null;
 
-    Try ToCompleteLoop => () => SinPitch <= PitchBreakpoint(UpsideDownFalling) && Down && Forward ? CompleteLoop : null;
-    Try ToAngleWrap => () => isPassedWrapAngle() ? PitchDownRaising : null;
+    Func<State> ToCompleteLoop => () => SinPitch <= PitchBreakpoint(UpsideDownFalling) && Down && Forward ? CompleteLoop : null;
+    Func<State> ToAngleWrap => () => isPassedWrapAngle() ? PitchDownRaising : null;
 
-    Try ToStraightHoldBack => () => Mathf.Approximately(SinPitch, 0f) && Back ? StraightHoldBack : null;
-    Try ToPitchDownHoldBack => () => SinPitch < 0 && Back ? PitchDownHoldBack : null;
-    Try ToTurnAround => () => InStateForSeconds(0.5f) && Back ? TurnAround : null;
-    Try ToDiveTurnAround => () => InStateForSeconds(0.1f) && Back ? TurnAround : null;
+    Func<State> ToStraightHoldBack => () => Mathf.Approximately(SinPitch, 0f) && Back ? StraightHoldBack : null;
+    Func<State> ToPitchDownHoldBack => () => SinPitch < 0 && Back ? PitchDownHoldBack : null;
+    Func<State> ToTurnAround => () => InStateForSeconds(0.5f) && Back ? TurnAround : null;
+    Func<State> ToDiveTurnAround => () => InStateForSeconds(0.1f) && Back ? TurnAround : null;
 
     public void Start()
     {
