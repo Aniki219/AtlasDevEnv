@@ -1,21 +1,25 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-using Can = System.Collections.Generic.List<Try>;
+using Can = System.Collections.Generic.List<StateType>;
+
+using static StateType;
 
 public class AtlasStateTransitions : StateTransition
 {
     [SerializeField] float angleWrapCutoff;
     [SerializeField] float breakpointThreshold;
 
-    private Dictionary<StateType, Can> Transitions = new Dictionary<StateType, Can>();
+    private Dictionary<StateType, Can> Transitions;
+    private Dictionary<(StateType to, StateType? from), Func<bool>> ToConditions;
 
-    private State st_Broom => stateRegistry.GetState(StateType.Broom);
-    private State st_PitchUpRaising => stateRegistry.GetState(StateType.Broom_PitchUpRaising);
-    private State st_PitchUpFull => stateRegistry.GetState(StateType.Broom_PitchUpFull);
-    private State st_UpsideDown => stateRegistry.GetState(StateType.Broom_UpsideDown);
-    private State st_UpsideDownFalling => stateRegistry.GetState(StateType.Broom_UpsideDownFalling);
+    private State st_Broom => stateRegistry.GetState(Broom);
+    private State st_PU_Rising => stateRegistry.GetState(PU_Rising);
+    private State st_PU_Full => stateRegistry.GetState(PU_Full);
+    private State st_UD_ => stateRegistry.GetState(UpsideDown);
+    private State st_UD_Falling => stateRegistry.GetState(UD_Falling);
     
     private BroomBehavior _bh_Broom;
     private BroomBehavior bh_Broom => _bh_Broom ??= st_Broom.GetComponent<BroomBehavior>();
@@ -26,149 +30,183 @@ public class AtlasStateTransitions : StateTransition
     private bool Back => input.Back();
     private bool Forward => input.Forward();
 
-    Try ToStraight          => StateType.Broom_Straight.When(() => Mathf.Approximately(SinPitch, 0f));
+    public readonly struct StateTransitionBuilder
+    {
+        private readonly StateType _to;
+        
+        public StateTransitionBuilder(StateType to)
+        {
+            _to = to;
+        }
+        
+        public (StateType, StateType?) From(StateType from)
+        {
+            return (_to, from);
+        }
+        
+        // Implicit conversion to tuple when no From() is called
+        public static implicit operator (StateType, StateType?)(StateTransitionBuilder builder)
+        {
+            return (builder._to, null);
+        }
+    }
 
-    Try ToPitchUpRaising    => StateType.Broom_PitchUpRaising.When(() => SinPitch >= 0 && Up);
-    Try ToPitchUpFalling    => StateType.Broom_PitchUpFalling.When(() => SinPitch > 0 && !Up);
-    Try ToPitchDownFalling  => StateType.Broom_PitchDownFalling.When(() => SinPitch <= 0 && Down && !Back);
-    Try ToPitchDownRaising  => StateType.Broom_PitchDownRaising.When(() => SinPitch < 0 && !Down);
-    Try ToPitchUpFull       => StateType.Broom_PitchUpFull.When(() => SinPitch >= PitchBreakpoint(st_PitchUpRaising) && Back && Up);
-    Try ToPitchUpFullUpsideDown => StateType.Broom_PitchUpFull.When(() => SinPitch >= PitchBreakpoint(st_PitchUpRaising) && Forward && Up);
-
-    Try ToUpsideDown        => StateType.Broom_UpsideDown.When(() => SinPitch >= PitchBreakpoint(st_PitchUpFull) && Back && !Up);
-    Try ToUpsideDownNoBack  => StateType.Broom_UpsideDown.When(() => SinPitch >= PitchBreakpoint(st_PitchUpFull) && !Up);
-    Try ToUpsideDownFalling => StateType.Broom_UpsideDownFalling.When(() => SinPitch <= PitchBreakpoint(st_UpsideDown) && Down);
-    Try ToUpsideDownRising  => StateType.Broom_UpsideDownRising.When(() => SinPitch < PitchBreakpoint(st_UpsideDown) && !Down);
-    Try ToUpsideDownPitchUpRising  => StateType.Broom_UpsideDownPitchUpRising.When(() => SinPitch >= PitchBreakpoint(st_UpsideDown) && Up);
-    Try ToUpsideDownPitchUpFalling => StateType.Broom_UpsideDownPitchUpFalling.When(() => SinPitch > PitchBreakpoint(st_UpsideDown) && !Up);
-    Try ToRollOver          => StateType.Broom_RollOver.When(() => InStateForSeconds(2.0f));
-
-    Try ToCompleteLoop      => StateType.Broom_CompleteLoop.When(() => SinPitch <= PitchBreakpoint(st_UpsideDownFalling) && Down && Forward);
-    Try ToAngleWrap         => StateType.Broom_PitchDownRaising.When(() => isPassedWrapAngle());
-
-    Try ToStraightHoldBack  => StateType.Broom_StraightHoldBack.When(() => Mathf.Approximately(SinPitch, 0f) && Back);
-    Try ToPitchDownHoldBack => StateType.Broom_PitchDownHoldBack.When(() => SinPitch < 0 && Back);
-    Try ToTurnAround        => StateType.Broom_TurnAround.When(() => InStateForSeconds(0.5f) && Back);
-    Try ToDiveTurnAround    => StateType.Broom_TurnAround.When(() => InStateForSeconds(0.1f) && Back);
+    // Helper method to start the builder
+    private StateTransitionBuilder To(StateType to)
+    {
+        return new StateTransitionBuilder(to);
+    }
 
     public void Start()
     {
+        ToConditions = new Dictionary<(StateType to, StateType? from), Func<bool>> {
+            [To(Straight)]           = () => Mathf.Approximately(SinPitch, 0f),
+
+            [To(PU_Rising)]          = () => SinPitch >= 0 && Up,
+            [To(PU_Falling)]         = () => SinPitch > 0 && !Up,
+            [To(PD_Falling)]         = () => SinPitch <= 0 && Down && !Back,
+            [To(PD_Rising)]          = () => SinPitch < 0 && !Down,
+            [To(PU_Full)]            = () => SinPitch >= PitchBreakpoint(st_PU_Rising) && Back && Up,
+            [To(PU_Full)
+                .From(UD_PURising)]  = () => SinPitch >= PitchBreakpoint(st_PU_Rising) && Forward && Up,
+
+            [To(UpsideDown)]         = () => SinPitch >= PitchBreakpoint(st_PU_Full) && Back && !Up,
+            [To(UpsideDown)
+                .From(UD_PUFalling)] = () => SinPitch >= PitchBreakpoint(st_PU_Full) && !Up,
+            [To(UpsideDown)
+                .From(UD_Rising)]    = () => SinPitch >= PitchBreakpoint(st_PU_Full) && !Up,
+            [To(UD_Falling)]         = () => SinPitch <= PitchBreakpoint(st_UD_) && Down,
+            [To(UD_Rising)]          = () => SinPitch < PitchBreakpoint(st_UD_) && !Down,
+            [To(UD_PURising)]        = () => SinPitch >= PitchBreakpoint(st_UD_) && Up,
+            [To(UD_PUFalling)]       = () => SinPitch > PitchBreakpoint(st_UD_) && !Up,
+            [To(CompleteLoop)]       = () => SinPitch <= PitchBreakpoint(st_UD_Falling) && Down && Forward,
+            [To(PD_HoldBack)]        = () => SinPitch < 0 && Back,
+
+            [To(PD_Rising)]          = () => isPassedWrapAngle(),
+
+            [To(HoldBack)]           = () => Mathf.Approximately(SinPitch, 0f) && Back,
+            [To(HoldBack)]           = () => Mathf.Approximately(SinPitch, 0f) && Back,
+            [To(RollOver)]           = () => InStateForSeconds(2.0f),
+            [To(TurnAround)]         = () => InStateForSeconds(0.5f) && Back,
+            [To(TurnAround)
+                .From(PD_HoldBack)]  = () => InStateForSeconds(0.1f) && Back,
+        };
+
         Transitions = new Dictionary<StateType, Can>()
         {
-            [StateType.Broom_Straight] = new Can {
-                ToStraightHoldBack,
-                ToPitchUpRaising,
-                ToPitchDownFalling
+            [Straight] = new Can {
+                HoldBack,
+                PU_Rising,
+                PD_Falling
             },
-            [StateType.Broom_PitchUpRaising] = new Can {
-                ToPitchUpFull,
-                ToPitchUpFalling,
-                ToPitchDownFalling
+            [PU_Rising] = new Can {
+                PU_Full,
+                PU_Falling,
+                PD_Falling
             },
-            [StateType.Broom_PitchUpFalling] = new Can {
-                ToPitchUpRaising,
-                ToStraight,
-                ToPitchDownFalling
+            [PU_Falling] = new Can {
+                PU_Rising,
+                Straight,
+                PD_Falling
             },
-            [StateType.Broom_PitchDownFalling] = new Can {
-                ToPitchDownHoldBack,
-                ToPitchDownRaising,
-                ToPitchUpRaising,
+            [PD_Falling] = new Can {
+                PD_HoldBack,
+                PD_Rising,
+                PU_Rising,
             },
-            [StateType.Broom_PitchDownRaising] = new Can {
-                ToPitchDownFalling,
-                ToStraight,
-                ToPitchUpRaising
+            [PD_Rising] = new Can {
+                PD_Falling,
+                Straight,
+                PU_Rising
             },
-            [StateType.Broom_PitchUpFull] = new Can {
-                ToUpsideDown,
-                ToPitchUpFalling
+            [PU_Full] = new Can {
+                UpsideDown,
+                PU_Falling
             },
-            [StateType.Broom_UpsideDown] = new Can {
-                ToRollOver,
-                ToUpsideDownPitchUpRising,
-                ToUpsideDownFalling
+            [UpsideDown] = new Can {
+                RollOver,
+                UD_PURising,
+                UD_Falling
             },
-            [StateType.Broom_UpsideDownPitchUpRising] = new Can {
-                ToUpsideDownFalling,
-                ToUpsideDownNoBack,
-                ToUpsideDownPitchUpFalling,
-                ToPitchUpFullUpsideDown
+            [UD_PURising] = new Can {
+                UD_Falling,
+                UD_NoBack,
+                UD_PUFalling,
+                PU_Full
             },
-            [StateType.Broom_UpsideDownPitchUpFalling] = new Can {
-                ToUpsideDownFalling,
-                ToUpsideDownNoBack,
-                ToUpsideDownPitchUpRising
+            [UD_PUFalling] = new Can {
+                UD_Falling,
+                UD_NoBack,
+                UD_PURising
             },
-            [StateType.Broom_UpsideDownFalling] = new Can {
-                ToUpsideDownRising,
-                ToUpsideDown,
-                ToCompleteLoop
+            [UD_Falling] = new Can {
+                UD_Rising,
+                UpsideDown,
+                CompleteLoop
             },
-            [StateType.Broom_UpsideDownRising] = new Can {
-                ToUpsideDown,
-                ToUpsideDownPitchUpRising,
-                ToUpsideDownFalling
+            [UD_Rising] = new Can {
+                UpsideDown,
+                UD_PURising,
+                UD_Falling
             },
-            [StateType.Broom_CompleteLoop] = new Can {
+            [CompleteLoop] = new Can {
                 ToAngleWrap
             },
-            [StateType.Broom_RollOver] = new Can {
+            [RollOver] = new Can {
                 /* Transitions to Straight on AnimEnd */
             },
-            [StateType.Broom_StraightHoldBack] = new Can {
-                ToTurnAround,
-                ToStraightHoldBack,
-                ToStraight
+            [HoldBack] = new Can {
+                TurnAround,
+                PD_HoldBack,
+                Straight
             },
-            [StateType.Broom_PitchDownHoldBack] = new Can {
-                ToStraightHoldBack,
-                ToDiveTurnAround,
-                ToPitchDownFalling,
-                ToPitchDownRaising,
+            [PD_HoldBack] = new Can {
+                HoldBack,
+                TurnAround,
+                PD_Falling,
+                PD_Rising,
             },
-            [StateType.Broom_TurnAround] = new Can
+            [TurnAround] = new Can
             {
-                OnAnimationEnd(StateType.Broom_Straight),
-                PauseTransition(StateType.Bonk, PauseType.StateEnd),
+                OnAnimationEnd(Straight),
             },
-            [StateType.Bonk] = new Can
+            [Bonk] = new Can
             { 
-                OnAnimationEnd(StateType.Fall),
+                OnAnimationEnd(Fall),
             },
-            [StateType.Broom] = new Can
+            [Broom] = new Can
             {
                 /* Superstate Transitions */
-                ToBonk,
-                OnInput(Broom, StateType.Fall),
+                Bonk,
+                OnInput(Broom, Fall),
                 OnInput(Attack, GetAttackStateType()),
                 OnInput(Jump, GetAirJump()),
             },
-            [StateType.BroomStart] = new Can
+            [BroomStart] = new Can
             { 
-                OnAnimationEnd(StateType.Broom_Straight),
+                OnAnimationEnd(Straight),
             },
-            [StateType.Crouch] = new Can { },
-            [StateType.Dash] = new Can { },
-            [StateType.DownAir] = new Can { },
-            [StateType.DownTilt] = new Can { },
-            [StateType.Fall] = new Can { },
-            [StateType.FallingNair] = new Can { },
-            [StateType.Hurt] = new Can { },
-            [StateType.Jab1] = new Can { },
-            [StateType.Jab2] = new Can { },
-            [StateType.Jab3] = new Can { },
-            [StateType.Jump] = new Can { },
-            [StateType.RisingNair] = new Can { },
-            [StateType.Slide] = new Can { },
-            [StateType.Slip] = new Can { },
-            [StateType.SpinJump] = new Can { },
-            [StateType.UpAir] = new Can { },
-            [StateType.UpTilt] = new Can { },
-            [StateType.Wait] = new Can { },
-            [StateType.Walk] = new Can { },
-            [StateType.WallJump] = new Can { },
-            [StateType.WallSlide] = new Can { },
+            [Crouch] = new Can { },
+            [Dash] = new Can { },
+            [DownAir] = new Can { },
+            [DownTilt] = new Can { },
+            [Fall] = new Can { },
+            [FallingNair] = new Can { },
+            [Hurt] = new Can { },
+            [Jab1] = new Can { },
+            [Jab2] = new Can { },
+            [Jab3] = new Can { },
+            [Jump] = new Can { },
+            [RisingNair] = new Can { },
+            [Slide] = new Can { },
+            [Slip] = new Can { },
+            [SpinJump] = new Can { },
+            [UpAir] = new Can { },
+            [UpTilt] = new Can { },
+            [Wait] = new Can { },
+            [Walk] = new Can { },
+            [WallJump] = new Can { },
+            [WallSlide] = new Can { },
         };
     }
 
@@ -179,16 +217,16 @@ public class AtlasStateTransitions : StateTransition
             ?.FirstOrDefault(transition => transition.Condition());
 
         if (toStateType != null) {
-            to = stateRegistry.GetState(toStateType.TargetState);
+            to = stateRegistry.GetState(toTargetState);
             return !Equals(to, state);
         }
 
         return false;
     }
 
-    private Try OnAnimationEnd(StateType stateType)
+    private Func<bool> OnAnimationEnd(StateType stateType)
     {
-        return stateType.When(() => sprite.GetNormalizedTime() >= 1);
+        return () => sprite.GetNormalizedTime() >= 1;
     }
 
     public bool isPassedWrapAngle()
