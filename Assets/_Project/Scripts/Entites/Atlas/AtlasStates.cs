@@ -2,7 +2,7 @@ public enum StateType
 {
     Unset,
     Bonk,
-    Broom,
+    su_Broom,
     CompleteLoop,
     PD_Falling,
     PD_Rising,

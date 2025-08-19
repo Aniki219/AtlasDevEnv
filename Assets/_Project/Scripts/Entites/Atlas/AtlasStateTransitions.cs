@@ -3,32 +3,33 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-using Can = System.Collections.Generic.List<StateType>;
+using Can = System.Collections.Generic.List<StateType?>;
 
 using static StateType;
+using bt = ButtonType;
 
 public class AtlasStateTransitions : StateTransition
 {
     [SerializeField] float angleWrapCutoff;
     [SerializeField] float breakpointThreshold;
 
-    private Dictionary<StateType, Can> Transitions;
+    private Dictionary<StateType, Can> CanTransitions;
     private Dictionary<(StateType to, StateType? from), Func<bool>> ToConditions;
 
-    private State st_Broom => stateRegistry.GetState(Broom);
+    private State st_Broom => stateRegistry.GetState(Straight);
     private State st_PU_Rising => stateRegistry.GetState(PU_Rising);
     private State st_PU_Full => stateRegistry.GetState(PU_Full);
-    private State st_UD_ => stateRegistry.GetState(UpsideDown);
+    private State st_UpsideDown => stateRegistry.GetState(UpsideDown);
     private State st_UD_Falling => stateRegistry.GetState(UD_Falling);
     
     private BroomBehavior _bh_Broom;
     private BroomBehavior bh_Broom => _bh_Broom ??= st_Broom.GetComponent<BroomBehavior>();
 
     private float SinPitch => Mathf.Round(Mathf.Sin(bh_Broom.pitchLerper.Value() * Mathf.Deg2Rad));
-    private bool Up => input.Up(ButtonState.DOWN);
-    private bool Down => input.Down(ButtonState.DOWN);
-    private bool Back => input.Back();
-    private bool Forward => input.Forward();
+    private bool Back      => InputManager.Instance.Back();
+    private bool Forward   => InputManager.Instance.Forward();
+    private bool Up      => InputManager.Instance.GetAxisY() > 0;
+    private bool Down   => InputManager.Instance.GetAxisY() < 0;
 
     public readonly struct StateTransitionBuilder
     {
@@ -57,32 +58,37 @@ public class AtlasStateTransitions : StateTransition
         return new StateTransitionBuilder(to);
     }
 
+    private InputQuery On(ButtonType buttonType) {
+        return input.Query(buttonType);
+    }
+
     public void Start()
     {
         ToConditions = new Dictionary<(StateType to, StateType? from), Func<bool>> {
             [To(Straight)]           = () => Mathf.Approximately(SinPitch, 0f),
 
-            [To(PU_Rising)]          = () => SinPitch >= 0 && Up,
-            [To(PU_Falling)]         = () => SinPitch > 0 && !Up,
-            [To(PD_Falling)]         = () => SinPitch <= 0 && Down && !Back,
-            [To(PD_Rising)]          = () => SinPitch < 0 && !Down,
-            [To(PU_Full)]            = () => SinPitch >= PitchBreakpoint(st_PU_Rising) && Back && Up,
+            [To(PU_Rising)]          = () => SinPitch >= 0 &&  Up,
+            [To(PU_Falling)]         = () => SinPitch >  0 && !Up,
+            [To(PD_Falling)]         = () => SinPitch <= 0 &&  Down && !Back,
+            [To(PD_Rising)]          = () => SinPitch <  0 && !Down,
+            [To(PU_Full)]            = () => SinPitch >= PitchBreakpoint(st_PU_Rising)  &&  Back && Up,
             [To(PU_Full)
-                .From(UD_PURising)]  = () => SinPitch >= PitchBreakpoint(st_PU_Rising) && Forward && Up,
+                .From(UD_PURising)]  = () => SinPitch >= PitchBreakpoint(st_PU_Rising)  &&  Forward && Up,
 
-            [To(UpsideDown)]         = () => SinPitch >= PitchBreakpoint(st_PU_Full) && Back && !Up,
+            [To(UpsideDown)]         = () => SinPitch >= PitchBreakpoint(st_PU_Full)    &&  Back && !Up,
             [To(UpsideDown)
-                .From(UD_PUFalling)] = () => SinPitch >= PitchBreakpoint(st_PU_Full) && !Up,
+                .From(UD_PUFalling)] = () => SinPitch >= PitchBreakpoint(st_PU_Full)    && !Up,
             [To(UpsideDown)
-                .From(UD_Rising)]    = () => SinPitch >= PitchBreakpoint(st_PU_Full) && !Up,
-            [To(UD_Falling)]         = () => SinPitch <= PitchBreakpoint(st_UD_) && Down,
-            [To(UD_Rising)]          = () => SinPitch < PitchBreakpoint(st_UD_) && !Down,
-            [To(UD_PURising)]        = () => SinPitch >= PitchBreakpoint(st_UD_) && Up,
-            [To(UD_PUFalling)]       = () => SinPitch > PitchBreakpoint(st_UD_) && !Up,
-            [To(CompleteLoop)]       = () => SinPitch <= PitchBreakpoint(st_UD_Falling) && Down && Forward,
+                .From(UD_Rising)]    = () => SinPitch >= PitchBreakpoint(st_PU_Full)    && !Up,
+            [To(UD_Falling)]         = () => SinPitch <= PitchBreakpoint(st_UpsideDown) &&  Down,
+            [To(UD_Rising)]          = () => SinPitch <  PitchBreakpoint(st_UpsideDown) && !Down,
+            [To(UD_PURising)]        = () => SinPitch >= PitchBreakpoint(st_UpsideDown) &&  Up,
+            [To(UD_PUFalling)]       = () => SinPitch >  PitchBreakpoint(st_UpsideDown) && !Up,
+            [To(CompleteLoop)]       = () => SinPitch <= PitchBreakpoint(st_UD_Falling) &&  Down && Forward,
             [To(PD_HoldBack)]        = () => SinPitch < 0 && Back,
 
-            [To(PD_Rising)]          = () => isPassedWrapAngle(),
+            [To(PD_Rising)
+                .From(CompleteLoop)] = () => isPassedWrapAngle(),
 
             [To(HoldBack)]           = () => Mathf.Approximately(SinPitch, 0f) && Back,
             [To(HoldBack)]           = () => Mathf.Approximately(SinPitch, 0f) && Back,
@@ -92,7 +98,7 @@ public class AtlasStateTransitions : StateTransition
                 .From(PD_HoldBack)]  = () => InStateForSeconds(0.1f) && Back,
         };
 
-        Transitions = new Dictionary<StateType, Can>()
+        CanTransitions = new Dictionary<StateType, Can>()
         {
             [Straight] = new Can {
                 HoldBack,
@@ -102,12 +108,12 @@ public class AtlasStateTransitions : StateTransition
             [PU_Rising] = new Can {
                 PU_Full,
                 PU_Falling,
-                PD_Falling
+                PD_Falling,
             },
             [PU_Falling] = new Can {
                 PU_Rising,
                 Straight,
-                PD_Falling
+                PD_Falling,
             },
             [PD_Falling] = new Can {
                 PD_HoldBack,
@@ -117,40 +123,39 @@ public class AtlasStateTransitions : StateTransition
             [PD_Rising] = new Can {
                 PD_Falling,
                 Straight,
-                PU_Rising
+                PU_Rising,
             },
             [PU_Full] = new Can {
                 UpsideDown,
-                PU_Falling
+                PU_Falling,
             },
             [UpsideDown] = new Can {
                 RollOver,
                 UD_PURising,
-                UD_Falling
+                UD_Falling,
             },
             [UD_PURising] = new Can {
                 UD_Falling,
-                UD_NoBack,
                 UD_PUFalling,
-                PU_Full
+                PU_Full,
             },
             [UD_PUFalling] = new Can {
                 UD_Falling,
-                UD_NoBack,
-                UD_PURising
+                UpsideDown,
+                UD_PURising,
             },
             [UD_Falling] = new Can {
                 UD_Rising,
                 UpsideDown,
-                CompleteLoop
+                CompleteLoop,
             },
             [UD_Rising] = new Can {
                 UpsideDown,
                 UD_PURising,
-                UD_Falling
+                UD_Falling,
             },
             [CompleteLoop] = new Can {
-                ToAngleWrap
+                PD_Rising,
             },
             [RollOver] = new Can {
                 /* Transitions to Straight on AnimEnd */
@@ -158,7 +163,7 @@ public class AtlasStateTransitions : StateTransition
             [HoldBack] = new Can {
                 TurnAround,
                 PD_HoldBack,
-                Straight
+                Straight,
             },
             [PD_HoldBack] = new Can {
                 HoldBack,
@@ -174,13 +179,13 @@ public class AtlasStateTransitions : StateTransition
             { 
                 OnAnimationEnd(Fall),
             },
-            [Broom] = new Can
+            [su_Broom] = new Can
             {
                 /* Superstate Transitions */
                 Bonk,
-                OnInput(Broom, Fall),
-                OnInput(Attack, GetAttackStateType()),
-                OnInput(Jump, GetAirJump()),
+                OnInput(bt.Broom.Pressed(), Fall),
+                // OnInput(bt.Attack.Pressed(), GetAttackStateType()),
+                // OnInput(bt.Jump.Pressed(), GetAirJump()),
             },
             [BroomStart] = new Can
             { 
@@ -212,21 +217,64 @@ public class AtlasStateTransitions : StateTransition
 
     public override bool CheckCondition()
     {
-        Try toStateType =
-            Transitions.GetValueOrDefault(stateMachine.currentState.stateType)
-            ?.FirstOrDefault(transition => transition.Condition());
+        /*
+            1. Look for the State ToCondition for the current StateType
+                a. First try to find the ToCondition for To(toStateType).From(currentStateType)
+                b. Then if no record find the ToCondition for To(toStateType)
+                c. If we don't find a record it might be worth logging a warning
+            2. Now we have a StateType to transfer to. Use the StateRegister to find the State
+            3. ChangeState like normal
+        */
+        StateType fromStateType = stateMachine.currentState.stateType;
+        
+        /*
+            Our current state is the fromState. Get the Can from the fromState to recieve a
+            List of toStates.
+            For each toState map this entry to
+                1. to(toState).from(fromState)
+                2. to(toState)
+                3. null
+            Then get the first non-null result as a StateType?
+        */
+        StateType? canStateType = CanTransitions
+            .GetValueOrDefault(fromStateType) // Can: List<StateType?>
+            ?.Select<StateType?, (StateType stateType, Func<bool> cond)>(toStateType => {
+                if (toStateType.HasValue) {
+                    if (ToConditions.TryGetValue(To(toStateType.Value)
+                                                    .From(fromStateType), out var toFrom)) {
+                        return (toStateType.Value, toFrom);
+                    }
+                    if (ToConditions.TryGetValue(To(toStateType.Value), out var to)) {
+                        return (toStateType.Value, to);
+                    }
+                }
+                return (Unset, () => false);
+            })
+            .Where(e => e.cond())
+            .Select(e => e.stateType)
+            .First()
+        ;
 
-        if (toStateType != null) {
-            to = stateRegistry.GetState(toTargetState);
+        if (canStateType.HasValue) {
+            to = stateRegistry.GetState(canStateType.Value);
             return !Equals(to, state);
         }
 
         return false;
     }
 
-    private Func<bool> OnAnimationEnd(StateType stateType)
+    private StateType? OnAnimationEnd(StateType stateType)
     {
-        return () => sprite.GetNormalizedTime() >= 1;
+        return sprite.GetNormalizedTime() >= 1 ?
+            stateType :
+            null;
+    }
+
+    private StateType? OnInput(InputQuery inputQuery, StateType stateType)
+    {
+        return inputQuery ?
+            stateType :
+            null;
     }
 
     public bool isPassedWrapAngle()
