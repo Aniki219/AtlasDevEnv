@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/*
+
+*/
+
 [RequireComponent(typeof(StateMachine))]
 public class StateRegistry : MonoBehaviour
 {
@@ -10,6 +14,8 @@ public class StateRegistry : MonoBehaviour
 
     private Dictionary<StateType, State> registry;
 
+    [SerializeField] public List<State> states => registry.Values.ToList();
+    
     private void Awake()
     {
         registry = new Dictionary<StateType, State>();
@@ -21,7 +27,7 @@ public class StateRegistry : MonoBehaviour
         State state;
         registry.TryGetValue(stateType, out state);
 
-        if (state == null)
+        if (!state)
         {
             AtlasHelpers.WarnOrThrow(
                 throwOnMissingState,
@@ -35,19 +41,19 @@ public class StateRegistry : MonoBehaviour
     private void DiscoverAndRegisterStates()
     {
         var stateRegistrations = GetComponentsInChildren<State>()
-        .Select((state) =>
-            new KeyValuePair<StateType, bool>(
-                state.stateType,
+        .Select<State, (string stateName, bool success)>((state) =>
+            (
+                state.name,
                 RegisterState(state)
             )
         )
         .ToList();
 
-        int successful = stateRegistrations.Count(r => r.Value);
+        int successful = stateRegistrations.Count(r => r.success);
         string failedStates = string.Join(", ",
             stateRegistrations
-            .Where(r => !r.Value)
-            .Select(r => r.Key.ToString()));
+            .Where(r => !r.success)
+            .Select(r => r.stateName));
 
         Debug.Log($"Registered {successful} states");
         if (failedStates.Length > 0)

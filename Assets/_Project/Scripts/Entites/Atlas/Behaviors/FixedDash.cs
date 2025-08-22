@@ -1,11 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
 public class FixedDash : StateBehavior, IStateBehavior
 {
     [SerializeField] AnimationCurve velocityProfile;
     private float duration;
-
-    [SerializeField] OnComplete onComplete;
 
     public void StartState()
     {
@@ -17,11 +16,6 @@ public class FixedDash : StateBehavior, IStateBehavior
     {
         float t = state.GetNomalizedTime(duration);
         body.SetForwardVelocity(velocityProfile.Evaluate(t * duration));
-
-        if (t >= 1)
-        {
-            onComplete.Activate();
-        }
     }
 
     public void FixedUpdateState() { }

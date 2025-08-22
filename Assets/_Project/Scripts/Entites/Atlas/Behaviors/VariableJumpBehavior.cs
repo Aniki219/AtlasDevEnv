@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using static ButtonType;
 
 public class VariableJumpBehavior : StateBehavior, IStateBehavior
 {
@@ -12,7 +13,7 @@ public class VariableJumpBehavior : StateBehavior, IStateBehavior
 
     public void UpdateState()
     {
-        if (!jumpReleased && input.Jump(ButtonState.RELEASED) && body.velocity.y > 1)
+        if (!jumpReleased && Jump.Released() && body.velocity.y > 1)
         {
             body.velocity.y /= 4;
             jumpReleased = true;

@@ -13,8 +13,8 @@ public class AtlasStateTransitions : StateTransition
     [SerializeField] float angleWrapCutoff;
     [SerializeField] float breakpointThreshold;
 
-    private Dictionary<StateType, Can> CanTransitions;
-    private Dictionary<(StateType to, StateType? from), Func<bool>> ToConditions;
+    public Dictionary<StateType, Can> CanTransitions { get; private set; }
+    public Dictionary<(StateType to, StateType? from), Func<bool>> ToConditions { get; private set; }
 
     private State st_Broom => stateRegistry.GetState(Straight);
     private State st_PU_Rising => stateRegistry.GetState(PU_Rising);
@@ -28,8 +28,8 @@ public class AtlasStateTransitions : StateTransition
     private float SinPitch => Mathf.Round(Mathf.Sin(bh_Broom.pitchLerper.Value() * Mathf.Deg2Rad));
     private bool Back      => InputManager.Instance.Back();
     private bool Forward   => InputManager.Instance.Forward();
-    private bool Up      => InputManager.Instance.GetAxisY() > 0;
-    private bool Down   => InputManager.Instance.GetAxisY() < 0;
+    private bool Up        => InputManager.Instance.Y > 0;
+    private bool Down      => InputManager.Instance.X < 0;
 
     public readonly struct StateTransitionBuilder
     {
@@ -96,10 +96,25 @@ public class AtlasStateTransitions : StateTransition
             [To(TurnAround)]         = () => InStateForSeconds(0.5f) && Back,
             [To(TurnAround)
                 .From(PD_HoldBack)]  = () => InStateForSeconds(0.1f) && Back,
+            [To(Walk)
+                .From(Fall)]         = () => body.IsGrounded() && body.velocity.y <= 0,
+
+            [To(Fall)]               = () => !body.IsGrounded(),
+            [To(Fall)
+                .From(su_Broom)]     = () => bt.Broom.Pressed(),
+
+            [To(Jab1)]               = () => bt.Attack.Pressed(),
+            [To(Jab2)]               = () => bt.Attack.Pressed(),
+            [To(Jab3)]               = () => bt.Attack.Pressed(),
+            [To(UpTilt)]             = () => bt.Attack.UpTilt()  .Pressed(),
+            [To(DownTilt)]           = () => bt.Attack.DownTilt().Pressed(),
+            [To(UpAir)]              = () => bt.Attack.UpTilt()  .Pressed() && !body.IsGrounded(),
+            [To(DownAir)]            = () => bt.Attack.DownTilt().Pressed() && !body.IsGrounded(),
+            [To(FallingNair)]        = () => bt.Attack.Pressed()            && !body.IsGrounded(),
+            [To(RisingNair)]         = () => bt.Attack.Pressed()            && !body.IsGrounded(),
         };
 
-        CanTransitions = new Dictionary<StateType, Can>()
-        {
+        CanTransitions = new Dictionary<StateType, Can>() {
             [Straight] = new Can {
                 HoldBack,
                 PU_Rising,
@@ -194,8 +209,12 @@ public class AtlasStateTransitions : StateTransition
             [Crouch] = new Can { },
             [Dash] = new Can { },
             [DownAir] = new Can { },
-            [DownTilt] = new Can { },
-            [Fall] = new Can { },
+            [DownTilt] = new Can { 
+                OnAnimationEnd(Crouch),
+            },
+            [Fall] = new Can {
+                Walk,
+            },
             [FallingNair] = new Can { },
             [Hurt] = new Can { },
             [Jab1] = new Can { },
@@ -215,16 +234,9 @@ public class AtlasStateTransitions : StateTransition
         };
     }
 
-    public override bool CheckCondition()
+    public override bool TryGetFirstActiveTransition(out StateType outStateType)
     {
-        /*
-            1. Look for the State ToCondition for the current StateType
-                a. First try to find the ToCondition for To(toStateType).From(currentStateType)
-                b. Then if no record find the ToCondition for To(toStateType)
-                c. If we don't find a record it might be worth logging a warning
-            2. Now we have a StateType to transfer to. Use the StateRegister to find the State
-            3. ChangeState like normal
-        */
+        outStateType = Unset;
         StateType fromStateType = stateMachine.currentState.stateType;
         
         /*
@@ -240,23 +252,26 @@ public class AtlasStateTransitions : StateTransition
             .GetValueOrDefault(fromStateType) // Can: List<StateType?>
             ?.Select<StateType?, (StateType stateType, Func<bool> cond)>(toStateType => {
                 if (toStateType.HasValue) {
+                    // Look first for a To().From() transition key
                     if (ToConditions.TryGetValue(To(toStateType.Value)
                                                     .From(fromStateType), out var toFrom)) {
                         return (toStateType.Value, toFrom);
                     }
+                    // If no special transition key just look for a To()
                     if (ToConditions.TryGetValue(To(toStateType.Value), out var to)) {
                         return (toStateType.Value, to);
                     }
                 }
+                // Return Unset if no Transitions
                 return (Unset, () => false);
             })
-            .Where(e => e.cond())
-            .Select(e => e.stateType)
-            .First()
+            .Where(e => e.cond()) // Only return currently active transitions
+            .Select(e => e.stateType) // Select the StateType from the tuple
+            .FirstOrDefault() // Grab the first active Transition
         ;
 
         if (canStateType.HasValue) {
-            to = stateRegistry.GetState(canStateType.Value);
+            outStateType = canStateType.Value;
             return !Equals(to, state);
         }
 

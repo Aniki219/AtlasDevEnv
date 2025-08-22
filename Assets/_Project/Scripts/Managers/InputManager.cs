@@ -124,8 +124,8 @@ public class InputManager : MonoBehaviour
     
     // Axis and movement queries
     public Vector2 GetAxis() => currentAxis;
-    public float GetAxisX() => currentAxis.x;
-    public float GetAxisY() => currentAxis.y;
+    public float X => currentAxis.x;
+    public float Y => currentAxis.y;
     
     public bool Forward() => 
         Mathf.Abs(currentAxis.x) > 0 && AtlasHelpers.SameSign(currentAxis.x, playerManger.GetPlayerFacing());

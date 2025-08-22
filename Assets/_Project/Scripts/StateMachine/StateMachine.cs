@@ -8,29 +8,21 @@ public class StateMachine : MonoBehaviour
 {
     [NotNull] public readonly SpriteController sprite;
     [NotNull] public readonly StateRegistry stateRegistry;
+    [NotNull] public readonly IStateTransition stateTransitions;
 
     [NotNull]
     public State currentState;
-    [NotNull]
-    public Transform anyState;
-
-    public List<State> states;
-    public List<StateBehavior> behaviors;
-    public List<StateTransition> transitions;
 
     void Start()
     {
-        states = GetComponentsInChildren<State>().ToList();
         loadStateComponents();
         StartState();
     }
 
     public void ChangeState(State newState)
     {
-        if (currentState.Equals(newState))
-        {
-            return;
-        }
+        if (!newState) return;
+        if (currentState.Equals(newState)) return;
 
         ExitState();
 
@@ -42,20 +34,18 @@ public class StateMachine : MonoBehaviour
 
     private void loadStateComponents()
     {
-        List<State> parentStates = getParentStates(currentState.transform.parent);
+        List<Transform> parents = getParents(currentState.transform.parent);
 
-        foreach (State state in states)
+        foreach (State state in stateRegistry.states)
         {
             bool isCurrentState = state.Equals(currentState);
-            bool isParentState = parentStates.Contains(state);
+            bool isParent = parents.Contains(state.transform);
 
-            state.gameObject.SetActive(isCurrentState || isParentState);
+            state.gameObject.SetActive(isCurrentState || isParent);
         }
-        behaviors = GetComponentsInChildren<StateBehavior>().ToList();
-        transitions = GetComponentsInChildren<StateTransition>().ToList();
     }
 
-    private List<State> getParentStates(Transform go)
+    private List<Transform> getParents(Transform go)
     {
         if (go == null)
         {
@@ -65,26 +55,19 @@ public class StateMachine : MonoBehaviour
         }
         if (go.GetComponent<StateMachine>())
         {
-            return new List<State>();
+            return new List<Transform>();
         }
         
-        var states = new List<State>
-        {
-            go.GetComponent<State>()
-        };
-        states.AddRange(getParentStates(go.parent));
+        var states = new List<Transform> { go };
+        states.AddRange(getParents(go.parent));
         return states;
     }
 
     private void checkTransitions()
     {
-        foreach (StateTransition transition in transitions)
-        {
-            if (transition.CheckCondition())
-            {
-                ChangeState(transition.ToState());
-                return;
-            }
+        if (stateTransitions.TryGetFirstActiveTransition(out var toStateType)) {
+            State toState = stateRegistry.GetState(toStateType);
+            ChangeState(toState);
         }
     }
 

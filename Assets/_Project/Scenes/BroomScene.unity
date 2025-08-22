@@ -983,9 +983,9 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
+    x: 0.083333336
     y: 0
-    width: 1
+    width: 0.8333334
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
@@ -3181,6 +3181,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerManger: {fileID: 1531373584}
+  doubleTapWindow: 0.3
 --- !u!1001 &1551863494
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4348,10 +4349,6 @@ PrefabInstance:
       propertyPath: playerManager
       value: 
       objectReference: {fileID: 1531373584}
-    - target: {fileID: 371519189568662977, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
-      propertyPath: roomBounds
-      value: 
-      objectReference: {fileID: 1976921711}
     - target: {fileID: 536989159156229736, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.65

@@ -1,7 +1,8 @@
 public enum StateType
 {
     Unset,
-    Bonk,
+
+#region Broom    
     su_Broom,
     CompleteLoop,
     PD_Falling,
@@ -20,25 +21,44 @@ public enum StateType
     UD_PURising,
     UD_Rising,
     BroomStart,
-    Crouch,
-    Dash,
+#endregion
+
+#region Attacks
+    UpAir,
     DownAir,
-    DownTilt,
-    Fall,
     FallingNair,
-    Hurt,
+    RisingNair,
+    UpTilt,
+    DownTilt,
     Jab1,
     Jab2,
     Jab3,
+#endregion
+
+#region Hurt
+    Hurt,
+    Bonk,
+#endregion
+    
+#region Jump
     Jump,
-    RisingNair,
-    Slide,
-    Slip,
     SpinJump,
-    UpAir,
-    UpTilt,
-    Wait,
-    Walk,
+    
+    #region WallJump
     WallJump,
     WallSlide,
+    #endregion
+#endregion
+
+#region Movement    
+    Fall,
+    Walk,
+    Crouch,
+    Slide,
+    Slip,
+#endregion
+
+    Dash,
+    
+    Wait,
 }

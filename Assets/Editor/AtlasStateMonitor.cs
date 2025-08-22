@@ -15,7 +15,7 @@ public class AtlasStateMonitor : EditorWindow
     private bool showStates = true;
     
     private List<GameObject> activeStateBehaviors = new List<GameObject>();
-    private List<GameObject> activeStateTransitions = new List<GameObject>();
+    private List<StateType> activeStateTransitions = new List<StateType>();
     private List<GameObject> activeStates = new List<GameObject>();
 
     [MenuItem("Tools/Atlas State Monitor")]
@@ -68,13 +68,16 @@ public class AtlasStateMonitor : EditorWindow
             .Select(stateComponent => stateComponent.gameObject)
             .ToList();
 
-        activeStateBehaviors = stateMachine.behaviors
+        activeStateBehaviors = stateMachine.GetComponentsInChildren<Behaviour>()
             .Select(beh => beh.gameObject)
             .ToList();
 
-        activeStateTransitions = stateMachine.transitions
-            .Select(tran => tran.gameObject)
+        AtlasStateTransitions stateTransitions = (AtlasStateTransitions) stateMachine.stateTransitions;
+        if (stateTransitions.CanTransitions.TryGetValue(stateMachine.currentState.stateType, out var cans)) {
+        activeStateTransitions = cans
+            .Select(c => c.Value)
             .ToList();
+        }
     }
 
     private void OnGUI()
@@ -171,14 +174,10 @@ public class AtlasStateMonitor : EditorWindow
             }
             else
             {
-                foreach (GameObject go in activeStateTransitions)
+                foreach (StateType stateType in activeStateTransitions)
                 {
                     EditorGUILayout.BeginHorizontal();
-                    EditorGUILayout.LabelField($"  • {go.name}");
-                    if (GUILayout.Button("Select", GUILayout.Width(60)))
-                    {
-                        Selection.activeGameObject = go;
-                    }
+                    EditorGUILayout.LabelField($"  • {stateType}");
                     EditorGUILayout.EndHorizontal();
                 }
             }
@@ -187,13 +186,5 @@ public class AtlasStateMonitor : EditorWindow
 
 
         EditorGUILayout.EndScrollView();
-
-        // // Refresh button
-        // EditorGUILayout.Space();
-        // if (GUILayout.Button("Force Refresh"))
-        // {
-        //     FindAtlasStateMachine();
-        //     UpdateActiveComponents();
-        // }
     }
 }

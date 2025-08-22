@@ -2,8 +2,7 @@ using UnityEngine;
 
 public interface IStateTransition
 {
-    public bool CheckCondition();
-    public State ToState();
+    public bool TryGetFirstActiveTransition(out StateType outStateType);
 }
 
 public abstract class StateTransition : MonoBehaviour, IStateTransition
@@ -33,23 +32,8 @@ public abstract class StateTransition : MonoBehaviour, IStateTransition
         stateRegistry = stateMachine.stateRegistry;
     }
 
-    public virtual bool CheckCondition()
+    public virtual bool TryGetFirstActiveTransition(out StateType outStateType)
     {
         throw new System.NotImplementedException();
-    }
-
-    public virtual State ToState()
-    {
-        return to;
-    }
-}
-
-public abstract class EventTransition : StateTransition
-{
-    protected bool activeThisFrame = false;
-
-    public override bool CheckCondition()
-    {
-        return activeThisFrame;
     }
 }

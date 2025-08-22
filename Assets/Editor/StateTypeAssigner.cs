@@ -27,6 +27,7 @@ public class StateTypeAssignerMenu
 
             if (!gameObjectName.StartsWith("st_"))
             {
+                Debug.Log($"state name does not start with st_ {gameObjectName}");
                 failed++;
                 continue;
             }
@@ -35,6 +36,7 @@ public class StateTypeAssignerMenu
 
             if (string.IsNullOrEmpty(stateNamePart))
             {
+                Debug.Log($"null state name for {gameObjectName}");
                 failed++;
                 continue;
             }
@@ -51,6 +53,7 @@ public class StateTypeAssignerMenu
             }
             else
             {
+                Debug.Log($"no matching enum for {gameObjectName}");
                 failed++;
             }
         }

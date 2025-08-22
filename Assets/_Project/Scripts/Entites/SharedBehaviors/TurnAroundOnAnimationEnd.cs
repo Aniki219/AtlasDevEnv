@@ -13,11 +13,11 @@ public class TurnAroundOnAnimEnd : StateBehavior
 {
     public void OnEnable()
     {
-        entity.OnAnimationEnd.AddListener(entity.TurnAround);
+        sprite.OnAnimationEnd.AddListener(entity.TurnAround);
     }
 
     public void OnDisable()
     {
-        entity.OnAnimationEnd.RemoveListener(entity.TurnAround);
+        sprite.OnAnimationEnd.RemoveListener(entity.TurnAround);
     }
 }
