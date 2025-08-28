@@ -2,21 +2,25 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class StateMachine : MonoBehaviour
 {
-    [NotNull] public readonly SpriteController sprite;
-    [NotNull] public readonly StateRegistry stateRegistry;
-    [NotNull] public readonly IStateTransition stateTransitions;
+    [NotNull] public SpriteController sprite;
+    [NotNull] public StateRegistry stateRegistry;
+    [NotNull] public StateTransition stateTransitions;
 
     [NotNull]
     public State currentState;
+    bool initialized = false;
 
-    void Start()
+    public async Task Init()
     {
-        loadStateComponents();
+        setActiveStateObjects();
+        await Task.Delay(10);
         StartState();
+        initialized = true;
     }
 
     public void ChangeState(State newState)
@@ -27,12 +31,12 @@ public class StateMachine : MonoBehaviour
         ExitState();
 
         currentState = newState;
-        loadStateComponents();
+        setActiveStateObjects();
 
         StartState();
     }
 
-    private void loadStateComponents()
+    private void setActiveStateObjects()
     {
         List<Transform> parents = getParents(currentState.transform.parent);
 
@@ -83,6 +87,8 @@ public class StateMachine : MonoBehaviour
 
     void Update()
     {
+        if (!initialized) return;
+
         foreach (IStateBehavior beh in GetComponentsInChildren<IStateBehavior>())
         {
             beh.UpdateState();
@@ -92,6 +98,8 @@ public class StateMachine : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!initialized) return;
+
         foreach (IStateBehavior beh in GetComponentsInChildren<IStateBehavior>())
         {
             beh.FixedUpdateState();

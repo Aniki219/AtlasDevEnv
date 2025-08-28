@@ -16,7 +16,7 @@ public abstract class StateBehavior : MonoBehaviour
     protected PlayerController pc;
     protected EntityBody body;
     protected SpriteController sprite;
-    protected InputManager input;
+    protected InputManager input => InputManager.Instance;
     protected State state;
     protected StateMachine stateMachine;
 
@@ -27,7 +27,6 @@ public abstract class StateBehavior : MonoBehaviour
         pc = entity as PlayerController;
         body = ctx.body;
         sprite = ctx.sprite;
-        input = ctx.input;
         state = GetComponentInParent<State>();
         stateMachine = ctx.stateMachine;
     }

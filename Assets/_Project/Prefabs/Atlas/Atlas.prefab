@@ -573,6 +573,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 847c8b9c13f9cdb468326ed3ec98dc6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprite: {fileID: 3828301854041668711}
+  stateRegistry: {fileID: 3748862766551484965}
+  stateTransitions: {fileID: 1902145736814402573}
   currentState: {fileID: 554771326814560057}
 --- !u!114 &3748862766551484965
 MonoBehaviour:
@@ -7300,8 +7303,6 @@ MonoBehaviour:
   <facing>k__BackingField: 1
   lastSafePosition: {x: 0, y: 0, z: 0}
   invulnerable: 0
-  gameManager: {fileID: 0}
-  playerManager: {fileID: 0}
 --- !u!114 &4796069149910330990
 MonoBehaviour:
   m_ObjectHideFlags: 0

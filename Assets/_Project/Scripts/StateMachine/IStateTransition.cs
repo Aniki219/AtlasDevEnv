@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using UnityEngine;
 
 public interface IStateTransition
@@ -19,7 +20,7 @@ public abstract class StateTransition : MonoBehaviour, IStateTransition
     protected StateMachine stateMachine;
     protected StateRegistry stateRegistry;
 
-    private void Awake()
+    public virtual Task Init()
     {
         ctx = GetComponentInParent<EntityContext>();
         entity = ctx.controller;
@@ -30,6 +31,8 @@ public abstract class StateTransition : MonoBehaviour, IStateTransition
         stateMachine = ctx.stateMachine;
         state = GetComponentInParent<State>();
         stateRegistry = stateMachine.stateRegistry;
+
+        return Task.CompletedTask;
     }
 
     public virtual bool TryGetFirstActiveTransition(out StateType outStateType)

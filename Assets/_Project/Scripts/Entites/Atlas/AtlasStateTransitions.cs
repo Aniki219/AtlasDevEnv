@@ -7,8 +7,9 @@ using Can = System.Collections.Generic.List<StateType?>;
 
 using static StateType;
 using bt = ButtonType;
+using System.Threading.Tasks;
 
-public class AtlasStateTransitions : StateTransition
+public class AtlasStateTransitions : StateTransition, IStateTransition
 {
     [SerializeField] float angleWrapCutoff;
     [SerializeField] float breakpointThreshold;
@@ -62,8 +63,9 @@ public class AtlasStateTransitions : StateTransition
         return input.Query(buttonType);
     }
 
-    public void Start()
+    public override async Task Init()
     {
+        await base.Init();
         ToConditions = new Dictionary<(StateType to, StateType? from), Func<bool>> {
             [To(Straight)]           = () => Mathf.Approximately(SinPitch, 0f),
 
@@ -228,7 +230,13 @@ public class AtlasStateTransitions : StateTransition
             [UpAir] = new Can { },
             [UpTilt] = new Can { },
             [Wait] = new Can { },
-            [Walk] = new Can { },
+            [Walk] = new Can { 
+                Jump,
+                Fall,
+                Crouch,
+                Jab1,
+                UpTilt,
+            },
             [WallJump] = new Can { },
             [WallSlide] = new Can { },
         };

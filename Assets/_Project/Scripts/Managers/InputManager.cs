@@ -1,19 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 using static ButtonType;
 
-public class InputManager : MonoBehaviour
+public class InputManager : MonoBehaviour, IGameManager
 {
     // Singleton instance
     public static InputManager Instance { get; private set; }
+    private PlayerController player => PlayerController.Instance;
     
     private InputMaster inputMaster;
-    private InputMaster.PlayerActions player;
-    
-    [SerializeField] private PlayerManger playerManger;
+    private InputMaster.PlayerActions playerActions;
     
     // Dictionary to store button information for each input type
     private Dictionary<ButtonType, ButtonInfo> buttonStates = new Dictionary<ButtonType, ButtonInfo>();
@@ -22,32 +22,34 @@ public class InputManager : MonoBehaviour
     private Vector2 previousAxis;
 
     [SerializeField] private float doubleTapWindow = 0.3f;
+    private bool initialized = false;
 
-    private void Awake()
+    public Task Init()
     {
         if (Instance != null && Instance != this)
         {
-            // If another InputManager already exists, destroy this duplicate
             Destroy(gameObject);
-            return;
         }
         
-        // Set this as the singleton instance and make it persist across scenes
         Instance = this;
-        DontDestroyOnLoad(gameObject);
         
         inputMaster = new InputMaster();
-        player = inputMaster.Player;
+        playerActions = inputMaster.Player;
         
         // Initialize all button states
         foreach (ButtonType buttonType in Enum.GetValues(typeof(ButtonType)))
         {
             buttonStates[buttonType] = new ButtonInfo();
         }
+
+        initialized = true;
+        OnEnable();
+        return Task.CompletedTask;
     }
 
     private void OnEnable()
     {
+        if (!initialized) return;
         inputMaster.Enable();
         
         foreach (var buttonName in Enum.GetNames(typeof(ButtonType)))
@@ -59,12 +61,13 @@ public class InputManager : MonoBehaviour
         }
         
         // Handle movement separately since it's not a discrete button
-        player.Movement.performed += ctx => currentAxis = ctx.ReadValue<Vector2>();
-        player.Movement.canceled += ctx => currentAxis = Vector2.zero;
+        playerActions.Movement.performed += ctx => currentAxis = ctx.ReadValue<Vector2>();
+        playerActions.Movement.canceled += ctx => currentAxis = Vector2.zero;
     }
 
     private void OnDisable()
     {
+        if (!initialized) return;
         // Allegedly handles unsubscribing from all events
         inputMaster.Disable();
 
@@ -75,6 +78,9 @@ public class InputManager : MonoBehaviour
             action.performed -= ctx => OnButtonPressed(buttonType);
             action.canceled -= ctx => OnButtonReleased(buttonType);
         }
+
+        playerActions.Movement.performed -= ctx => currentAxis = ctx.ReadValue<Vector2>();
+        playerActions.Movement.canceled -= ctx => currentAxis = Vector2.zero;
     }
 
     private void Update()
@@ -128,14 +134,14 @@ public class InputManager : MonoBehaviour
     public float Y => currentAxis.y;
     
     public bool Forward() => 
-        Mathf.Abs(currentAxis.x) > 0 && AtlasHelpers.SameSign(currentAxis.x, playerManger.GetPlayerFacing());
+        Mathf.Abs(currentAxis.x) > 0 && AtlasHelpers.SameSign(currentAxis.x, player.GetFacing());
         
     public bool Back() => 
-        Mathf.Abs(currentAxis.x) > 0 && !AtlasHelpers.SameSign(currentAxis.x, playerManger.GetPlayerFacing());
+        Mathf.Abs(currentAxis.x) > 0 && !AtlasHelpers.SameSign(currentAxis.x, player.GetFacing());
 
     public Tilt GetTilt()
     {
-        int playerFacing = playerManger.GetPlayerFacing();
+        int playerFacing = player.GetFacing();
 
         if (currentAxis.y != 0)
             return currentAxis.y > 0 ? Tilt.Up : Tilt.Down;
@@ -161,7 +167,9 @@ public static class ButtonTypeExtensions {
     public static InputQuery HeldFor(this ButtonType b, float duration) => Q(b).HeldFor(duration);
     
     private static InputQuery Q(this ButtonType buttonType) {
-        return InputManager.Instance.Query(buttonType);
+        var inputManager = InputManager.Instance;
+        if (!inputManager) return new InputQuery();
+        return inputManager.Query(buttonType);
     }
 }
 

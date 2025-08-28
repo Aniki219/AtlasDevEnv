@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 
 /*
@@ -16,10 +17,11 @@ public class StateRegistry : MonoBehaviour
 
     [SerializeField] public List<State> states => registry.Values.ToList();
     
-    private void Awake()
+    public async Task Init()
     {
         registry = new Dictionary<StateType, State>();
-        DiscoverAndRegisterStates();
+        await DiscoverAndRegisterStates();
+        await Task.Delay(10);
     }
 
     public State GetState(StateType stateType)
@@ -38,7 +40,7 @@ public class StateRegistry : MonoBehaviour
         return state;
     }
 
-    private void DiscoverAndRegisterStates()
+    private Task DiscoverAndRegisterStates()
     {
         var stateRegistrations = GetComponentsInChildren<State>()
         .Select<State, (string stateName, bool success)>((state) =>
@@ -63,6 +65,7 @@ public class StateRegistry : MonoBehaviour
                 $"Failed to register states: {failedStates}"
             );
         }
+        return Task.CompletedTask;
     }
 
     public bool RegisterState(State state)
