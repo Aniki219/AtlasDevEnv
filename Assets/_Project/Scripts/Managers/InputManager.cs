@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -16,7 +17,7 @@ public class InputManager : MonoBehaviour, IGameManager
     private InputMaster.PlayerActions playerActions;
     
     // Dictionary to store button information for each input type
-    private Dictionary<ButtonType, ButtonInfo> buttonStates = new Dictionary<ButtonType, ButtonInfo>();
+    public Dictionary<ButtonType, ButtonInfo> buttonStates = new Dictionary<ButtonType, ButtonInfo>();
     private Dictionary<ButtonType, InputAction> buttonToActionMap = new Dictionary<ButtonType, InputAction>();
     private Vector2 currentAxis;
     private Vector2 previousAxis;
@@ -24,15 +25,36 @@ public class InputManager : MonoBehaviour, IGameManager
     [SerializeField] private float doubleTapWindow = 0.3f;
     private bool initialized = false;
 
-    public Task Init()
+    private void Awake()
     {
         if (Instance != null && Instance != this)
         {
+            Debug.LogWarning("Multiple InputManager instances detected. Destroying duplicate.");
             Destroy(gameObject);
+            return;
         }
         
         Instance = this;
-        
+
+        foreach (ButtonType buttonType in Enum.GetValues(typeof(ButtonType)))
+        {
+            buttonStates[buttonType] = new ButtonInfo();
+        }
+
+        DontDestroyOnLoad(gameObject); // Ensure persistence across scenes
+    }
+
+    public Task Init()
+    {
+        if (Instance != this) {
+            return Instance.Init();
+        }
+
+        if (initialized)
+        {
+            return Task.CompletedTask;
+        }
+
         inputMaster = new InputMaster();
         playerActions = inputMaster.Player;
         
@@ -83,13 +105,12 @@ public class InputManager : MonoBehaviour, IGameManager
         playerActions.Movement.canceled -= ctx => currentAxis = Vector2.zero;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         UpdateButtonHoldTimes();
         previousAxis = currentAxis;
     }
 
-    // Event handlers for button state changes
     private void OnButtonPressed(ButtonType buttonType)
     {
         var info = buttonStates[buttonType];
@@ -117,7 +138,7 @@ public class InputManager : MonoBehaviour, IGameManager
 
     private void UpdateButtonHoldTimes()
     {
-        foreach (var (_, info) in buttonStates)
+        foreach (var (btn, info) in buttonStates)
         {
             info.wasPressedThisFrame = false;
             info.wasReleasedThisFrame = false;
@@ -168,7 +189,6 @@ public static class ButtonTypeExtensions {
     
     private static InputQuery Q(this ButtonType buttonType) {
         var inputManager = InputManager.Instance;
-        if (!inputManager) return new InputQuery();
         return inputManager.Query(buttonType);
     }
 }

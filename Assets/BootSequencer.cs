@@ -15,27 +15,38 @@ public class BootSequencer : MonoBehaviour
 
     private void Start()
     {
-        InitializeMetroidvaniaWorld();
+        Initialize();
     }
     
-    private async void InitializeMetroidvaniaWorld()
+    private async void Initialize()
     {
         await InstantiateManagers();
         await InstantiatePlayer();
 
         await InitializeManagers();
-        await InitializePlayer();
 
         await LoadGameWorld();
         await SetupInitialRoom();
 
+        await ActivatePlayer();
+        await InitializePlayer();
+
         await UnloadBootScene();
+    }
+
+    private async Task ActivatePlayer()
+    {
+        player.SetActive(true);
+        await Task.CompletedTask;
     }
 
     private async Task InstantiatePlayer()
     {
         var p = await InstantiateAsync(playerRef);
         player = p[0];
+        player.name = "Atlas";
+        player.SetActive(false);
+        DontDestroyOnLoad(player);
     }
 
     private async Task UnloadBootScene()
@@ -70,7 +81,7 @@ public class BootSequencer : MonoBehaviour
         */
         StateMachine stateMachine = player.GetComponentInChildren<StateMachine>();
         StateRegistry stateRegistry = stateMachine.GetComponent<StateRegistry>();
-        StateTransition stateTransition = stateMachine.GetComponent<StateTransition>();
+        AtlasStateTransitions stateTransition = stateMachine.GetComponent<AtlasStateTransitions>();
         /*
             Initialize State Repository
             Initialize Transitions
@@ -79,13 +90,17 @@ public class BootSequencer : MonoBehaviour
         await stateRegistry.Init();
         await stateTransition.Init();
         await stateMachine.Init();
+
         await Task.CompletedTask;
     }
 
     private async Task InstantiateManagers() {
         await Task.WhenAll(gameManagerRefs.Select(async gm => {
                 var go = await InstantiateAsync(gm);
-                return go[0];
+                GameObject manager = go[0];
+                manager.name = gm.name;
+                DontDestroyOnLoad(manager);
+                return manager;
             })
         );
     }

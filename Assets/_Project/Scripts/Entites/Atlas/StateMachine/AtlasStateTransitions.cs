@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-using Can = System.Collections.Generic.List<StateType?>;
+// using Can = System.Collections.Generic.List<StateType?>;
 
 using static StateType;
 using bt = ButtonType;
@@ -14,7 +14,7 @@ public class AtlasStateTransitions : StateTransition, IStateTransition
     [SerializeField] float angleWrapCutoff;
     [SerializeField] float breakpointThreshold;
 
-    public Dictionary<StateType, Can> CanTransitions { get; private set; }
+    public Dictionary<StateType, List<StateType>> CanTransitions { get; private set; }
     public Dictionary<(StateType to, StateType? from), Func<bool>> ToConditions { get; private set; }
 
     private State st_Broom => stateRegistry.GetState(Straight);
@@ -105,6 +105,8 @@ public class AtlasStateTransitions : StateTransition, IStateTransition
             [To(Fall)
                 .From(su_Broom)]     = () => bt.Broom.Pressed(),
 
+            [To(Jump)]               = () => bt.Jump.Pressed(),
+
             [To(Jab1)]               = () => bt.Attack.Pressed(),
             [To(Jab2)]               = () => bt.Attack.Pressed(),
             [To(Jab3)]               = () => bt.Attack.Pressed(),
@@ -116,135 +118,150 @@ public class AtlasStateTransitions : StateTransition, IStateTransition
             [To(RisingNair)]         = () => bt.Attack.Pressed()            && !body.IsGrounded(),
         };
 
-        CanTransitions = new Dictionary<StateType, Can>() {
-            [Straight] = new Can {
+        CanTransitions = new Dictionary<StateType, List<StateType>>() {
+            [Straight] = Can(
                 HoldBack,
                 PU_Rising,
                 PD_Falling
-            },
-            [PU_Rising] = new Can {
+            ),
+            [PU_Rising] = Can(
                 PU_Full,
                 PU_Falling,
-                PD_Falling,
-            },
-            [PU_Falling] = new Can {
+                PD_Falling
+            ),
+            [PU_Falling] = Can(
                 PU_Rising,
                 Straight,
-                PD_Falling,
-            },
-            [PD_Falling] = new Can {
+                PD_Falling
+            ),
+            [PD_Falling] = Can(
                 PD_HoldBack,
                 PD_Rising,
-                PU_Rising,
-            },
-            [PD_Rising] = new Can {
+                PU_Rising
+            ),
+            [PD_Rising] = Can(
                 PD_Falling,
                 Straight,
-                PU_Rising,
-            },
-            [PU_Full] = new Can {
+                PU_Rising
+            ),
+            [PU_Full] = Can(
                 UpsideDown,
-                PU_Falling,
-            },
-            [UpsideDown] = new Can {
+                PU_Falling
+            ),
+            [UpsideDown] = Can(
                 RollOver,
                 UD_PURising,
-                UD_Falling,
-            },
-            [UD_PURising] = new Can {
+                UD_Falling
+            ),
+            [UD_PURising] = Can(
                 UD_Falling,
                 UD_PUFalling,
-                PU_Full,
-            },
-            [UD_PUFalling] = new Can {
+                PU_Full
+            ),
+            [UD_PUFalling] = Can(
                 UD_Falling,
                 UpsideDown,
-                UD_PURising,
-            },
-            [UD_Falling] = new Can {
+                UD_PURising
+            ),
+            [UD_Falling] = Can(
                 UD_Rising,
                 UpsideDown,
-                CompleteLoop,
-            },
-            [UD_Rising] = new Can {
+                CompleteLoop
+            ),
+            [UD_Rising] = Can(
                 UpsideDown,
                 UD_PURising,
-                UD_Falling,
-            },
-            [CompleteLoop] = new Can {
-                PD_Rising,
-            },
-            [RollOver] = new Can {
+                UD_Falling
+            ),
+            [CompleteLoop] = Can(
+                PD_Rising
+            ),
+            [RollOver] = Can(
                 /* Transitions to Straight on AnimEnd */
-            },
-            [HoldBack] = new Can {
+            ),
+            [HoldBack] = Can(
                 TurnAround,
                 PD_HoldBack,
-                Straight,
-            },
-            [PD_HoldBack] = new Can {
+                Straight
+            ),
+            [PD_HoldBack] = Can(
                 HoldBack,
                 TurnAround,
                 PD_Falling,
-                PD_Rising,
-            },
-            [TurnAround] = new Can
-            {
-                OnAnimationEnd(Straight),
-            },
-            [Bonk] = new Can
-            { 
-                OnAnimationEnd(Fall),
-            },
-            [su_Broom] = new Can
-            {
+                PD_Rising
+            ),
+            [TurnAround] = Can(
+                OnAnimationEnd(Straight)
+            ),
+            [Bonk] = Can( 
+                OnAnimationEnd(Fall)
+            ),
+            [su_Broom] = Can(
                 /* Superstate Transitions */
                 Bonk,
-                OnInput(bt.Broom.Pressed(), Fall),
-                // OnInput(bt.Attack.Pressed(), GetAttackStateType()),
-                // OnInput(bt.Jump.Pressed(), GetAirJump()),
-            },
-            [BroomStart] = new Can
-            { 
-                OnAnimationEnd(Straight),
-            },
-            [Crouch] = new Can { },
-            [Dash] = new Can { },
-            [DownAir] = new Can { },
-            [DownTilt] = new Can { 
-                OnAnimationEnd(Crouch),
-            },
-            [Fall] = new Can {
-                Walk,
-            },
-            [FallingNair] = new Can { },
-            [Hurt] = new Can { },
-            [Jab1] = new Can { },
-            [Jab2] = new Can { },
-            [Jab3] = new Can { },
-            [Jump] = new Can { },
-            [RisingNair] = new Can { },
-            [Slide] = new Can { },
-            [Slip] = new Can { },
-            [SpinJump] = new Can { },
-            [UpAir] = new Can { },
-            [UpTilt] = new Can { },
-            [Wait] = new Can { },
-            [Walk] = new Can { 
+                Fall,
+                SuperStateTypes.ArialAttacks
+            ),
+            [BroomStart] = Can( 
+                OnAnimationEnd(Straight)
+            ),
+            [Crouch] = Can( ),
+            [Dash] = Can( ),
+            [DownAir] = Can( ),
+            [DownTilt] = Can( 
+                OnAnimationEnd(Crouch)
+            ),
+            [Fall] = Can(
+                Walk
+            ),
+            [FallingNair] = Can( ),
+            [Hurt] = Can( ),
+            [Jab1] = Can( ),
+            [Jab2] = Can( ),
+            [Jab3] = Can( ),
+            [Jump] = Can( ),
+            [RisingNair] = Can( ),
+            [Slide] = Can( ),
+            [Slip] = Can( ),
+            [SpinJump] = Can( ),
+            [UpAir] = Can( ),
+            [UpTilt] = Can( ),
+            [Wait] = Can( ),
+            [Walk] = Can( 
                 Jump,
                 Fall,
                 Crouch,
                 Jab1,
-                UpTilt,
-            },
-            [WallJump] = new Can { },
-            [WallSlide] = new Can { },
+                UpTilt
+            ),
+            [WallJump] = Can( ),
+            [WallSlide] = Can( ),
         };
+    }
+
+    private List<StateType> Can(params object[] items) {
+        var result = new List<StateType>();
+        
+        foreach (var item in items) {
+            // If it's a single StateType, add it directly
+            if (item is StateType single) {
+                result.Add(single);
+            }
+            // If it's a collection of StateTypes, add all of them
+            else if (item is IEnumerable<StateType> collection) {
+                result.AddRange(collection);
+            }
+        }
+        
+        return result;
     }
 
     public override bool TryGetFirstActiveTransition(out StateType outStateType)
     {
         outStateType = Unset;
+        if (bt.Jump.Pressed()) {
+            Debug.Log("Jump");
+        }
         StateType fromStateType = stateMachine.currentState.stateType;
         
         /*
@@ -258,17 +275,15 @@ public class AtlasStateTransitions : StateTransition, IStateTransition
         */
         StateType? canStateType = CanTransitions
             .GetValueOrDefault(fromStateType) // Can: List<StateType?>
-            ?.Select<StateType?, (StateType stateType, Func<bool> cond)>(toStateType => {
-                if (toStateType.HasValue) {
-                    // Look first for a To().From() transition key
-                    if (ToConditions.TryGetValue(To(toStateType.Value)
-                                                    .From(fromStateType), out var toFrom)) {
-                        return (toStateType.Value, toFrom);
-                    }
-                    // If no special transition key just look for a To()
-                    if (ToConditions.TryGetValue(To(toStateType.Value), out var to)) {
-                        return (toStateType.Value, to);
-                    }
+            ?.Select<StateType, (StateType stateType, Func<bool> cond)>(toStateType => {
+                // Look first for a To().From() transition key
+                if (ToConditions.TryGetValue(To(toStateType)
+                                                .From(fromStateType), out var toFrom)) {
+                    return (toStateType, toFrom);
+                }
+                // If no special transition key just look for a To()
+                if (ToConditions.TryGetValue(To(toStateType), out var to)) {
+                    return (toStateType, to);
                 }
                 // Return Unset if no Transitions
                 return (Unset, () => false);

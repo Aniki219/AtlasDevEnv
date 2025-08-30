@@ -1,3 +1,7 @@
+using static StateType;
+using System.Collections.Generic;
+using System;
+
 public enum StateType
 {
     Unset,
@@ -61,4 +65,19 @@ public enum StateType
     Dash,
     
     Wait,
+}
+
+public static class SuperStateTypes {
+    public static List<StateType> GroundAttacks = new List<StateType>() {
+        Jab1,
+        UpTilt,
+        DownTilt,
+    };
+
+    public static StateType[] ArialAttacks = new StateType[] {
+        FallingNair,
+        RisingNair,
+        UpAir,
+        DownAir
+    };
 }

@@ -74,9 +74,7 @@ public class AtlasStateMonitor : EditorWindow
 
         AtlasStateTransitions stateTransitions = (AtlasStateTransitions) stateMachine.stateTransitions;
         if (stateTransitions.CanTransitions.TryGetValue(stateMachine.currentState.stateType, out var cans)) {
-        activeStateTransitions = cans
-            .Select(c => c.Value)
-            .ToList();
+            activeStateTransitions = cans;
         }
     }
 

@@ -30,7 +30,7 @@ public class PlayerController : EntityController
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
+
         base.Awake();
     }
 
