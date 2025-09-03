@@ -16,8 +16,8 @@ public abstract class StateTransition : MonoBehaviour, IStateTransition
     protected EntityBody body;
     protected SpriteController sprite;
     protected InputManager input;
-    protected State state;
     protected StateMachine stateMachine;
+    protected State state => stateMachine ? stateMachine.currentState : null;
     protected StateRegistry stateRegistry;
 
     public virtual Task Init()
@@ -29,7 +29,6 @@ public abstract class StateTransition : MonoBehaviour, IStateTransition
         sprite = ctx.sprite;
         input = ctx.input;
         stateMachine = ctx.stateMachine;
-        state = GetComponentInParent<State>();
         stateRegistry = stateMachine.stateRegistry;
 
         return Task.CompletedTask;

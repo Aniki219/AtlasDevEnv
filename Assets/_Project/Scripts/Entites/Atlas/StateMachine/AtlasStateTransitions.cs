@@ -67,56 +67,68 @@ public class AtlasStateTransitions : StateTransition, IStateTransition
     {
         await base.Init();
 
-        ToConditions = new Dictionary<(StateType to, StateType? from), Func<bool>> {
-            [To(Straight)]           = () => Mathf.Approximately(SinPitch, 0f),
+        ToConditions = new Dictionary<(StateType to, StateType? from), Func<bool>>
+        {
+            [To(Straight)] = () => Mathf.Approximately(SinPitch, 0f),
 
-            [To(PU_Rising)]          = () => SinPitch >= 0 &&  Up,
-            [To(PU_Falling)]         = () => SinPitch >  0 && !Up,
-            [To(PD_Falling)]         = () => SinPitch <= 0 &&  Down && !Back,
-            [To(PD_Rising)]          = () => SinPitch <  0 && !Down,
-            [To(PU_Full)]            = () => SinPitch >= PitchBreakpoint(st_PU_Rising)  &&  Back && Up,
+            [To(PU_Rising)] = () => SinPitch >= 0 && Up,
+            [To(PU_Falling)] = () => SinPitch > 0 && !Up,
+            [To(PD_Falling)] = () => SinPitch <= 0 && Down && !Back,
+            [To(PD_Rising)] = () => SinPitch < 0 && !Down,
+            [To(PU_Full)] = () => SinPitch >= PitchBreakpoint(st_PU_Rising) && Back && Up,
             [To(PU_Full)
-                .From(UD_PURising)]  = () => SinPitch >= PitchBreakpoint(st_PU_Rising)  &&  Forward && Up,
+                .From(UD_PURising)] = () => SinPitch >= PitchBreakpoint(st_PU_Rising) && Forward && Up,
 
-            [To(UpsideDown)]         = () => SinPitch >= PitchBreakpoint(st_PU_Full)    &&  Back && !Up,
+            [To(UpsideDown)] = () => SinPitch >= PitchBreakpoint(st_PU_Full) && Back && !Up,
             [To(UpsideDown)
-                .From(UD_PUFalling)] = () => SinPitch >= PitchBreakpoint(st_PU_Full)    && !Up,
+                .From(UD_PUFalling)] = () => SinPitch >= PitchBreakpoint(st_PU_Full) && !Up,
             [To(UpsideDown)
-                .From(UD_Rising)]    = () => SinPitch >= PitchBreakpoint(st_PU_Full)    && !Up,
-            [To(UD_Falling)]         = () => SinPitch <= PitchBreakpoint(st_UpsideDown) &&  Down,
-            [To(UD_Rising)]          = () => SinPitch <  PitchBreakpoint(st_UpsideDown) && !Down,
-            [To(UD_PURising)]        = () => SinPitch >= PitchBreakpoint(st_UpsideDown) &&  Up,
-            [To(UD_PUFalling)]       = () => SinPitch >  PitchBreakpoint(st_UpsideDown) && !Up,
-            [To(CompleteLoop)]       = () => SinPitch <= PitchBreakpoint(st_UD_Falling) &&  Down && Forward,
-            [To(PD_HoldBack)]        = () => SinPitch < 0 && Back,
+                .From(UD_Rising)] = () => SinPitch >= PitchBreakpoint(st_PU_Full) && !Up,
+            [To(UD_Falling)] = () => SinPitch <= PitchBreakpoint(st_UpsideDown) && Down,
+            [To(UD_Rising)] = () => SinPitch < PitchBreakpoint(st_UpsideDown) && !Down,
+            [To(UD_PURising)] = () => SinPitch >= PitchBreakpoint(st_UpsideDown) && Up,
+            [To(UD_PUFalling)] = () => SinPitch > PitchBreakpoint(st_UpsideDown) && !Up,
+            [To(CompleteLoop)] = () => SinPitch <= PitchBreakpoint(st_UD_Falling) && Down && Forward,
+            [To(PD_HoldBack)] = () => SinPitch < 0 && Back,
 
             [To(PD_Rising)
                 .From(CompleteLoop)] = () => isPassedWrapAngle(),
 
-            [To(HoldBack)]           = () => Mathf.Approximately(SinPitch, 0f) && Back,
-            [To(HoldBack)]           = () => Mathf.Approximately(SinPitch, 0f) && Back,
-            [To(RollOver)]           = () => InStateForSeconds(2.0f),
-            [To(TurnAround)]         = () => InStateForSeconds(0.5f) && Back,
+            [To(HoldBack)] = () => Mathf.Approximately(SinPitch, 0f) && Back,
+            [To(HoldBack)] = () => Mathf.Approximately(SinPitch, 0f) && Back,
+            [To(RollOver)] = () => InStateForSeconds(2.0f),
+            [To(TurnAround)] = () => InStateForSeconds(0.5f) && Back,
             [To(TurnAround)
-                .From(PD_HoldBack)]  = () => InStateForSeconds(0.1f) && Back,
+                .From(PD_HoldBack)] = () => InStateForSeconds(0.1f) && Back,
             [To(Walk)
-                .From(Fall)]         = () => body.IsGrounded() && body.velocity.y <= 0,
+                .From(Fall)] = () => body.IsGrounded() && body.velocity.y <= 0,
 
-            [To(Fall)]               = () => !body.IsGrounded(),
+            [To(Fall)] = () => !body.IsGrounded() && body.velocity.y <= 0,
             [To(Fall)
-                .From(su_Broom)]     = () => bt.Broom.Pressed(),
+                .From(su_Broom)] = () => bt.Broom.Pressed(),
 
-            [To(Jump)]               = () => bt.Jump.Pressed(),
+            [To(Jump)] = () => bt.Jump.Pressed(),
 
-            [To(Jab1)]               = () => bt.Attack.Pressed(),
-            [To(Jab2)]               = () => bt.Attack.Pressed(),
-            [To(Jab3)]               = () => bt.Attack.Pressed(),
-            [To(UpTilt)]             = () => bt.Attack.UpTilt()  .Pressed(),
-            [To(DownTilt)]           = () => bt.Attack.DownTilt().Pressed(),
-            [To(UpAir)]              = () => bt.Attack.UpTilt()  .Pressed() && !body.IsGrounded(),
-            [To(DownAir)]            = () => bt.Attack.DownTilt().Pressed() && !body.IsGrounded(),
-            [To(FallingNair)]        = () => bt.Attack.Pressed()            && !body.IsGrounded(),
-            [To(RisingNair)]         = () => bt.Attack.Pressed()            && !body.IsGrounded(),
+            [To(Jab1)] = () => bt.Attack.Pressed(),
+            [To(Jab2)] = () => bt.Attack.Pressed(),
+            [To(Jab3)] = () => bt.Attack.Pressed(),
+            [To(UpTilt)] = () => bt.Attack.UpTilt().Pressed(),
+            [To(DownTilt)] = () => bt.Attack.DownTilt().Pressed(),
+            [To(UpAir)] = () => bt.Attack.UpTilt().Pressed() && !body.IsGrounded(),
+            [To(DownAir)] = () => bt.Attack.DownTilt().Pressed() && !body.IsGrounded(),
+            [To(FallingNair)] = () => bt.Attack.Pressed() && !body.IsGrounded(),
+            [To(RisingNair)] = () => bt.Attack.Pressed() && !body.IsGrounded(),
+
+            [To(Hurt)] = () => false,
+            [To(Bonk)] = () => false,
+            [To(SpinJump)] = () => false,
+            [To(WallJump)] = () => false,
+            [To(WallSlide)] = () => false,
+            [To(Crouch)] = () => false,
+            [To(Slide)] = () => false,
+            [To(Slip)] = () => false,
+            [To(Dash)] = () => false,
+            [To(Wait)] = () => false,
         };
 
         CanTransitions = new Dictionary<StateType, List<StateType>>() {
@@ -220,7 +232,7 @@ public class AtlasStateTransitions : StateTransition, IStateTransition
             [Jab1] = Can( ),
             [Jab2] = Can( ),
             [Jab3] = Can( ),
-            [Jump] = Can( ),
+            [Jump] = Can( Fall ),
             [RisingNair] = Can( ),
             [Slide] = Can( ),
             [Slip] = Can( ),
@@ -261,7 +273,6 @@ public class AtlasStateTransitions : StateTransition, IStateTransition
     {
         outStateType = Unset;
         StateType fromStateType = stateMachine.currentState.stateType;
-
         /*
             Our current state is the fromState. Get the Can from the fromState to recieve a
             List of toStates.
@@ -291,9 +302,11 @@ public class AtlasStateTransitions : StateTransition, IStateTransition
             .FirstOrDefault() // Grab the first active Transition
         ;
 
-        if (canStateType.HasValue) {
+        if (canStateType.HasValue)
+        {
             outStateType = canStateType.Value;
-            return !Equals(to, state);
+            Debug.Log($"can state type has value: {canStateType.Value} | {canStateType.Value},{state}");
+            return !Equals(canStateType.Value, state);
         }
 
         return false;
