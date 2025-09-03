@@ -25,6 +25,7 @@ public class PlayerController : EntityController
     {
         if (Instance != null && Instance != this)
         {
+            Debug.LogWarning("PlayerController Instance already exists");
             Destroy(gameObject);
             return;
         }

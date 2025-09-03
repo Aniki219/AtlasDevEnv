@@ -13,7 +13,7 @@ public class StateMachine : MonoBehaviour
 
     [NotNull]
     public State currentState;
-    bool initialized = false;
+    public bool initialized { get; private set; } = false;
 
     public async Task Init()
     {

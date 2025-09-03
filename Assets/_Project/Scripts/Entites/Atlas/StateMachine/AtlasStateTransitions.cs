@@ -14,7 +14,7 @@ public class AtlasStateTransitions : StateTransition, IStateTransition
     [SerializeField] float angleWrapCutoff;
     [SerializeField] float breakpointThreshold;
 
-    public Dictionary<StateType, List<StateType>> CanTransitions { get; private set; }
+    public Dictionary<StateType, List<StateType>> CanTransitions;
     public Dictionary<(StateType to, StateType? from), Func<bool>> ToConditions { get; private set; }
 
     private State st_Broom => stateRegistry.GetState(Straight);
@@ -35,17 +35,17 @@ public class AtlasStateTransitions : StateTransition, IStateTransition
     public readonly struct StateTransitionBuilder
     {
         private readonly StateType _to;
-        
+
         public StateTransitionBuilder(StateType to)
         {
             _to = to;
         }
-        
+
         public (StateType, StateType?) From(StateType from)
         {
             return (_to, from);
         }
-        
+
         // Implicit conversion to tuple when no From() is called
         public static implicit operator (StateType, StateType?)(StateTransitionBuilder builder)
         {
@@ -66,6 +66,7 @@ public class AtlasStateTransitions : StateTransition, IStateTransition
     public override async Task Init()
     {
         await base.Init();
+
         ToConditions = new Dictionary<(StateType to, StateType? from), Func<bool>> {
             [To(Straight)]           = () => Mathf.Approximately(SinPitch, 0f),
 
@@ -252,18 +253,15 @@ public class AtlasStateTransitions : StateTransition, IStateTransition
                 result.AddRange(collection);
             }
         }
-        
+
         return result;
     }
 
     public override bool TryGetFirstActiveTransition(out StateType outStateType)
     {
         outStateType = Unset;
-        if (bt.Jump.Pressed()) {
-            Debug.Log("Jump");
-        }
         StateType fromStateType = stateMachine.currentState.stateType;
-        
+
         /*
             Our current state is the fromState. Get the Can from the fromState to recieve a
             List of toStates.

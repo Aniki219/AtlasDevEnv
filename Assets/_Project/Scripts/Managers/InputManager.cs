@@ -41,7 +41,7 @@ public class InputManager : MonoBehaviour, IGameManager
             buttonStates[buttonType] = new ButtonInfo();
         }
 
-        DontDestroyOnLoad(gameObject); // Ensure persistence across scenes
+        //DontDestroyOnLoad(gameObject); // Ensure persistence across scenes
     }
 
     public Task Init()
