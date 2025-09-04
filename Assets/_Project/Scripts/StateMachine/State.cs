@@ -9,6 +9,7 @@ public class State : MonoBehaviour
     public StateType stateType;
 
     private float startTime;
+    public bool isComplete = false;
 
     private void OnEnable()
     {
@@ -25,8 +26,18 @@ public class State : MonoBehaviour
         return Mathf.Clamp01(GetElapsedTime() / duration);
     }
 
+    public void MarkComplete()
+    {
+        isComplete = true;
+    }
+
     private void OnDisable()
     {
         startTime = 0;
+    }
+
+    public void OnExit()
+    {
+        isComplete = false;
     }
 }

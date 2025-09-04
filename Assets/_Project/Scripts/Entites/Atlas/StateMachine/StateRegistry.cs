@@ -27,6 +27,8 @@ public class StateRegistry : MonoBehaviour
     public State GetState(StateType stateType)
     {
         State state;
+        if (Equals(stateType, StateType.Unset)) return null;
+
         registry.TryGetValue(stateType, out state);
 
         if (!state)

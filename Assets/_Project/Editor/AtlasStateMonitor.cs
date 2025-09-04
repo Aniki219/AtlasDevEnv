@@ -16,7 +16,6 @@ public class AtlasStateMonitor : EditorWindow
     
     private List<GameObject> activeStateBehaviors = new List<GameObject>();
     private List<StateType> activeStateTransitions = new List<StateType>();
-    private List<StateType> trueConditions = new List<StateType>();
     private List<GameObject> activeStates = new List<GameObject>();
 
     [MenuItem("Tools/Atlas State Monitor")]
@@ -71,11 +70,10 @@ public class AtlasStateMonitor : EditorWindow
             .Select(beh => beh.gameObject)
             .ToList();
 
-        AtlasStateTransitions stateTransitions = (AtlasStateTransitions)stateMachine.stateTransitions;
-        activeStateTransitions = stateTransitions.CanTransitions[stateMachine.currentState.stateType].ToList();
-
-        trueConditions = activeStateTransitions
-            .Where(stateType => stateTransitions.ToConditions[(stateType, null)]())
+        AtlasTransitionManager stateTransitions = (AtlasTransitionManager)stateMachine.stateTransitions;
+        activeStateTransitions = stateTransitions
+            .CanTransitions[stateMachine.currentState.stateType]
+            .Select(st => st.Value())
             .ToList();
     }
 
@@ -107,6 +105,11 @@ public class AtlasStateMonitor : EditorWindow
 
         // Toggle sections
         EditorGUILayout.BeginHorizontal();
+        if (Application.isPlaying && GUILayout.Button("test"))
+        {
+            PlayerController.Instance.GetComponentInChildren<StateMachine>().stateTransitions.Init();
+        }
+        
         showStates = EditorGUILayout.Toggle("States", showStates);
         showStateBehaviors = EditorGUILayout.Toggle("StateBehaviors", showStateBehaviors);
         showStateTransitions = EditorGUILayout.Toggle("StateTransitions", showStateTransitions);
@@ -179,36 +182,9 @@ public class AtlasStateMonitor : EditorWindow
                     EditorGUILayout.LabelField($"  • {stateType}");
                     EditorGUILayout.EndHorizontal();
                 }
-                EditorGUILayout.Space();
-                foreach (StateType stateType in trueConditions)
-                {
-                    EditorGUILayout.BeginHorizontal();
-                    EditorGUILayout.LabelField($"  • {stateType}");
-                    EditorGUILayout.EndHorizontal();
-                }
             }
             EditorGUILayout.Space();
         }
-
-        if (showStateTransitions)
-        {
-            EditorGUILayout.LabelField($"True Conditions ({trueConditions.Count})", EditorStyles.boldLabel);
-            if (trueConditions.Count == 0)
-            {
-                EditorGUILayout.LabelField("  None found", EditorStyles.miniLabel);
-            }
-            else
-            {
-                foreach (StateType stateType in trueConditions)
-                {
-                    EditorGUILayout.BeginHorizontal();
-                    EditorGUILayout.LabelField($"  • {stateType}");
-                    EditorGUILayout.EndHorizontal();
-                }
-            }
-            EditorGUILayout.Space();
-        }
-
 
         EditorGUILayout.EndScrollView();
     }

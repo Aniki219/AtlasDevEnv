@@ -47,6 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: -8119383505577889395, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 3
+  isComplete: 0
 --- !u!1 &235942071964855635
 GameObject:
   m_ObjectHideFlags: 0
@@ -132,6 +133,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: -7813635296899823279, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 36
+  isComplete: 0
 --- !u!1 &274911413655015904
 GameObject:
   m_ObjectHideFlags: 0
@@ -257,6 +259,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: 8848956288371750351, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 23
+  isComplete: 0
 --- !u!114 &9087516169526926227
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -406,6 +409,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: 8507910840181929846, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 33
+  isComplete: 0
 --- !u!1 &801210810121739933
 GameObject:
   m_ObjectHideFlags: 0
@@ -452,6 +456,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: -8481183219922285483, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 28
+  isComplete: 0
 --- !u!1 &866407796266698135
 GameObject:
   m_ObjectHideFlags: 0
@@ -531,7 +536,7 @@ GameObject:
   - component: {fileID: 6467452079184131}
   - component: {fileID: 340695696707421245}
   - component: {fileID: 3748862766551484965}
-  - component: {fileID: 1902145736814402573}
+  - component: {fileID: 2252641164636352153}
   m_Layer: 0
   m_Name: StateMachine
   m_TagString: Untagged
@@ -575,7 +580,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sprite: {fileID: 3828301854041668711}
   stateRegistry: {fileID: 3748862766551484965}
-  stateTransitions: {fileID: 1902145736814402573}
+  stateTransitions: {fileID: 2252641164636352153}
   currentState: {fileID: 554771326814560057}
 --- !u!114 &3748862766551484965
 MonoBehaviour:
@@ -590,7 +595,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   throwOnMissingState: 0
---- !u!114 &1902145736814402573
+--- !u!114 &2252641164636352153
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -599,13 +604,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 941758202629080064}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f5a3b4e4abd6e943bd69962537165e7, type: 3}
+  m_Script: {fileID: 11500000, guid: 998dd02337594b944b721cd894468c72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   to: {fileID: 0}
-  angleWrapCutoff: 0
-  breakpointThreshold: 0
-  initialized: 0
+  angleWrapCutoff: 270
+  breakpointThreshold: 0.9
 --- !u!1 &1135304515499783985
 GameObject:
   m_ObjectHideFlags: 0
@@ -815,6 +819,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: 2823648563037337610, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 32
+  isComplete: 0
 --- !u!1 &1387192210080542107
 GameObject:
   m_ObjectHideFlags: 0
@@ -896,6 +901,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: 8521484726005130208, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 26
+  isComplete: 0
 --- !u!114 &4701569746863296945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -958,6 +964,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: 5466135108310439800, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 31
+  isComplete: 0
 --- !u!1 &2267504623524887830
 GameObject:
   m_ObjectHideFlags: 0
@@ -1051,6 +1058,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: -6302757567101595320, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 12
+  isComplete: 0
 --- !u!1 &2803880732275151661
 GameObject:
   m_ObjectHideFlags: 0
@@ -6130,6 +6138,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: -4703028185382212809, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 38
+  isComplete: 0
 --- !u!1 &3385473609415449643
 GameObject:
   m_ObjectHideFlags: 0
@@ -6178,6 +6187,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: 5539831331247536789, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 30
+  isComplete: 0
 --- !u!1 &3418749819258753717
 GameObject:
   m_ObjectHideFlags: 0
@@ -6224,6 +6234,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: 397166314450843912, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 20
+  isComplete: 0
 --- !u!1 &3424530473196467309
 GameObject:
   m_ObjectHideFlags: 0
@@ -6271,6 +6282,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: 7489151234708153709, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 9
+  isComplete: 0
 --- !u!1 &3426415453312937501
 GameObject:
   m_ObjectHideFlags: 0
@@ -6317,6 +6329,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: 3387261700586155531, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 39
+  isComplete: 0
 --- !u!1 &3569616656744503757
 GameObject:
   m_ObjectHideFlags: 0
@@ -6363,6 +6376,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: -3412118355008324347, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 22
+  isComplete: 0
 --- !u!1 &3640907048832877077
 GameObject:
   m_ObjectHideFlags: 0
@@ -6411,6 +6425,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: -7077972614687583268, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 18
+  isComplete: 0
 --- !u!114 &6793263352319160745
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6526,6 +6541,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: 1647971169402146592, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 11
+  isComplete: 0
 --- !u!1 &4138491765143730412
 GameObject:
   m_ObjectHideFlags: 0
@@ -6816,6 +6832,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: 1647971169402146592, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 5
+  isComplete: 0
 --- !u!1 &4747184891470418180
 GameObject:
   m_ObjectHideFlags: 0
@@ -6863,6 +6880,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: -8119383505577889395, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 2
+  isComplete: 0
 --- !u!1 &4967526242161612539
 GameObject:
   m_ObjectHideFlags: 0
@@ -6943,6 +6961,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: -8119383505577889395, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 13
+  isComplete: 0
 --- !u!1 &5125849128474034910
 GameObject:
   m_ObjectHideFlags: 0
@@ -7064,6 +7083,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: -8119383505577889395, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 15
+  isComplete: 0
 --- !u!1 &5626078625035288408
 GameObject:
   m_ObjectHideFlags: 0
@@ -7111,6 +7131,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: -1192840080986744117, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 37
+  isComplete: 0
 --- !u!1 &5671085240118911604
 GameObject:
   m_ObjectHideFlags: 0
@@ -7157,6 +7178,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: 0}
   stateType: 40
+  isComplete: 0
 --- !u!1 &6015542444137619061
 GameObject:
   m_ObjectHideFlags: 0
@@ -7204,6 +7226,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: 1647971169402146592, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 8
+  isComplete: 0
 --- !u!1 &6090342878814653837
 GameObject:
   m_ObjectHideFlags: 0
@@ -7251,6 +7274,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: 1647971169402146592, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 7
+  isComplete: 0
 --- !u!1 &6100663377661742451
 GameObject:
   m_ObjectHideFlags: 0
@@ -7447,6 +7471,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: 1660819827610714667, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 27
+  isComplete: 0
 --- !u!114 &7160670354275545676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7507,6 +7532,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: 955230141529268299, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 19
+  isComplete: 0
 --- !u!1 &6407196353549187985
 GameObject:
   m_ObjectHideFlags: 0
@@ -7554,6 +7580,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: 5917537482288442099, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 34
+  isComplete: 0
 --- !u!1 &7205105913742356909
 GameObject:
   m_ObjectHideFlags: 0
@@ -7601,6 +7628,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: 7486509777129800119, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 25
+  isComplete: 0
 --- !u!114 &7294665558266186242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7705,6 +7733,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: -7394926002100986739, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 21
+  isComplete: 0
 --- !u!1 &7811140237413016523
 GameObject:
   m_ObjectHideFlags: 0
@@ -7752,6 +7781,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: -1812974786618966211, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 10
+  isComplete: 0
 --- !u!1 &7904340072193247198
 GameObject:
   m_ObjectHideFlags: 0
@@ -7800,6 +7830,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: 0}
   stateType: 1
+  isComplete: 0
 --- !u!1 &7921158981114383528
 GameObject:
   m_ObjectHideFlags: 0
@@ -7893,6 +7924,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: -8481183219922285483, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 29
+  isComplete: 0
 --- !u!1 &8102616912663106510
 GameObject:
   m_ObjectHideFlags: 0
@@ -7940,6 +7972,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: -8119383505577889395, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 17
+  isComplete: 0
 --- !u!1 &8330290044284527532
 GameObject:
   m_ObjectHideFlags: 0
@@ -8020,6 +8053,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: -8119383505577889395, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 14
+  isComplete: 0
 --- !u!1 &8617545322643961335
 GameObject:
   m_ObjectHideFlags: 0
@@ -8067,6 +8101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: -1812974786618966211, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 6
+  isComplete: 0
 --- !u!1 &8787310077454892950
 GameObject:
   m_ObjectHideFlags: 0
@@ -8114,6 +8149,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: -1812974786618966211, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 4
+  isComplete: 0
 --- !u!1 &8934652333260152975
 GameObject:
   m_ObjectHideFlags: 0
@@ -8161,6 +8197,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: -8411195197158814327, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 24
+  isComplete: 0
 --- !u!114 &3450141486029626930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8222,6 +8259,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: -8119383505577889395, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 16
+  isComplete: 0
 --- !u!1 &9199665794109129039
 GameObject:
   m_ObjectHideFlags: 0
@@ -8270,6 +8308,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: -3100369314251171874, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 35
+  isComplete: 0
 --- !u!1001 &100448882754927298
 PrefabInstance:
   m_ObjectHideFlags: 0

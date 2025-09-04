@@ -91,7 +91,7 @@ public class BootSequencer : MonoBehaviour
         */
         StateMachine stateMachine = player.GetComponentInChildren<StateMachine>();
         StateRegistry stateRegistry = stateMachine.stateRegistry;
-        AtlasStateTransitions stateTransition = stateMachine.stateTransitions as AtlasStateTransitions;
+        AtlasTransitionManager stateTransition = stateMachine.stateTransitions as AtlasTransitionManager;
 
         /*
             Initialize State Repository

@@ -9,7 +9,7 @@ public class StateMachine : MonoBehaviour
 {
     [NotNull] public SpriteController sprite;
     [NotNull] public StateRegistry stateRegistry;
-    [NotNull] public StateTransition stateTransitions;
+    [NotNull] public StateTransitionManager stateTransitions;
 
     [NotNull]
     public State currentState;
@@ -112,6 +112,7 @@ public class StateMachine : MonoBehaviour
         {
             beh.ExitState();
         }
+        currentState.OnExit();
         sprite.ClearOverrideClip();
     }
     #endregion
