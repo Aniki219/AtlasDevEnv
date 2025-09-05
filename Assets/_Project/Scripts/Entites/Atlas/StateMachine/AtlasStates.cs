@@ -5,9 +5,10 @@ using System;
 public enum StateType
 {
     Unset,
+    su_Any,
 
-#region Broom    
-    su_Broom,
+    #region Broom  
+    su_Broom,  
     CompleteLoop,
     PD_Falling,
     PD_Rising,
@@ -25,9 +26,9 @@ public enum StateType
     UD_PURising,
     UD_Rising,
     BroomStart,
-#endregion
+    #endregion
 
-#region Attacks
+    #region Attacks
     UpAir,
     DownAir,
     FallingNair,
@@ -37,47 +38,37 @@ public enum StateType
     Jab1,
     Jab2,
     Jab3,
-#endregion
+    su_Attack,
+    su_ArialAttack,
+    su_GroundedAttack,
+    #endregion
 
-#region Hurt
+    #region Hurt
     Hurt,
     Bonk,
-#endregion
-    
-#region Jump
+    #endregion
+
+    #region Jump
+    su_Jump,
     Jump,
     SpinJump,
-    
+
     #region WallJump
     WallJump,
     WallSlide,
     #endregion
-#endregion
+    #endregion
 
-#region Movement    
+    #region Movement 
+    su_Movement,   
     Fall,
     Walk,
     Crouch,
     Slide,
     Slip,
-#endregion
+    #endregion
 
     Dash,
-    
+
     Wait,
-}
-
-public static class SuperStateTypes {
-    public static List<StateType> GroundAttacks = new List<StateType>() {
-        Jab1,
-        UpTilt,
-        DownTilt,
-    };
-
-    public static StateType[] ArialAttacks = new StateType[] {
-        FallingNair,
-        RisingNair,
-        UpAir,
-        DownAir
-    };
 }

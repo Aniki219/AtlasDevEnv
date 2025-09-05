@@ -27,7 +27,7 @@ public class StateTypeAssignerMenu
 
             if (!gameObjectName.StartsWith("st_"))
             {
-                Debug.Log($"state name does not start with st_ {gameObjectName}");
+                Debug.Log($"state name does not start with acceptable prefix {gameObjectName}");
                 failed++;
                 continue;
             }
@@ -44,7 +44,7 @@ public class StateTypeAssignerMenu
             string matchingEnumName = stateTypeNames.FirstOrDefault(name =>
                 string.Equals(name, stateNamePart, StringComparison.OrdinalIgnoreCase));
 
-            if (matchingEnumName != null && Enum.TryParse<StateType>(matchingEnumName, out StateType stateType))
+            if (matchingEnumName != null && Enum.TryParse(matchingEnumName, out StateType stateType))
             {
                 Undo.RecordObject(state, $"Set StateType for {gameObjectName}");
                 state.stateType = stateType;

@@ -16,6 +16,10 @@ public class BroomStartBehavior : StateBehavior, IStateBehavior
     {
         float t = state.GetNomalizedTime(state.stateAnimation.length);
         body.SetForwardVelocity(velocityProfile.Evaluate(t) * speed);
+        if (t >= 1)
+        {
+            state.MarkComplete();
+        }
     }
 
     public void FixedUpdateState() { }

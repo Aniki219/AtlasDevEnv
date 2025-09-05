@@ -25,9 +25,6 @@ using static StateTypeWrapper;
     StateTransition.TryGetFirstActiveTransition which will find the first transition
     condition that passes and return that StateType. So priority is ordered
     descendingly
-
-    SuperStateTypes allow us to group several StateTypes into a "super type" which is
-    just a bespoke array of StateTypes
 */
 public partial class AtlasTransitionManager
 {
@@ -77,12 +74,14 @@ public partial class AtlasTransitionManager
             [UD_PUFalling] = Can(
                 UD_Falling,
                 UpsideDown,
-                UD_PURising
+                UD_PURising,
+                UpsideDown
             ),
             [UD_Falling] = Can(
                 UD_Rising,
                 UpsideDown,
-                CompleteLoop
+                CompleteLoop,
+                UpsideDown
             ),
             [UD_Rising] = Can(
                 UpsideDown,
@@ -113,13 +112,17 @@ public partial class AtlasTransitionManager
                 OnAnimationEnd(Fall)
             ),
             [su_Broom] = Can(
-                /* Superstate Transitions */
                 Bonk,
-                Fall,
-                SuperStateTypes.ArialAttacks
+                Fall
+            ),
+            [su_Attack] = Can(
+                OnAnimationEnd(Walk)
+            ),
+            [su_Movement] = Can(
+                BroomStart
             ),
             [BroomStart] = Can(
-                OnAnimationEnd(Straight)
+                OnComplete(Straight)
             ),
             [Crouch] = Can(
                 Fall,
@@ -162,12 +165,16 @@ public partial class AtlasTransitionManager
                 UpTilt
             ),
             [WallJump] = Can(
-
+                OnComplete(Jump),
+                OnComplete(Fall)
             ),
             [WallSlide] = Can(
                 Fall,
                 WallJump
             ),
+            [su_Movement] = Can(
+                BroomStart
+            )
         };
     }
 }

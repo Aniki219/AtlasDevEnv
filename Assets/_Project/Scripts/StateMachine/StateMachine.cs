@@ -38,7 +38,7 @@ public class StateMachine : MonoBehaviour
 
     private void setActiveStateObjects()
     {
-        List<Transform> parents = getParents(currentState.transform.parent);
+        List<Transform> parents = GetStateParents(currentState.transform.parent);
 
         foreach (State state in stateRegistry.states)
         {
@@ -49,12 +49,12 @@ public class StateMachine : MonoBehaviour
         }
     }
 
-    private List<Transform> getParents(Transform go)
+    public static List<Transform> GetStateParents(Transform go)
     {
         if (go == null)
         {
             throw new Exception(
-                $"State {currentState.name} is not a child of a StateMachine"
+                $"State {go.name} is not a child of a StateMachine"
             );
         }
         if (go.GetComponent<StateMachine>())
@@ -63,7 +63,7 @@ public class StateMachine : MonoBehaviour
         }
         
         var states = new List<Transform> { go };
-        states.AddRange(getParents(go.parent));
+        states.AddRange(GetStateParents(go.parent));
         return states;
     }
 

@@ -34,7 +34,10 @@ public partial class AtlasTransitionManager
     {
         ToConditions = new Dictionary<(StateType to, StateType? from), Func<bool>>
         {
+            [To(BroomStart)] = () => bt.Broom.Pressed(),
             [To(Straight)] = () => Mathf.Approximately(SinPitch, 0f),
+            [To(Straight)
+                .From(HoldBack)] = () => Mathf.Approximately(SinPitch, 0f) && !Back,
 
             [To(PU_Rising)] = () => SinPitch >= 0 && Up,
             [To(PU_Falling)] = () => SinPitch > 0 && !Up,

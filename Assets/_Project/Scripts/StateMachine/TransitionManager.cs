@@ -56,36 +56,72 @@ public abstract class StateTransitionManager : MonoBehaviour
         return stateMachine.currentState.GetElapsedTime() > seconds;
     }
 
+    /*
+        Our current state is the fromState. 
+        We get the Cans from the fromState and its superstates. 
+        These are used as our toState values for trying the get a ToCondition
+        For each toState map this entry to
+            1. to(toState).from(fromState)
+            2. to(toState).from(fromSuper)
+            3. to(toState)
+            4. Unset
+        return true or false to indicate success
+        output the StateType or Unset if none found
+    */
     public bool TryGetFirstActiveTransition(out StateType outStateType)
     {
         outStateType = Unset;
-        StateType fromStateType = stateMachine.currentState.stateType;
-        /*
-            Our current state is the fromState. Get the Can from the fromState to recieve a
-            List of toStates.
-            For each toState map this entry to
-                1. to(toState).from(fromState)
-                2. to(toState)
-                3. null
-            Then get the first non-null result as a StateType?
-        */
-        StateType? canStateType = CanTransitions
-            .GetValueOrDefault(fromStateType) // Can: List<StateType?>
-            ?.Select<StateTypeWrapper, (StateType stateType, Func<bool> cond)>(toStateTypeWrapper =>
+        StateType baseState = stateMachine.currentState.stateType;
+        List<StateType> superStates = stateRegistry.GetSuperStates(baseState);
+
+        // All the Cans of the base state
+        List<StateTypeWrapper> baseTransitions = CanTransitions
+            .GetValueOrDefault(baseState) ?? new List<StateTypeWrapper>();
+
+        // All the Cans of the superstate
+        List<StateTypeWrapper> superTransitions = superStates
+            .SelectMany(
+                superState =>
+                {
+                    var output = CanTransitions
+                        .GetValueOrDefault(superState) ?? new List<StateTypeWrapper>();
+                    return output;
+                }
+            )
+            .ToList();
+
+        // All Cans of base and super states
+        var availableTransitions = baseTransitions.Concat(superTransitions);
+
+        StateType firstActiveTransition = availableTransitions
+            .Select<StateTypeWrapper, (StateType stateType, Func<bool> cond)>(baseStateTypeWrapper =>
             {
-                var toStateType = toStateTypeWrapper.Value();
-                // Look first for a To().From() transition key
-                if (ToConditions.TryGetValue(To(toStateType)
-                                                .From(fromStateType), out var toFrom))
+                var can = baseStateTypeWrapper.Value();
+
+                // 1. Look first for a To().From(baseState) transition key
+                if (ToConditions.TryGetValue(To(can)
+                                                .From(baseState), out var toFrom))
                 {
-                    return (toStateType, toFrom);
+                    return (can, toFrom);
                 }
-                // If no special transition key just look for a To()
-                if (ToConditions.TryGetValue(To(toStateType), out var to))
+
+                // 2. Then look for a To().From(superState) transition key
+                foreach (StateType superState in superStates)
                 {
-                    return (toStateType, to);
+                    if (ToConditions.TryGetValue(To(can)
+                                                    .From(superState), out var toSuperFrom))
+                    {
+                        return (can, toSuperFrom);
+                    }
                 }
-                // Return Unset if no Transitions
+
+                // 3. If no special-case transition key just look for a To()
+                if (ToConditions.TryGetValue(To(can), out var to))
+                {
+                    return (can, to);
+                }
+                
+                // 4. Return Unset if no Transitions
                 return (Unset, () => false);
             })
             .Where(e => e.cond()) // Only return currently active transitions
@@ -93,10 +129,10 @@ public abstract class StateTransitionManager : MonoBehaviour
             .FirstOrDefault() // Grab the first active Transition
         ;
 
-        if (canStateType.HasValue && canStateType.Value != Unset)
+        if (firstActiveTransition != Unset)
         {
-            outStateType = canStateType.Value;
-            return !Equals(canStateType.Value, state);
+            outStateType = firstActiveTransition;
+            return !Equals(firstActiveTransition, state?.stateType);
         }
 
         return false;

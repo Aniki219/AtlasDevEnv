@@ -1,0 +1,167 @@
+@startuml
+!theme plain
+
+state Straight
+state HoldBack
+state PU_Rising
+state PD_Falling
+state PU_Falling
+state PD_Rising
+state PU_Full
+state UpsideDown
+state UD_PURising
+state UD_PUFalling
+state UD_Falling
+state UD_Rising
+state CompleteLoop
+state RollOver
+state PD_HoldBack
+state TurnAround
+state Bonk
+state su_Broom
+state su_Attack
+state BroomStart
+state Crouch
+state Dash
+state DownAir
+state DownTilt
+state Fall
+state FallingNair
+state Hurt
+state Jab1
+state Jab2
+state Jab3
+state Jump
+state RisingNair
+state Slide
+state Slip
+state SpinJump
+state UpAir
+state UpTilt
+state Wait
+state Walk
+state WallJump
+state WallSlide
+
+' Straight transitions
+Straight --> HoldBack
+Straight --> PU_Rising
+Straight --> PD_Falling
+
+' PU_Rising transitions
+PU_Rising --> PU_Full
+PU_Rising --> PU_Falling
+PU_Rising --> PD_Falling
+
+' PU_Falling transitions
+PU_Falling --> PU_Rising
+PU_Falling --> Straight
+PU_Falling --> PD_Falling
+
+' PD_Falling transitions
+PD_Falling --> PD_HoldBack
+PD_Falling --> PD_Rising
+PD_Falling --> PU_Rising
+
+' PD_Rising transitions
+PD_Rising --> PD_Falling
+PD_Rising --> Straight
+PD_Rising --> PU_Rising
+
+' PU_Full transitions
+PU_Full --> UpsideDown
+PU_Full --> PU_Falling
+
+' UpsideDown transitions
+UpsideDown --> RollOver
+UpsideDown --> UD_PURising
+UpsideDown --> UD_Falling
+
+' UD_PURising transitions
+UD_PURising --> UD_Falling
+UD_PURising --> UD_PUFalling
+UD_PURising --> PU_Full
+
+' UD_PUFalling transitions
+UD_PUFalling --> UD_Falling
+UD_PUFalling --> UpsideDown
+UD_PUFalling --> UD_PURising
+
+' UD_Falling transitions
+UD_Falling --> UD_Rising
+UD_Falling --> UpsideDown
+UD_Falling --> CompleteLoop
+
+' UD_Rising transitions
+UD_Rising --> UpsideDown
+UD_Rising --> UD_PURising
+UD_Rising --> UD_Falling
+
+' CompleteLoop transitions
+CompleteLoop --> PD_Rising
+
+' RollOver transitions (OnAnimationEnd)
+RollOver --> Straight : OnAnimationEnd
+
+' HoldBack transitions
+HoldBack --> TurnAround
+HoldBack --> PD_HoldBack
+HoldBack --> Straight
+
+' PD_HoldBack transitions
+PD_HoldBack --> HoldBack
+PD_HoldBack --> TurnAround
+PD_HoldBack --> PD_Falling
+PD_HoldBack --> PD_Rising
+
+' TurnAround transitions (OnAnimationEnd)
+TurnAround --> Straight : OnAnimationEnd
+
+' Bonk transitions (OnAnimationEnd)
+Bonk --> Fall : OnAnimationEnd
+
+' su_Broom transitions
+su_Broom --> Bonk
+su_Broom --> Fall
+
+' su_Attack transitions (OnAnimationEnd)
+su_Attack --> Walk : OnAnimationEnd
+
+' BroomStart transitions (OnAnimationEnd)
+BroomStart --> Straight : OnAnimationEnd
+
+' Crouch transitions
+Crouch --> Fall
+Crouch --> Walk
+Crouch --> Slide
+Crouch --> DownTilt
+
+' DownTilt transitions (OnAnimationEnd)
+DownTilt --> Crouch : OnAnimationEnd
+
+' Fall transitions
+Fall --> Walk
+
+' Hurt transitions (OnAnimationEnd)
+Hurt --> Fall : OnAnimationEnd
+Hurt --> Walk : OnAnimationEnd
+
+' Jump transitions
+Jump --> Fall
+
+' Slide transitions (OnComplete)
+Slide --> Crouch : OnComplete
+Slide --> Walk : OnComplete
+
+' Walk transitions
+Walk --> Jump
+Walk --> Fall
+Walk --> Crouch
+Walk --> Jab1
+Walk --> UpTilt
+
+' WallSlide transitions
+WallSlide --> Fall
+WallSlide --> WallJump
+
+@enduml
