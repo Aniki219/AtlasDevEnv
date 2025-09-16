@@ -121,6 +121,8 @@ public class AtlasStateMonitor : EditorWindow
         // Display State components
         if (showStates)
         {
+            EditorGUILayout.LabelField($"Active State {stateMachine?.currentState?.name}", EditorStyles.boldLabel);
+            EditorGUILayout.Space();
             EditorGUILayout.LabelField($"Active State Components ({activeStates.Count})", EditorStyles.boldLabel);
             if (activeStates.Count == 0)
             {
@@ -137,6 +139,10 @@ public class AtlasStateMonitor : EditorWindow
                         Selection.activeGameObject = go;
                     }
                     EditorGUILayout.EndHorizontal();
+                    if (go.name == "st_su_Broom")
+                    {
+                        EditorGUILayout.LabelField($"SinPitch  • {(stateMachine.stateTransitions as AtlasTransitionManager).SinPitch}");
+                    }
                 }
             }
             EditorGUILayout.Space();

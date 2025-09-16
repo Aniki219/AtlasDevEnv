@@ -3,6 +3,7 @@ using UnityEngine;
 using static StateType;
 using bt = ButtonType;
 using System.Threading.Tasks;
+using System;
 
 /*
     This class is a Component on Atlas' StateMachine GameObject and is Initialized by
@@ -26,12 +27,12 @@ public partial class AtlasTransitionManager : StateTransitionManager
     private State st_PU_Rising => stateRegistry.GetState(PU_Rising);
     private State st_PU_Full => stateRegistry.GetState(PU_Full);
     private State st_UpsideDown => stateRegistry.GetState(UpsideDown);
-    private State st_UD_Falling => stateRegistry.GetState(UD_Falling);
+    private State st_UD_Falling => stateRegistry.GetState(UD_PDFalling);
 
     public BroomBehavior _bh_Broom;
     private BroomBehavior bh_Broom => _bh_Broom ??= st_Broom.GetComponentInChildren<BroomBehavior>();
 
-    private float SinPitch => Mathf.Sin(bh_Broom.pitchLerper.Value() * Mathf.Deg2Rad);
+    public float SinPitch => (float)Math.Round(Mathf.Sin(bh_Broom.pitchLerper.Value() * Mathf.Deg2Rad), 2);
     private bool Back => InputManager.Instance.Back();
     private bool Forward => InputManager.Instance.Forward();
     private bool Up => InputManager.Instance.Y > 0;
@@ -42,10 +43,6 @@ public partial class AtlasTransitionManager : StateTransitionManager
         await base.Init();
         InitializeToConditions();
         InitializeCanTransitions();
-    }
-
-    private void Update() {
-        Debug.Log($"sp: {Mathf.Sin(bh_Broom.pitchLerper.Value() * Mathf.Deg2Rad)} down: {Down} not back {!Back}");
     }
 
     // Helpers for use with ToConditions
@@ -81,7 +78,7 @@ public partial class AtlasTransitionManager : StateTransitionManager
         // Throw if not broom super state
         BroomTargetPitchBehavior comp = state.GetComponentInChildren<BroomTargetPitchBehavior>();
         if (!comp) return Mathf.Infinity;
-        return Mathf.Sin(comp.targetPitch * Mathf.Deg2Rad) * breakpointThreshold;
+        return (float)Math.Round(Math.Sin(comp.targetPitch * Mathf.Deg2Rad) * breakpointThreshold, 2);
     }
 }
 

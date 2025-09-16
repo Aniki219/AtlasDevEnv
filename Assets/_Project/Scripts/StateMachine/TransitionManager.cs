@@ -6,6 +6,7 @@ using static StateType;
 using static StateTransitionBuilder;
 using System.Collections.Generic;
 using System;
+using System.Reflection;
 
 public abstract class StateTransitionManager : MonoBehaviour
 {
@@ -48,7 +49,7 @@ public abstract class StateTransitionManager : MonoBehaviour
     */
     protected StateTypeWrapper OnComplete(StateType stateType)
     {
-        return new StateTypeWrapper(stateType, () => state.isComplete);
+        return new StateTypeWrapper(stateType, () => PlayerController.Instance.GetComponentInChildren<StateMachine>().currentState.isComplete);
     }
 
     protected bool InStateForSeconds(float seconds)
@@ -102,6 +103,7 @@ public abstract class StateTransitionManager : MonoBehaviour
                 if (ToConditions.TryGetValue(To(can)
                                                 .From(baseState), out var toFrom))
                 {
+                    Debug.Log("1");
                     return (can, toFrom);
                 }
 
@@ -111,6 +113,7 @@ public abstract class StateTransitionManager : MonoBehaviour
                     if (ToConditions.TryGetValue(To(can)
                                                     .From(superState), out var toSuperFrom))
                     {
+                        Debug.Log($"2 - {superState}");
                         return (can, toSuperFrom);
                     }
                 }
@@ -118,9 +121,10 @@ public abstract class StateTransitionManager : MonoBehaviour
                 // 3. If no special-case transition key just look for a To()
                 if (ToConditions.TryGetValue(To(can), out var to))
                 {
+                    Debug.Log($"3 to: {can} - cond: {to()} state: {stateMachine.stateTransitions.state.stateType} sm: {stateMachine.stateTransitions.state.isComplete}");
                     return (can, to);
                 }
-                
+                Debug.Log("4");
                 // 4. Return Unset if no Transitions
                 return (Unset, () => false);
             })
@@ -132,9 +136,10 @@ public abstract class StateTransitionManager : MonoBehaviour
         if (firstActiveTransition != Unset)
         {
             outStateType = firstActiveTransition;
+            Debug.Log("5");
             return !Equals(firstActiveTransition, state?.stateType);
         }
-
+Debug.Log("6");
         return false;
     }
 }

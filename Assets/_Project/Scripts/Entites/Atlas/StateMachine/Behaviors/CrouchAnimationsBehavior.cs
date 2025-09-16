@@ -25,5 +25,5 @@ public class CrouchAnimationsBehavior : StateBehavior, IStateBehavior
 
     public void FixedUpdateState() { }
 
-    public void ExitState() { }
+    public void ExitState(StateType toState) { }
 }

@@ -10,6 +10,7 @@ public class State : MonoBehaviour
 
     private float startTime;
     public bool isComplete = false;
+    public float pauseTransitionsUntil = 0;
 
     private void OnEnable()
     {
@@ -39,5 +40,10 @@ public class State : MonoBehaviour
     public void OnExit()
     {
         isComplete = false;
+    }
+
+    public bool isTransitionPaused()
+    {
+        return GetElapsedTime() < pauseTransitionsUntil;
     }
 }

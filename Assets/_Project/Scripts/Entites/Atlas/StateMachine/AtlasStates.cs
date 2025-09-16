@@ -21,10 +21,10 @@ public enum StateType
     HoldBack,
     TurnAround,
     UpsideDown,
-    UD_Falling,
+    UD_PDFalling,
+    UD_PDRising,
     UD_PUFalling,
     UD_PURising,
-    UD_Rising,
     BroomStart,
     #endregion
 
@@ -67,8 +67,6 @@ public enum StateType
     Slide,
     Slip,
     #endregion
-
-    Dash,
 
     Wait,
 }

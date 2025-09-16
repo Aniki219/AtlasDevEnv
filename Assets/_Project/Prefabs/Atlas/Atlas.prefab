@@ -48,6 +48,7 @@ MonoBehaviour:
   stateAnimation: {fileID: -8119383505577889395, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 4
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &235942071964855635
 GameObject:
   m_ObjectHideFlags: 0
@@ -101,6 +102,7 @@ MonoBehaviour:
   stateAnimation: {fileID: 0}
   stateType: 30
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &245050787562980157
 GameObject:
   m_ObjectHideFlags: 0
@@ -150,6 +152,7 @@ MonoBehaviour:
   stateAnimation: {fileID: -7813635296899823279, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 42
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &274911413655015904
 GameObject:
   m_ObjectHideFlags: 0
@@ -276,6 +279,7 @@ MonoBehaviour:
   stateAnimation: {fileID: 8848956288371750351, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 24
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!114 &9087516169526926227
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -426,6 +430,7 @@ MonoBehaviour:
   stateAnimation: {fileID: 8507910840181929846, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 38
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &801210810121739933
 GameObject:
   m_ObjectHideFlags: 0
@@ -473,6 +478,7 @@ MonoBehaviour:
   stateAnimation: {fileID: -8481183219922285483, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 32
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &866407796266698135
 GameObject:
   m_ObjectHideFlags: 0
@@ -541,6 +547,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  pauseTransitionTime: 0
 --- !u!1 &941758202629080064
 GameObject:
   m_ObjectHideFlags: 0
@@ -619,7 +626,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   to: {fileID: 0}
   angleWrapCutoff: 270
-  breakpointThreshold: 1
+  breakpointThreshold: 0.8
   _bh_Broom: {fileID: 0}
 --- !u!1 &1135304515499783985
 GameObject:
@@ -831,6 +838,7 @@ MonoBehaviour:
   stateAnimation: {fileID: 2823648563037337610, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 37
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &1387192210080542107
 GameObject:
   m_ObjectHideFlags: 0
@@ -881,6 +889,7 @@ MonoBehaviour:
   stateAnimation: {fileID: 0}
   stateType: 34
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &1738331671918353545
 GameObject:
   m_ObjectHideFlags: 0
@@ -929,6 +938,7 @@ MonoBehaviour:
   stateAnimation: {fileID: 8521484726005130208, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 27
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!114 &4701569746863296945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -992,6 +1002,7 @@ MonoBehaviour:
   stateAnimation: {fileID: 5466135108310439800, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 36
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &2267504623524887830
 GameObject:
   m_ObjectHideFlags: 0
@@ -1086,6 +1097,7 @@ MonoBehaviour:
   stateAnimation: {fileID: -6302757567101595320, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 13
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &2803880732275151661
 GameObject:
   m_ObjectHideFlags: 0
@@ -1138,6 +1150,7 @@ MonoBehaviour:
   stateAnimation: {fileID: 0}
   stateType: 31
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &2930436352398967197
 GameObject:
   m_ObjectHideFlags: 0
@@ -1221,7 +1234,6 @@ Transform:
   - {fileID: 3544562428076324896}
   - {fileID: 4325460411957168375}
   - {fileID: 5203210817377329010}
-  - {fileID: 39075122624677241}
   m_Father: {fileID: 2324372809153639761}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4299493946799837076
@@ -1239,6 +1251,7 @@ MonoBehaviour:
   stateAnimation: {fileID: 0}
   stateType: 39
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &3029869724498124356
 GameObject:
   m_ObjectHideFlags: 0
@@ -6198,6 +6211,7 @@ MonoBehaviour:
   stateAnimation: {fileID: -4703028185382212809, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 44
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &3385473609415449643
 GameObject:
   m_ObjectHideFlags: 0
@@ -6247,6 +6261,7 @@ MonoBehaviour:
   stateAnimation: {fileID: 5539831331247536789, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 35
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &3418749819258753717
 GameObject:
   m_ObjectHideFlags: 0
@@ -6294,6 +6309,7 @@ MonoBehaviour:
   stateAnimation: {fileID: 397166314450843912, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 21
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &3424530473196467309
 GameObject:
   m_ObjectHideFlags: 0
@@ -6342,53 +6358,7 @@ MonoBehaviour:
   stateAnimation: {fileID: 7489151234708153709, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 10
   isComplete: 0
---- !u!1 &3426415453312937501
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 39075122624677241}
-  - component: {fileID: 3766919360782702880}
-  m_Layer: 0
-  m_Name: st_Dash
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &39075122624677241
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3426415453312937501}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 8122663158254083812}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3766919360782702880
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3426415453312937501}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a51c3722e39b58246894269df838dbb5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stateAnimation: {fileID: 3387261700586155531, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
-  stateType: 45
-  isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &3569616656744503757
 GameObject:
   m_ObjectHideFlags: 0
@@ -6436,6 +6406,7 @@ MonoBehaviour:
   stateAnimation: {fileID: -3412118355008324347, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 23
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &3640907048832877077
 GameObject:
   m_ObjectHideFlags: 0
@@ -6485,6 +6456,7 @@ MonoBehaviour:
   stateAnimation: {fileID: -7077972614687583268, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 19
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!114 &6793263352319160745
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6601,6 +6573,7 @@ MonoBehaviour:
   stateAnimation: {fileID: 1647971169402146592, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 12
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &4138491765143730412
 GameObject:
   m_ObjectHideFlags: 0
@@ -6892,6 +6865,7 @@ MonoBehaviour:
   stateAnimation: {fileID: 1647971169402146592, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 6
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &4620217812089429861
 GameObject:
   m_ObjectHideFlags: 0
@@ -6948,6 +6922,7 @@ MonoBehaviour:
   stateAnimation: {fileID: 0}
   stateType: 1
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &4747184891470418180
 GameObject:
   m_ObjectHideFlags: 0
@@ -6996,6 +6971,7 @@ MonoBehaviour:
   stateAnimation: {fileID: -8119383505577889395, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 3
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &4967526242161612539
 GameObject:
   m_ObjectHideFlags: 0
@@ -7045,6 +7021,7 @@ MonoBehaviour:
   stateAnimation: {fileID: 0}
   stateType: 29
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &5096902509796960490
 GameObject:
   m_ObjectHideFlags: 0
@@ -7093,6 +7070,7 @@ MonoBehaviour:
   stateAnimation: {fileID: -8119383505577889395, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 14
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &5125849128474034910
 GameObject:
   m_ObjectHideFlags: 0
@@ -7213,8 +7191,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: -8119383505577889395, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
-  stateType: 16
+  stateType: 17
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &5626078625035288408
 GameObject:
   m_ObjectHideFlags: 0
@@ -7263,6 +7242,7 @@ MonoBehaviour:
   stateAnimation: {fileID: -1192840080986744117, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 43
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &5671085240118911604
 GameObject:
   m_ObjectHideFlags: 0
@@ -7308,8 +7288,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: 0}
-  stateType: 46
+  stateType: 45
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &6015542444137619061
 GameObject:
   m_ObjectHideFlags: 0
@@ -7358,6 +7339,7 @@ MonoBehaviour:
   stateAnimation: {fileID: 1647971169402146592, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 9
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &6090342878814653837
 GameObject:
   m_ObjectHideFlags: 0
@@ -7406,6 +7388,7 @@ MonoBehaviour:
   stateAnimation: {fileID: 1647971169402146592, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 8
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &6100663377661742451
 GameObject:
   m_ObjectHideFlags: 0
@@ -7603,6 +7586,7 @@ MonoBehaviour:
   stateAnimation: {fileID: 1660819827610714667, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 28
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!114 &7160670354275545676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7664,6 +7648,7 @@ MonoBehaviour:
   stateAnimation: {fileID: 955230141529268299, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 20
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &6407196353549187985
 GameObject:
   m_ObjectHideFlags: 0
@@ -7712,6 +7697,7 @@ MonoBehaviour:
   stateAnimation: {fileID: 5917537482288442099, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 40
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &6497026146296564215
 GameObject:
   m_ObjectHideFlags: 0
@@ -7806,6 +7792,7 @@ MonoBehaviour:
   stateAnimation: {fileID: 7486509777129800119, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 26
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!114 &7294665558266186242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7911,6 +7898,7 @@ MonoBehaviour:
   stateAnimation: {fileID: -7394926002100986739, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 22
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &7811140237413016523
 GameObject:
   m_ObjectHideFlags: 0
@@ -7959,6 +7947,7 @@ MonoBehaviour:
   stateAnimation: {fileID: -1812974786618966211, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 11
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &7904340072193247198
 GameObject:
   m_ObjectHideFlags: 0
@@ -8008,6 +7997,7 @@ MonoBehaviour:
   stateAnimation: {fileID: 0}
   stateType: 2
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &7921158981114383528
 GameObject:
   m_ObjectHideFlags: 0
@@ -8102,6 +8092,7 @@ MonoBehaviour:
   stateAnimation: {fileID: -8481183219922285483, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 33
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &8102616912663106510
 GameObject:
   m_ObjectHideFlags: 0
@@ -8113,7 +8104,7 @@ GameObject:
   - component: {fileID: 240352283435023122}
   - component: {fileID: 4156844626375996914}
   m_Layer: 0
-  m_Name: st_UD_Rising
+  m_Name: st_UD_PDRising
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8148,8 +8139,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: -8119383505577889395, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
-  stateType: 18
+  stateType: 16
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &8508525764640659057
 GameObject:
   m_ObjectHideFlags: 0
@@ -8161,7 +8153,7 @@ GameObject:
   - component: {fileID: 6669509433847290571}
   - component: {fileID: 184040141115162742}
   m_Layer: 0
-  m_Name: st_UD_Falling
+  m_Name: st_UD_PDFalling
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8198,6 +8190,7 @@ MonoBehaviour:
   stateAnimation: {fileID: -8119383505577889395, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 15
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &8617545322643961335
 GameObject:
   m_ObjectHideFlags: 0
@@ -8246,6 +8239,7 @@ MonoBehaviour:
   stateAnimation: {fileID: -1812974786618966211, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 7
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &8787310077454892950
 GameObject:
   m_ObjectHideFlags: 0
@@ -8294,6 +8288,7 @@ MonoBehaviour:
   stateAnimation: {fileID: -1812974786618966211, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 5
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &8934652333260152975
 GameObject:
   m_ObjectHideFlags: 0
@@ -8342,6 +8337,7 @@ MonoBehaviour:
   stateAnimation: {fileID: -8411195197158814327, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 25
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!114 &3450141486029626930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8402,8 +8398,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateAnimation: {fileID: -8119383505577889395, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
-  stateType: 17
+  stateType: 18
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1 &9199665794109129039
 GameObject:
   m_ObjectHideFlags: 0
@@ -8453,6 +8450,7 @@ MonoBehaviour:
   stateAnimation: {fileID: -3100369314251171874, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
   stateType: 41
   isComplete: 0
+  pauseTransitionsUntil: 0
 --- !u!1001 &100448882754927298
 PrefabInstance:
   m_ObjectHideFlags: 0

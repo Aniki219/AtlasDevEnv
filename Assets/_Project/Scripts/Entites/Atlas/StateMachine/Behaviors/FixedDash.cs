@@ -5,10 +5,12 @@ public class FixedDash : StateBehavior, IStateBehavior
 {
     [SerializeField] AnimationCurve velocityProfile;
     private float duration;
+    public float pauseTransitionTime = 0.25f;
 
     public void StartState()
     {
         duration = velocityProfile[velocityProfile.length - 1].time;
+        state.pauseTransitionsUntil = pauseTransitionTime;
         // sprite.CreateParticle(ParticleSystem.Dust);
     }
 
@@ -24,5 +26,5 @@ public class FixedDash : StateBehavior, IStateBehavior
 
     public void FixedUpdateState() { }
 
-    public void ExitState() { }
+    public void ExitState(StateType toState) { }
 }

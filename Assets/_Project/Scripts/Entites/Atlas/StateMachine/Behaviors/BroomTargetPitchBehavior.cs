@@ -7,7 +7,7 @@ public class BroomTargetPitchBehavior : StateBehavior, IStateBehavior
 
     [SerializeField] BroomBehavior broomBehaviorRef;
 
-    public void ExitState()
+    public void ExitState(StateType toState)
     {
     }
 

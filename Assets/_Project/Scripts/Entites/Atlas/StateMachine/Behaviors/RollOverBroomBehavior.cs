@@ -4,7 +4,7 @@ public class RollOverBroomBehavior : StateBehavior, IStateBehavior
 {
     public BroomBehavior broomBehavior;
 
-    public void ExitState() {}
+    public void ExitState(StateType toState) {}
 
     public void FixedUpdateState() {}
 

@@ -21,5 +21,5 @@ public class JumpBehavior : StateBehavior, IStateBehavior
 
     public void FixedUpdateState() { }
 
-    public void ExitState() { }
+    public void ExitState(StateType toState) { }
 }

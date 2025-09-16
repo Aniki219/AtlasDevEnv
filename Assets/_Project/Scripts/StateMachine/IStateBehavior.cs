@@ -6,7 +6,7 @@ public interface IStateBehavior
     public void StartState();
     public void UpdateState();
     public void FixedUpdateState();
-    public void ExitState();
+    public void ExitState(StateType toState);
 }
 
 public abstract class StateBehavior : MonoBehaviour

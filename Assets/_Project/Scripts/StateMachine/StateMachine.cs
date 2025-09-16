@@ -25,10 +25,13 @@ public class StateMachine : MonoBehaviour
 
     public void ChangeState(State newState)
     {
+        //Logging
+
         if (!newState) return;
+        if (Equals(newState.stateType, StateType.Unset)) return;
         if (currentState.Equals(newState)) return;
 
-        ExitState();
+        ExitState(newState.stateType);
 
         currentState = newState;
         setActiveStateObjects();
@@ -69,7 +72,14 @@ public class StateMachine : MonoBehaviour
 
     private void checkTransitions()
     {
-        if (stateTransitions.TryGetFirstActiveTransition(out var toStateType)) {
+        // TODO: We probably need some unavoidable transitions such as Hurt and Bonk
+        // Though there are still times those should not be allowed either, perhaps
+        // some kind of tiered system such as Pausible States and Unpausible States
+        // then the ability to prevfent transitions to even unpausable states during
+        // cutscenes etc
+        if (currentState.isTransitionPaused()) return;
+        if (stateTransitions.TryGetFirstActiveTransition(out var toStateType))
+        {
             State toState = stateRegistry.GetState(toStateType);
             ChangeState(toState);
         }
@@ -106,11 +116,13 @@ public class StateMachine : MonoBehaviour
         }
     }
 
-    void ExitState()
+    void ExitState(StateType toState)
     {
+        //Could be cool to log the toState here
+
         foreach (IStateBehavior beh in GetComponentsInChildren<IStateBehavior>())
         {
-            beh.ExitState();
+            beh.ExitState(toState);
         }
         currentState.OnExit();
         sprite.ClearOverrideClip();

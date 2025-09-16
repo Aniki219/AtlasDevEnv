@@ -107,8 +107,12 @@ public class BroomBehavior : StateBehavior, IStateBehavior
 
     }
 
-    public void ExitState()
+    public void ExitState(StateType toState)
     {
+        if (!toState.isA(stateMachine.stateRegistry, StateType.su_Broom))
+        {
+            pitchLerper = new RateLerper();
+        }
         spriteTransform.eulerAngles = Vector3.zero;
         body.canGravity = true;
     }

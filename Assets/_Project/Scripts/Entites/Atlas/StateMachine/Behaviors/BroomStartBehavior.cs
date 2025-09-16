@@ -24,7 +24,7 @@ public class BroomStartBehavior : StateBehavior, IStateBehavior
 
     public void FixedUpdateState() { }
 
-    public void ExitState()
+    public void ExitState(StateType toState)
     {
         sprite.transform.eulerAngles = Vector3.zero;
         broomBehavior.thrust = broomBehavior.initialThrust;

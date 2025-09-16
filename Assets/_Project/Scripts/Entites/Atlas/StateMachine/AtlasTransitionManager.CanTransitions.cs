@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using static StateType;
 using static StateTypeWrapper;
@@ -64,29 +65,27 @@ public partial class AtlasTransitionManager
             [UpsideDown] = Can(
                 RollOver,
                 UD_PURising,
-                UD_Falling
+                UD_PDFalling
             ),
             [UD_PURising] = Can(
-                UD_Falling,
+                UD_PDFalling,
                 UD_PUFalling,
                 PU_Full
             ),
             [UD_PUFalling] = Can(
-                UD_Falling,
+                UD_PDFalling,
                 UpsideDown,
-                UD_PURising,
-                UpsideDown
+                UD_PURising
             ),
-            [UD_Falling] = Can(
-                UD_Rising,
-                UpsideDown,
+            [UD_PDFalling] = Can(
+                UD_PDRising,
                 CompleteLoop,
                 UpsideDown
             ),
-            [UD_Rising] = Can(
+            [UD_PDRising] = Can(
                 UpsideDown,
                 UD_PURising,
-                UD_Falling
+                UD_PDFalling
             ),
             [CompleteLoop] = Can(
                 PD_Rising
@@ -112,13 +111,20 @@ public partial class AtlasTransitionManager
                 OnAnimationEnd(Fall)
             ),
             [su_Broom] = Can(
+                SelectAttack(),
                 Bonk,
                 Fall
             ),
             [su_Attack] = Can(
-                OnAnimationEnd(Walk)
+                OnAnimationEnd(Walk),
+                OnAnimationEnd(Fall)
             ),
             [su_Movement] = Can(
+                SelectAttack(),
+                BroomStart
+            ),
+            [su_Jump] = Can(
+                SelectAttack(),
                 BroomStart
             ),
             [BroomStart] = Can(
@@ -130,7 +136,6 @@ public partial class AtlasTransitionManager
                 Slide,
                 DownTilt
             ),
-            [Dash] = Can(),
             [DownAir] = Can(),
             [DownTilt] = Can(
                 OnAnimationEnd(Crouch)
@@ -149,20 +154,23 @@ public partial class AtlasTransitionManager
             [Jump] = Can(Fall),
             [RisingNair] = Can(),
             [Slide] = Can(
+                SpinJump,
                 OnComplete(Crouch),
                 OnComplete(Walk)
             ),
             [Slip] = Can(),
-            [SpinJump] = Can(),
+            [SpinJump] = Can(
+                BroomStart,
+                OnAnimationEnd(Fall),
+                OnAnimationEnd(Walk)
+            ),
             [UpAir] = Can(),
             [UpTilt] = Can(),
             [Wait] = Can(),
             [Walk] = Can(
                 Jump,
                 Fall,
-                Crouch,
-                Jab1,
-                UpTilt
+                Crouch
             ),
             [WallJump] = Can(
                 OnComplete(Jump),
@@ -171,10 +179,12 @@ public partial class AtlasTransitionManager
             [WallSlide] = Can(
                 Fall,
                 WallJump
-            ),
-            [su_Movement] = Can(
-                BroomStart
             )
         };
+    }
+
+    public StateTypeWrapper SelectAttack()
+    {
+        return new AttackStateTypeWrapper();
     }
 }

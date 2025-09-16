@@ -34,8 +34,12 @@ public partial class AtlasTransitionManager
     {
         ToConditions = new Dictionary<(StateType to, StateType? from), Func<bool>>
         {
+            /* Broom */
             [To(BroomStart)] = () => bt.Broom.Pressed(),
-            [To(Straight)] = () => Mathf.Approximately(SinPitch, 0f),
+            [To(CompleteLoop)] = () => SinPitch <= PitchBreakpoint(st_UD_Falling) && Down && Forward,
+
+            /* Broom Pitch */
+            [To(Straight)] = () => { Debug.Log(SinPitch); return Mathf.Approximately(SinPitch, 0f); },
             [To(Straight)
                 .From(HoldBack)] = () => Mathf.Approximately(SinPitch, 0f) && !Back,
 
@@ -43,63 +47,73 @@ public partial class AtlasTransitionManager
             [To(PU_Falling)] = () => SinPitch > 0 && !Up,
             [To(PD_Falling)] = () => SinPitch <= 0 && Down && !Back,
             [To(PD_Rising)] = () => SinPitch < 0 && !Down,
+            [To(PD_Rising)
+                .From(CompleteLoop)] = () => isPassedWrapAngle(),
             [To(PU_Full)] = () => SinPitch >= PitchBreakpoint(st_PU_Rising) && Back && Up,
             [To(PU_Full)
                 .From(UD_PURising)] = () => SinPitch >= PitchBreakpoint(st_PU_Rising) && Forward && Up,
 
+            /* Broom Upside Down */
+            [To(RollOver)] = () => InStateForSeconds(2.0f),
+
             [To(UpsideDown)] = () => SinPitch >= PitchBreakpoint(st_PU_Full) && Back && !Up,
             [To(UpsideDown)
-                .From(UD_PUFalling)] = () => SinPitch >= PitchBreakpoint(st_PU_Full) && !Up,
+                .From(UD_PUFalling)] = () => SinPitch == 0 && !Up,
             [To(UpsideDown)
-                .From(UD_Rising)] = () => SinPitch >= PitchBreakpoint(st_PU_Full) && !Up,
-            [To(UD_Falling)] = () => SinPitch <= PitchBreakpoint(st_UpsideDown) && Down,
-            [To(UD_Rising)] = () => SinPitch < PitchBreakpoint(st_UpsideDown) && !Down,
+                .From(UD_PDRising)] = () => SinPitch == 0 && !Up,
+            [To(UD_PDFalling)] = () => SinPitch <= PitchBreakpoint(st_UpsideDown) && Down,
+            [To(UD_PDRising)] = () => SinPitch < PitchBreakpoint(st_UpsideDown) && !Down,
             [To(UD_PURising)] = () => SinPitch >= PitchBreakpoint(st_UpsideDown) && Up,
             [To(UD_PUFalling)] = () => SinPitch > PitchBreakpoint(st_UpsideDown) && !Up,
-            [To(CompleteLoop)] = () => SinPitch <= PitchBreakpoint(st_UD_Falling) && Down && Forward,
+
+            /* Broom Turn Around */
+            [To(HoldBack)] = () => Mathf.Approximately(SinPitch, 0f) && Back,
             [To(PD_HoldBack)] = () => SinPitch < 0 && Back,
-
-            [To(PD_Rising)
-                .From(CompleteLoop)] = () => isPassedWrapAngle(),
-
-            [To(HoldBack)] = () => Mathf.Approximately(SinPitch, 0f) && Back,
-            [To(HoldBack)] = () => Mathf.Approximately(SinPitch, 0f) && Back,
-            [To(RollOver)] = () => InStateForSeconds(2.0f),
             [To(TurnAround)] = () => InStateForSeconds(0.5f) && Back,
             [To(TurnAround)
                 .From(PD_HoldBack)] = () => InStateForSeconds(0.1f) && Back,
-            [To(Walk)] = () => body.IsGrounded(),
-            [To(Walk)
-                .From(Crouch)] = () => !bt.Down.Held(),
 
+            /* Movement */
             [To(Fall)] = () => !body.IsGrounded() && body.velocity.y <= 0,
             [To(Fall)
                 .From(su_Broom)] = () => bt.Broom.Pressed(),
             [To(Fall)
                 .From(WallSlide)] = () => !PushAgainstWall(),
 
-            [To(Jump)] = () => bt.Jump.Pressed(),
+            [To(Walk)] = () => body.IsGrounded(),
+            [To(Walk)
+                .From(Crouch)] = () => !bt.Down.Held(),
 
-            [To(Jab1)] = () => bt.Attack.Pressed(),
-            [To(Jab2)] = () => bt.Attack.Pressed(),
-            [To(Jab3)] = () => bt.Attack.Pressed(),
-            [To(UpTilt)] = () => bt.Attack.UpTilt().Pressed(),
-            [To(DownTilt)] = () => bt.Attack.DownTilt().Pressed(),
+            [To(Crouch)] = () => bt.Down.Held(),
+            [To(Slide)] = () => bt.Down.Held() && bt.Jump.Pressed(),
+
+            [To(Slip)] = () => false,
+
+            /* Jumps */
+            [To(Jump)] = () => bt.Jump.Pressed(),
+            [To(SpinJump)] = () => bt.Jump.Pressed(),
+            
+            [To(WallJump)] = () => bt.Jump.Pressed(),
+            [To(WallSlide)] = () => PushAgainstWall(),
+
+            /* Attacks */
+            [To(Jab1)] = () => bt.Attack.Pressed() && body.IsGrounded(),
+            [To(Jab2)] = () => bt.Attack.Pressed() && body.IsGrounded(),
+            [To(Jab3)] = () => bt.Attack.Pressed() && body.IsGrounded(),
+
+            [To(DownTilt)] = () => bt.Attack.DownTilt().Pressed() && body.IsGrounded(),
+            [To(UpTilt)] = () => bt.Attack.UpTilt().Pressed() && body.IsGrounded(),
+
             [To(UpAir)] = () => bt.Attack.UpTilt().Pressed() && !body.IsGrounded(),
             [To(DownAir)] = () => bt.Attack.DownTilt().Pressed() && !body.IsGrounded(),
             [To(FallingNair)] = () => bt.Attack.Pressed() && !body.IsGrounded(),
             [To(RisingNair)] = () => bt.Attack.Pressed() && !body.IsGrounded(),
 
+            /* Hurt */
             [To(Hurt)] = () => true,
             [To(Bonk)] = () => false,
-            [To(SpinJump)] = () => bt.Jump.Pressed(),
-            [To(WallJump)] = () => bt.Jump.Pressed(),
-            [To(WallSlide)] = () => PushAgainstWall(),
-            [To(Crouch)] = () => bt.Down.Held(),
 
-            [To(Slide)] = () => bt.Down.Held() && bt.Jump.Pressed(),
-            [To(Slip)] = () => false,
-            [To(Dash)] = () => false,
+            /* Wait */
             [To(Wait)] = () => false,
         };
     }

@@ -43,7 +43,7 @@ public class MoveBehavior : StateBehavior, IStateBehavior
         }
     }
 
-    public void ExitState()
+    public void ExitState(StateType toState)
     {
         body.OnBonkCeiling.RemoveListener(bonkCeilingListener);
     }

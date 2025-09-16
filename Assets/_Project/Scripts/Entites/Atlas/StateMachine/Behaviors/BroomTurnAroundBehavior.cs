@@ -32,7 +32,7 @@ public class BroomTurnAroundBehavior : StateBehavior, IStateBehavior
 
     public void FixedUpdateState() { }
 
-    public void ExitState()
+    public void ExitState(StateType toState)
     {
         broomBehavior.yAngle = 0;
         broomBehavior.pitchLerper = new RateLerper();

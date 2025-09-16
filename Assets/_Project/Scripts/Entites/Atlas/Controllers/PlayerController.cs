@@ -213,5 +213,10 @@ public class PlayerController : EntityController
     {
         return body.collisions.isGrounded();
     }
+
+    public Vector2 getVelocity()
+    {
+        return new Vector2(body.velocity.x, body.velocity.y);
+    }
     #endregion
 }
