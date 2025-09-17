@@ -112,9 +112,9 @@ public class BroomBehavior : StateBehavior, IStateBehavior
         if (!toState.isA(stateMachine.stateRegistry, StateType.su_Broom))
         {
             pitchLerper = new RateLerper();
+            spriteTransform.eulerAngles = Vector3.zero;
+            body.canGravity = true;
         }
-        spriteTransform.eulerAngles = Vector3.zero;
-        body.canGravity = true;
     }
 
     /*
@@ -124,7 +124,6 @@ public class BroomBehavior : StateBehavior, IStateBehavior
     private void SetSprite()
     {
         if (!pitchSpriteAngle) return;
-
         float sprAngle = (entity.facing > 0 ? 0 : 180) - Vector2.SignedAngle(body.velocity.normalized, Vector2.right);
 
         spriteTransform.eulerAngles = new Vector3(0, 0, sprAngle);

@@ -32,8 +32,6 @@ public class StateTypeWrapper
     //Get the StateType Wrapped by the class
     public virtual StateType Value()
     {
-
-        Debug.Log($"{PlayerController.Instance.GetComponentInChildren<StateMachine>().currentState.stateType}, {PlayerController.Instance.GetComponentInChildren<StateMachine>().currentState.isComplete}, cond: {condition()}, stateType: {stateType}");
         return condition() ? stateType : Unset;
     }
 

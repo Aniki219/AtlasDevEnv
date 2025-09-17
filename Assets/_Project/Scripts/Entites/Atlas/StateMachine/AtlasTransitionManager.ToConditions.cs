@@ -39,7 +39,7 @@ public partial class AtlasTransitionManager
             [To(CompleteLoop)] = () => SinPitch <= PitchBreakpoint(st_UD_Falling) && Down && Forward,
 
             /* Broom Pitch */
-            [To(Straight)] = () => { Debug.Log(SinPitch); return Mathf.Approximately(SinPitch, 0f); },
+            [To(Straight)] = () => Mathf.Approximately(SinPitch, 0f),
             [To(Straight)
                 .From(HoldBack)] = () => Mathf.Approximately(SinPitch, 0f) && !Back,
 
