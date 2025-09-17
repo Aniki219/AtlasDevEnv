@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
-using UnityEngine.Playables;
+using UnityEngine.Events;
 
 public class SpriteController : MonoBehaviour
 {
@@ -11,11 +11,15 @@ public class SpriteController : MonoBehaviour
 
     [SerializeField][NotNull] AnimationClip animClip;
     [SerializeField] AnimationClip animOverrideClip;
-    bool holdOverrideClip;
+    private bool holdOverrideClip;
+    private bool wasAnimEnd;
+
+    public readonly UnityEvent OnAnimationEnd = new UnityEvent();
 
     private void Update()
     {
         checkClearAnimOverride();
+        checkAnimEnd();
     }
 
     #region Animator
@@ -67,6 +71,25 @@ public class SpriteController : MonoBehaviour
                 ClearOverrideClip();
             }
         }
+    }
+
+    /*
+        Checks one for animation end using normalized time on the current clip.
+        Might be worth checking or returning information on whether this was an
+        override clip or not.
+
+        Also worth considering if this should ever invoke for looping animations.
+    */
+    private void checkAnimEnd()
+    {
+        bool isAnimEnd = GetNormalizedTime() >= 1;
+
+        if (!wasAnimEnd && isAnimEnd)
+        {
+            OnAnimationEnd?.Invoke();
+        }
+
+        wasAnimEnd = isAnimEnd;
     }
 
     public float GetNormalizedTime()

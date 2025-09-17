@@ -92,7 +92,7 @@ namespace DigitalRuby.AdvancedPolygonCollider
 
     [RequireComponent(typeof(PolygonCollider2D))]
     [RequireComponent(typeof(SpriteRenderer))]
-    [ExecuteInEditMode]
+    //[ExecuteInEditMode]
     public class AdvancedPolygonCollider : MonoBehaviour
     {
         [Serializable]

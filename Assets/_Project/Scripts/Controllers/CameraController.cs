@@ -35,6 +35,8 @@ public class CameraController : MonoBehaviour
         h = cam.orthographicSize;
         w = h * Screen.width / Screen.height;
 
+        target = PlayerController.Instance.GetComponentInChildren<EntityBody>();
+
         Vector3 to = target.transform.position;
         to.x = Mathf.Clamp(to.x, bounds.min.x + w, bounds.max.x - w);
         to.y = Mathf.Clamp(to.y, bounds.min.y + h, bounds.max.y - h);

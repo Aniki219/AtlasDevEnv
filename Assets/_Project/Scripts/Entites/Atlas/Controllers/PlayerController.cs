@@ -9,13 +9,10 @@ public class PlayerController : EntityController
     #region State
     //Could be in the Reset Behavior
     [HideInInspector] public Vector3 lastSafePosition;
-    [HideInInspector] public static bool created = false;
     public bool invulnerable = false;
     #endregion
 
-    [Header("Object References")]
-    public GameManager gameManager;
-    public PlayerManger playerManager;
+    public static PlayerController Instance;
 
     #region Unity functions
     public void Start()
@@ -26,14 +23,15 @@ public class PlayerController : EntityController
 
     public override void Awake()
     {
-        if (created)
+        if (Instance != null && Instance != this)
         {
-            Debug.Log("DESTROYED DUPLICATE ATLAS");
+            Debug.LogWarning("PlayerController Instance already exists");
             Destroy(gameObject);
+            return;
         }
-        created = true;
 
-        DontDestroyOnLoad(gameObject);
+        Instance = this;
+
         base.Awake();
     }
 
@@ -71,7 +69,7 @@ public class PlayerController : EntityController
         if (Input.GetKeyDown(KeyCode.F1))
         {
             body.debug = !body.debug;
-            playerManager.ShowStateDisplay(body.debug);
+            PlayerManager.Instance.ShowStateDisplay(body.debug);
             canvas.Shoutout("Debug " + (body.debug ? "On" : "Off"));
         }
 
@@ -214,6 +212,11 @@ public class PlayerController : EntityController
     public bool isGrounded()
     {
         return body.collisions.isGrounded();
+    }
+
+    public Vector2 getVelocity()
+    {
+        return new Vector2(body.velocity.x, body.velocity.y);
     }
     #endregion
 }

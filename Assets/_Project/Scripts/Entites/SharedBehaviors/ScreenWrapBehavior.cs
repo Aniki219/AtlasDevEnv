@@ -1,33 +1,40 @@
 using UnityEngine;
 
-public class ScreenWrapBehavior : MonoBehaviour, IStateBehavior
+public class ScreenWrapBehavior : StateBehavior, IStateBehavior
 {
     [SerializeField] BoxCollider2D roomBounds;
     [SerializeField] float offset = 0.25f;
+    Transform player;
 
-    public void StartState() { }
+    public void StartState()
+    {
+        roomBounds = GameObject.Find("RoomBounds")?.GetComponent<BoxCollider2D>();
+        player = PlayerController.Instance.transform;
+    }
 
     public void UpdateState()
     {
-        if (transform.root.position.y > roomBounds.bounds.max.y)
+        if (roomBounds == null) return;
+
+        if (player.position.y > roomBounds.bounds.max.y)
         {
-            transform.root.position = new Vector3(transform.root.position.x, roomBounds.bounds.min.y + offset, 0);
+            player.position = new Vector3(player.position.x, roomBounds.bounds.min.y + offset, 0);
         }
-        if (transform.root.position.y < roomBounds.bounds.min.y)
+        if (player.position.y < roomBounds.bounds.min.y)
         {
-            transform.root.position = new Vector3(transform.root.position.x, roomBounds.bounds.max.y - offset, 0);
+            player.position = new Vector3(player.position.x, roomBounds.bounds.max.y - offset, 0);
         }
-        if (transform.root.position.x > roomBounds.bounds.max.x)
+        if (player.position.x > roomBounds.bounds.max.x)
         {
-            transform.root.position = new Vector3(roomBounds.bounds.min.x + offset, transform.root.position.y, 0);
+            player.position = new Vector3(roomBounds.bounds.min.x + offset, player.position.y, 0);
         }
-        if (transform.root.position.x < roomBounds.bounds.min.x)
+        if (player.position.x < roomBounds.bounds.min.x)
         {
-            transform.root.position = new Vector3(roomBounds.bounds.max.x - offset, transform.root.position.y, 0);
+            player.position = new Vector3(roomBounds.bounds.max.x - offset, player.position.y, 0);
         }
     }
 
     public void FixedUpdateState() { }
 
-    public void ExitState() { }
+    public void ExitState(StateType toState) { }
 }

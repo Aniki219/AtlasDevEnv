@@ -2,88 +2,86 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class StateMachine : MonoBehaviour
 {
     [NotNull] public SpriteController sprite;
+    [NotNull] public StateRegistry stateRegistry;
+    [NotNull] public StateTransitionManager stateTransitions;
 
     [NotNull]
     public State currentState;
-    [NotNull]
-    public Transform anyState;
+    public bool initialized { get; private set; } = false;
 
-    public List<State> states;
-    public List<StateBehavior> behaviors;
-    public List<StateTransition> transitions;
-
-    void Start()
+    public async Task Init()
     {
-        states = GetComponentsInChildren<State>().ToList();
-        loadStateComponents();
+        setActiveStateObjects();
+        await Task.Delay(10);
         StartState();
+        initialized = true;
     }
 
     public void ChangeState(State newState)
     {
-        if (currentState.Equals(newState))
-        {
-            return;
-        }
+        //Logging
 
-        ExitState();
+        if (!newState) return;
+        if (Equals(newState.stateType, StateType.Unset)) return;
+        if (currentState.Equals(newState)) return;
+
+        ExitState(newState.stateType);
 
         currentState = newState;
-        loadStateComponents();
+        setActiveStateObjects();
 
         StartState();
     }
 
-    private void loadStateComponents()
+    private void setActiveStateObjects()
     {
-        List<State> parentStates = getParentStates(currentState.transform.parent);
+        List<Transform> parents = GetStateParents(currentState.transform.parent);
 
-        foreach (State state in states)
+        foreach (State state in stateRegistry.states)
         {
             bool isCurrentState = state.Equals(currentState);
-            bool isParentState = parentStates.Contains(state);
+            bool isParent = parents.Contains(state.transform);
 
-            state.gameObject.SetActive(isCurrentState || isParentState);
+            state.gameObject.SetActive(isCurrentState || isParent);
         }
-        behaviors = GetComponentsInChildren<StateBehavior>().ToList();
-        transitions = GetComponentsInChildren<StateTransition>().ToList();
     }
 
-    private List<State> getParentStates(Transform go)
+    public static List<Transform> GetStateParents(Transform go)
     {
         if (go == null)
         {
             throw new Exception(
-                $"State {currentState.name} is not a child of a StateMachine"
+                $"State {go.name} is not a child of a StateMachine"
             );
         }
         if (go.GetComponent<StateMachine>())
         {
-            return new List<State>();
+            return new List<Transform>();
         }
         
-        var states = new List<State>
-        {
-            go.GetComponent<State>()
-        };
-        states.AddRange(getParentStates(go.parent));
+        var states = new List<Transform> { go };
+        states.AddRange(GetStateParents(go.parent));
         return states;
     }
 
     private void checkTransitions()
     {
-        foreach (StateTransition transition in transitions)
+        // TODO: We probably need some unavoidable transitions such as Hurt and Bonk
+        // Though there are still times those should not be allowed either, perhaps
+        // some kind of tiered system such as Pausible States and Unpausible States
+        // then the ability to prevfent transitions to even unpausable states during
+        // cutscenes etc
+        if (currentState.isTransitionPaused()) return;
+        if (stateTransitions.TryGetFirstActiveTransition(out var toStateType))
         {
-            if (transition.CheckCondition())
-            {
-                ChangeState(transition.ToState());
-                return;
-            }
+            State toState = stateRegistry.GetState(toStateType);
+            ChangeState(toState);
         }
     }
 
@@ -99,6 +97,8 @@ public class StateMachine : MonoBehaviour
 
     void Update()
     {
+        if (!initialized) return;
+
         foreach (IStateBehavior beh in GetComponentsInChildren<IStateBehavior>())
         {
             beh.UpdateState();
@@ -108,18 +108,23 @@ public class StateMachine : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!initialized) return;
+
         foreach (IStateBehavior beh in GetComponentsInChildren<IStateBehavior>())
         {
             beh.FixedUpdateState();
         }
     }
 
-    void ExitState()
+    void ExitState(StateType toState)
     {
+        //Could be cool to log the toState here
+
         foreach (IStateBehavior beh in GetComponentsInChildren<IStateBehavior>())
         {
-            beh.ExitState();
+            beh.ExitState(toState);
         }
+        currentState.OnExit();
         sprite.ClearOverrideClip();
     }
     #endregion

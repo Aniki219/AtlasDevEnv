@@ -6,8 +6,11 @@ using UnityEngine.PlayerLoop;
 public class State : MonoBehaviour
 {
     public AnimationClip stateAnimation;
+    public StateType stateType;
 
     private float startTime;
+    public bool isComplete = false;
+    public float pauseTransitionsUntil = 0;
 
     private void OnEnable()
     {
@@ -24,8 +27,23 @@ public class State : MonoBehaviour
         return Mathf.Clamp01(GetElapsedTime() / duration);
     }
 
+    public void MarkComplete()
+    {
+        isComplete = true;
+    }
+
     private void OnDisable()
     {
         startTime = 0;
+    }
+
+    public void OnExit()
+    {
+        isComplete = false;
+    }
+
+    public bool isTransitionPaused()
+    {
+        return GetElapsedTime() < pauseTransitionsUntil;
     }
 }
