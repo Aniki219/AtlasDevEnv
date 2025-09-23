@@ -1,0 +1,36 @@
+{
+  "Rects": null,
+  "Def": {
+    "__cHei": 4,
+    "__cWid": 9,
+    "cachedPixelData": {
+      "opaqueTiles": "111110000111110000111010000111010000",
+      "averageColors": "f7d4f6c4f7d4f4b4f4b436b316c436c426c4f6c4f4b4f6c4f4b4f4b40000000027d437d4f7d4f6c4f7d487d4f4b4f5b468d400000000f5b4f5b4f4b487d4f4b4f5b468d400000000"
+    },
+    "customData": [
+      {
+        "data": "ur_ramp",
+        "tileId": 24
+      }
+    ],
+    "embedAtlas": null,
+    "enumTags": [
+
+    ],
+    "identifier": "Tl_grass",
+    "padding": 0,
+    "pxHei": 64,
+    "pxWid": 144,
+    "relPath": "../Art/Tilesets/tl_grass.png",
+    "savedSelections": [
+
+    ],
+    "spacing": 0,
+    "tags": [
+
+    ],
+    "tagsSourceEnumUid": null,
+    "tileGridSize": 16,
+    "uid": 1
+  }
+}

@@ -167,8 +167,9 @@ MonoBehaviour:
   - {fileID: 3536460015559274764, guid: ed40d5494533a2d4c91ed8dd0550b1a0, type: 3}
   - {fileID: 3243848079116004589, guid: ccfd613d949814d4d9709613774473d1, type: 3}
   - {fileID: 6903238996074734100, guid: 345bfc0568498e84584f14b87b2f722f, type: 3}
+  - {fileID: 6903238996074734100, guid: 85b573ef56013df4a8b51ff48f737b79, type: 3}
   playerRef: {fileID: 6100663377661742451, guid: ff454727343ab0944a5dd8cf8008ac32, type: 3}
-  baseSceneName: BroomScene
+  baseSceneName: Game
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

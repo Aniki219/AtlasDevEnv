@@ -31,7 +31,7 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         cam = GetComponent<Camera>();
-        bounds = GameObject.Find("RoomBounds").GetComponent<BoxCollider2D>().bounds;
+//        bounds = GameObject.Find("RoomBounds").GetComponent<BoxCollider2D>().bounds;
         h = cam.orthographicSize;
         w = h * Screen.width / Screen.height;
 

@@ -68,6 +68,15 @@ public class BootSequencer : MonoBehaviour
     private async Task SetupInitialRoom()
     {
         await SceneManager.LoadSceneAsync(baseSceneName, LoadSceneMode.Additive);
+        var levelManager = GetManager<LevelManager>();
+        if (levelManager.SetLevelObject(0, 0, out var level))
+        {
+            levelManager.InstantiateLevel(level);
+            Transform playerSpawnPoint = GameObject.FindGameObjectWithTag("PlayerSpawner")?.transform;
+            Debug.Log($"Set player position to {playerSpawnPoint.position}");
+            player.transform.position = playerSpawnPoint.position;
+            Destroy(playerSpawnPoint?.gameObject);
+        }
         await Task.CompletedTask;
     }
 

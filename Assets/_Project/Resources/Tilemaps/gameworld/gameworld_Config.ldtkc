@@ -1,0 +1,48 @@
+{
+    "PixelsPerUnit": 32,
+    "CustomLevelPrefab": {
+        "instanceID": 0
+    },
+    "IntGridValueColorsVisible": false,
+    "UseCompositeCollider": true,
+    "GeometryType": 0,
+    "CreateBackgroundColor": false,
+    "CreateLevelBoundsTrigger": true,
+    "UseParallax": true,
+    "IntGridValues": [
+        {
+            "_key": "IntGrid_1",
+            "_asset": {
+                "instanceID": 0
+            }
+        },
+        {
+            "_key": "IntGrid_2",
+            "_asset": {
+                "instanceID": 0
+            }
+        }
+    ],
+    "Entities": [
+        {
+            "_key": "Atlas",
+            "_asset": {
+                "fileID": 4134575331511561946,
+                "guid": "961d841354509854e9fc4e1430291ba8",
+                "type": 3
+            }
+        },
+        {
+            "_key": "DiveToad",
+            "_asset": {
+                "instanceID": 0
+            }
+        },
+        {
+            "_key": "SeedBomber",
+            "_asset": {
+                "instanceID": 0
+            }
+        }
+    ]
+}

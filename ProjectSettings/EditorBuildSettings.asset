@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Project/Scenes/BroomScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/_Project/Scenes/Game.unity
+    guid: 3a416d6e6a2f74b69bcf3ed3ad4d69d0
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 7ae72af655b0c9649a04454899e75ae4, type: 3}
   m_UseUCBPForAssetBundles: 0

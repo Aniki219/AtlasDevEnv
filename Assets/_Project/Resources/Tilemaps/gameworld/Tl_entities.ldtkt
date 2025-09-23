@@ -1,0 +1,52 @@
+{
+  "Rects": [
+    {
+      "x": 64,
+      "y": 0,
+      "w": 32,
+      "h": 32
+    },
+    {
+      "x": 0,
+      "y": 0,
+      "w": 32,
+      "h": 32
+    },
+    {
+      "x": 32,
+      "y": 0,
+      "w": 32,
+      "h": 32
+    }
+  ],
+  "Def": {
+    "__cHei": 5,
+    "__cWid": 5,
+    "cachedPixelData": {
+      "opaqueTiles": "0000000000000000000000000",
+      "averageColors": "3b8679966a660000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "customData": [
+
+    ],
+    "embedAtlas": null,
+    "enumTags": [
+
+    ],
+    "identifier": "Tl_entities",
+    "padding": 0,
+    "pxHei": 160,
+    "pxWid": 160,
+    "relPath": "../Art/Tilesets/tl_entities.png",
+    "savedSelections": [
+
+    ],
+    "spacing": 0,
+    "tags": [
+
+    ],
+    "tagsSourceEnumUid": null,
+    "tileGridSize": 32,
+    "uid": 56
+  }
+}
