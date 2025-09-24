@@ -101,7 +101,6 @@ public class StateRegistry : MonoBehaviour
             .Where(r => !r.success)
             .Select(r => r.stateName));
 
-        Debug.Log($"Registered {successful} states");
         if (failedStates.Length > 0)
         {
             AtlasHelpers.WarnOrThrow(

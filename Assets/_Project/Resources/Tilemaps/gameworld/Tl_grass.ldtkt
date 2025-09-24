@@ -21,7 +21,7 @@
     "padding": 0,
     "pxHei": 64,
     "pxWid": 144,
-    "relPath": "../Art/Tilesets/tl_grass.png",
+    "relPath": "../../Art/Tilesets/tl_grass.png",
     "savedSelections": [
 
     ],

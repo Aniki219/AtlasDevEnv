@@ -20,15 +20,10 @@ public class LevelManager : MonoBehaviour, IGameManager
 
     public bool SetLevelObject(int x, int y, out GameObject levelObject)
     {
-        Debug.Log("setting level object");
-        var levelResource = Resources.Load<GameObject>($"Tilemaps/gameworld/Level_{x}_{y}");
-        if (levelResource)
-        {
-            Debug.Log("loaded non null level resource");
-            levelObject = levelResource as GameObject;
-            return true;
-        }
-        levelObject = null;
+        levelObject = Resources.Load<GameObject>($"Tilemaps/gameworld/Level_{x}_{y}");
+
+        if (levelObject) return true;
+
         Debug.LogWarning($"Failed to load Level_{x}_{y}");
         return false;
     }

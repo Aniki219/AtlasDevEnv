@@ -24,7 +24,7 @@ ScriptedImporter:
       y: 128
       width: 32
       height: 32
-    spriteID: cfc03484762a6824384221255ef44a18
+    spriteID: 4dccc365edede804183905476518bcf1
     spriteOutline: []
     tessellationDetail: 0
   - name: Tl_entities_1
@@ -39,7 +39,7 @@ ScriptedImporter:
       y: 128
       width: 32
       height: 32
-    spriteID: a78af13d993490641982144e292d1c19
+    spriteID: 7a04564f218dadd4aa558edc1865108c
     spriteOutline: []
     tessellationDetail: 0
   - name: Tl_entities_2
@@ -54,7 +54,7 @@ ScriptedImporter:
       y: 128
       width: 32
       height: 32
-    spriteID: 84f85d77c0f4f9240b0de75beef62512
+    spriteID: c736b9c6123546d4690658e5f3ece222
     spriteOutline: []
     tessellationDetail: 0
   - name: Tl_entities_3
@@ -69,7 +69,7 @@ ScriptedImporter:
       y: 128
       width: 32
       height: 32
-    spriteID: 0f553dc9045e0214289163348dcb1b86
+    spriteID: be4d302b0f8c43f478a0094405b76669
     spriteOutline: []
     tessellationDetail: 0
   - name: Tl_entities_4
@@ -84,7 +84,7 @@ ScriptedImporter:
       y: 128
       width: 32
       height: 32
-    spriteID: fc63eab427b773144bb17de7a7a03ce9
+    spriteID: f4fa9b7ed85613f438ade00c193a1b98
     spriteOutline: []
     tessellationDetail: 0
   - name: Tl_entities_5
@@ -99,7 +99,7 @@ ScriptedImporter:
       y: 96
       width: 32
       height: 32
-    spriteID: 9c8e8656450b5c047b135cade354d95e
+    spriteID: 84e06e5ab4893de41a3f03fae3d52d38
     spriteOutline: []
     tessellationDetail: 0
   - name: Tl_entities_6
@@ -114,7 +114,7 @@ ScriptedImporter:
       y: 96
       width: 32
       height: 32
-    spriteID: b9496b48146d510448d31d9d4a5831e6
+    spriteID: 1161bac22f95aca4ca965c8424b5ea08
     spriteOutline: []
     tessellationDetail: 0
   - name: Tl_entities_7
@@ -129,7 +129,7 @@ ScriptedImporter:
       y: 96
       width: 32
       height: 32
-    spriteID: fb6444c7135bfd2418489ab093f39bea
+    spriteID: 757fa8fc384c6da44ab2f79c97a672ce
     spriteOutline: []
     tessellationDetail: 0
   - name: Tl_entities_8
@@ -144,7 +144,7 @@ ScriptedImporter:
       y: 96
       width: 32
       height: 32
-    spriteID: 1459e6b5eb1599a4f8052b98128ee78e
+    spriteID: 1a27f0d6cbfc0f74695572d8d9dc38c9
     spriteOutline: []
     tessellationDetail: 0
   - name: Tl_entities_9
@@ -159,7 +159,7 @@ ScriptedImporter:
       y: 96
       width: 32
       height: 32
-    spriteID: fc2a531f27051194194302763567374b
+    spriteID: 2d79f15fdcd88394facfdafe988d2ab8
     spriteOutline: []
     tessellationDetail: 0
   - name: Tl_entities_10
@@ -174,7 +174,7 @@ ScriptedImporter:
       y: 64
       width: 32
       height: 32
-    spriteID: 3f570aaaf1c1cd24f8ea04766ce3561f
+    spriteID: 676b503b3ec59304397c1c44916aa95e
     spriteOutline: []
     tessellationDetail: 0
   - name: Tl_entities_11
@@ -189,7 +189,7 @@ ScriptedImporter:
       y: 64
       width: 32
       height: 32
-    spriteID: 75183475ccaeda24e8e15476612aca89
+    spriteID: 59bfe9d5c47952a4a886399a3f3638be
     spriteOutline: []
     tessellationDetail: 0
   - name: Tl_entities_12
@@ -204,7 +204,7 @@ ScriptedImporter:
       y: 64
       width: 32
       height: 32
-    spriteID: 0edf1621717b6aa4fbe4f203dee49812
+    spriteID: 6f0d9ea329b9d2f4db9fead353657c32
     spriteOutline: []
     tessellationDetail: 0
   - name: Tl_entities_13
@@ -219,7 +219,7 @@ ScriptedImporter:
       y: 64
       width: 32
       height: 32
-    spriteID: c21b1b47661bf8e45bad043a937cac8d
+    spriteID: 1b841a73ef0e1d14ba38c0bb139f0d17
     spriteOutline: []
     tessellationDetail: 0
   - name: Tl_entities_14
@@ -234,7 +234,7 @@ ScriptedImporter:
       y: 64
       width: 32
       height: 32
-    spriteID: 51b72ac11b936dd40a9795947f1312f6
+    spriteID: 617baaf641ce2f34cbbbc0db66db7993
     spriteOutline: []
     tessellationDetail: 0
   - name: Tl_entities_15
@@ -249,7 +249,7 @@ ScriptedImporter:
       y: 32
       width: 32
       height: 32
-    spriteID: abd907ba830d0d642b650c8c3cf530da
+    spriteID: ae02a6d496c2c5d4bac09d9d4227ce5a
     spriteOutline: []
     tessellationDetail: 0
   - name: Tl_entities_16
@@ -264,7 +264,7 @@ ScriptedImporter:
       y: 32
       width: 32
       height: 32
-    spriteID: 3b385710998f0854faa517aa909c84cd
+    spriteID: bf390ba34c1bef74ebe9b30e62483d7e
     spriteOutline: []
     tessellationDetail: 0
   - name: Tl_entities_17
@@ -279,7 +279,7 @@ ScriptedImporter:
       y: 32
       width: 32
       height: 32
-    spriteID: 52a4481231f382e4e9e0484e319036bd
+    spriteID: 8b1cb1ef07f136e439e5bbadaf6a6411
     spriteOutline: []
     tessellationDetail: 0
   - name: Tl_entities_18
@@ -294,7 +294,7 @@ ScriptedImporter:
       y: 32
       width: 32
       height: 32
-    spriteID: d472b2a21d3ed6a4db682802b3e131ee
+    spriteID: c8f318ef8522be24791399cf08a60540
     spriteOutline: []
     tessellationDetail: 0
   - name: Tl_entities_19
@@ -309,7 +309,7 @@ ScriptedImporter:
       y: 32
       width: 32
       height: 32
-    spriteID: 7aa48329ced585d4f84211aed2dd98b5
+    spriteID: c84d132300142e54cbfa7b0aacc91329
     spriteOutline: []
     tessellationDetail: 0
   - name: Tl_entities_20
@@ -324,7 +324,7 @@ ScriptedImporter:
       y: 0
       width: 32
       height: 32
-    spriteID: 14ed72d33e65b294ebcae75456be6387
+    spriteID: bfd4450a17e24964b9b9d0880d857672
     spriteOutline: []
     tessellationDetail: 0
   - name: Tl_entities_21
@@ -339,7 +339,7 @@ ScriptedImporter:
       y: 0
       width: 32
       height: 32
-    spriteID: 325eb791ab718b34d825d370b19587fa
+    spriteID: 66203cea861aaf94d9299bd07d997cbd
     spriteOutline: []
     tessellationDetail: 0
   - name: Tl_entities_22
@@ -354,7 +354,7 @@ ScriptedImporter:
       y: 0
       width: 32
       height: 32
-    spriteID: 3e37462e5654be247b3793b39391bcd0
+    spriteID: c49d01aa4a4a08b4f9bf6955870b0243
     spriteOutline: []
     tessellationDetail: 0
   - name: Tl_entities_23
@@ -369,7 +369,7 @@ ScriptedImporter:
       y: 0
       width: 32
       height: 32
-    spriteID: 7eb125e74ce6952448e75a7f86e4a38e
+    spriteID: 44062980bc3ecb047af139064cfc8c09
     spriteOutline: []
     tessellationDetail: 0
   - name: Tl_entities_24
@@ -384,7 +384,7 @@ ScriptedImporter:
       y: 0
       width: 32
       height: 32
-    spriteID: cf3a148aa1c948a41abc485a5d81e9a5
+    spriteID: 3d203ac3ddfda4b4381d26466716eb1d
     spriteOutline: []
     tessellationDetail: 0
   _secondaryTextures: []

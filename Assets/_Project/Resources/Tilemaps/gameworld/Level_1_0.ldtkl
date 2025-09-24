@@ -63,7 +63,7 @@
 			"__pxTotalOffsetX": 0,
 			"__pxTotalOffsetY": 0,
 			"__tilesetDefUid": 1,
-			"__tilesetRelPath": "../Art/Tilesets/tl_grass.png",
+			"__tilesetRelPath": "../../Art/Tilesets/tl_grass.png",
 			"iid": "28f96901-8560-11f0-b8f4-4bf3d9fde68e",
 			"levelId": 61,
 			"layerDefUid": 4,

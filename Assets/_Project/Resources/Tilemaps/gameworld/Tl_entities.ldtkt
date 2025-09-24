@@ -37,7 +37,7 @@
     "padding": 0,
     "pxHei": 160,
     "pxWid": 160,
-    "relPath": "../Art/Tilesets/tl_entities.png",
+    "relPath": "../../Art/Tilesets/tl_entities.png",
     "savedSelections": [
 
     ],

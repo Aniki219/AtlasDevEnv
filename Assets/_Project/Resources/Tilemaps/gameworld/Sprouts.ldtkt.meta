@@ -24,7 +24,7 @@ ScriptedImporter:
       y: 0
       width: 16
       height: 16
-    spriteID: 9420e34ad0807ac4999345eb9626b938
+    spriteID: 9990f54ca5e8b2c4192a740750b51628
     spriteOutline: []
     tessellationDetail: 0
   - name: Sprouts_1
@@ -39,7 +39,7 @@ ScriptedImporter:
       y: 0
       width: 16
       height: 16
-    spriteID: 2b16120f82db84446b4c8f3b626ee4cc
+    spriteID: 244ec5c178a373944a3a307b7dc4a746
     spriteOutline: []
     tessellationDetail: 0
   - name: Sprouts_2
@@ -54,7 +54,7 @@ ScriptedImporter:
       y: 0
       width: 16
       height: 16
-    spriteID: 0c46f4b8539be5945b93e67fd71ef3f9
+    spriteID: 0312d794ba365f1419fd88a1063d7097
     spriteOutline: []
     tessellationDetail: 0
   - name: Sprouts_3
@@ -69,7 +69,7 @@ ScriptedImporter:
       y: 0
       width: 16
       height: 16
-    spriteID: c56124750ac60bd439de7a1edf2001c1
+    spriteID: 25d2782f534f7834e80457f4bfe2cca8
     spriteOutline: []
     tessellationDetail: 0
   - name: Sprouts_4
@@ -84,7 +84,7 @@ ScriptedImporter:
       y: 0
       width: 16
       height: 16
-    spriteID: c0c690fe401aaa24f9d568043489b1d5
+    spriteID: 44c6ce26f6da9d94aacf52d3991affbd
     spriteOutline: []
     tessellationDetail: 0
   - name: Sprouts_5
@@ -99,7 +99,7 @@ ScriptedImporter:
       y: 0
       width: 16
       height: 16
-    spriteID: 26a5a3af8ee33094c8567f440ab44ae2
+    spriteID: 5e1df02116695f14d995862e935894f3
     spriteOutline: []
     tessellationDetail: 0
   - name: Sprouts_6
@@ -114,7 +114,7 @@ ScriptedImporter:
       y: 0
       width: 16
       height: 16
-    spriteID: 2e9217928693ce74ebe41a09a096a7f1
+    spriteID: 88e1e43b5b5be47488001fe33bc401f9
     spriteOutline: []
     tessellationDetail: 0
   _secondaryTextures: []

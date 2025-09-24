@@ -73,7 +73,6 @@ public class BootSequencer : MonoBehaviour
         {
             levelManager.InstantiateLevel(level);
             Transform playerSpawnPoint = GameObject.FindGameObjectWithTag("PlayerSpawner")?.transform;
-            Debug.Log($"Set player position to {playerSpawnPoint.position}");
             player.transform.position = playerSpawnPoint.position;
             Destroy(playerSpawnPoint?.gameObject);
         }

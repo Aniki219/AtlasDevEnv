@@ -31,7 +31,7 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         cam = GetComponent<Camera>();
-//        bounds = GameObject.Find("RoomBounds").GetComponent<BoxCollider2D>().bounds;
+
         h = cam.orthographicSize;
         w = h * Screen.width / Screen.height;
 
@@ -46,7 +46,7 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        Vector3 targetPoint = target.transform.position;
+        Vector3 targetPoint = target.transform.root.position;
         Vector3 to;
 
         if (!cameraTracking)
