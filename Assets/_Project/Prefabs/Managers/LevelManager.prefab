@@ -45,3 +45,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelObject: {fileID: 0}
+  cameraPrefab: {fileID: 3920125607863350195, guid: ffdad787d6044294094da168a4a28e63, type: 3}

@@ -44,7 +44,7 @@ public class BootSequencer : MonoBehaviour
     private async Task InstantiatePlayer()
     {
         var playerManager = GetManager<PlayerManager>(); // Using a helper method
-        player = await InstantiateSingleAsync(playerRef, playerManager.gameObject.transform);
+        player = await InstantiateSingleAsync(playerRef);
         player.name = "Atlas";
         player.SetActive(false);
     }
@@ -67,14 +67,15 @@ public class BootSequencer : MonoBehaviour
 
     private async Task SetupInitialRoom()
     {
-        await SceneManager.LoadSceneAsync(baseSceneName, LoadSceneMode.Additive);
+        //await SceneManager.LoadSceneAsync(baseSceneName, LoadSceneMode.Additive);
         var levelManager = GetManager<LevelManager>();
         if (levelManager.SetLevelObject(0, 0, out var level))
         {
             levelManager.InstantiateLevel(level);
             Transform playerSpawnPoint = GameObject.FindGameObjectWithTag("PlayerSpawner")?.transform;
             player.transform.position = playerSpawnPoint.position;
-            Destroy(playerSpawnPoint?.gameObject);
+            player.transform.SetParent(levelManager.levelObject.transform, true);
+            DestroyImmediate(playerSpawnPoint?.gameObject);
         }
         await Task.CompletedTask;
     }

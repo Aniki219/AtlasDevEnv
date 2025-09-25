@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -5,6 +6,7 @@ public class LevelManager : MonoBehaviour, IGameManager
 {
     public static LevelManager Instance;
     public GameObject levelObject;
+    public GameObject cameraPrefab;
 
     public Task Init()
     {
@@ -28,9 +30,28 @@ public class LevelManager : MonoBehaviour, IGameManager
         return false;
     }
 
-    public void InstantiateLevel(GameObject level)
+    public GameObject InstantiateLevel(GameObject level)
     {
         Destroy(levelObject);
         levelObject = Instantiate(level, transform);
+
+        var cameraObject = Instantiate(cameraPrefab, levelObject.transform);
+        if (levelObject.TryGetComponent<PolygonCollider2D>(out var levelBoundsPoly))
+        {
+            if (cameraObject.TryGetComponent<CameraController>(out var cameraController))
+            {
+                cameraController.roomBounds = levelBoundsPoly;
+                cameraController.setBounds(levelBoundsPoly);
+                return levelObject;
+            }
+            else
+            {
+                throw new Exception("Camera Prefab does not have a CameraController component!");
+            }
+        }
+        else
+        {
+            throw new Exception($"LevelObject {levelObject.name} does not have a PolygonCollider2D component!");
+        }
     }
 }

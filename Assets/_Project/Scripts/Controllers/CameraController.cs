@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.U2D;
 
 public class CameraController : MonoBehaviour
 {
 
-    [SerializeField] Collider2D roomBounds;
+    public Collider2D roomBounds;
     [SerializeField] EntityBody target;
 
     Camera cam;
@@ -31,9 +32,9 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         cam = GetComponent<Camera>();
-
-        h = cam.orthographicSize;
-        w = h * Screen.width / Screen.height;
+        var ppcam = GetComponent<UnityEngine.Rendering.Universal.PixelPerfectCamera>();
+        h = ppcam.refResolutionY/64.0f; //cam.orthographicSize;
+        w = ppcam.refResolutionX/64.0f; //h * Screen.width / Screen.height;
 
         target = PlayerController.Instance.GetComponentInChildren<EntityBody>();
 
@@ -43,10 +44,15 @@ public class CameraController : MonoBehaviour
         transform.position = new Vector3(to.x, to.y, transform.position.z);
     }
 
+    public void setBounds(PolygonCollider2D polygonCollider)
+    {
+        bounds = polygonCollider.bounds;
+    }
+
     // Update is called once per frame
     void FixedUpdate()
     {
-        Vector3 targetPoint = target.transform.root.position;
+        Vector3 targetPoint = target.transform.parent.position;
         Vector3 to;
 
         if (!cameraTracking)
@@ -69,7 +75,6 @@ public class CameraController : MonoBehaviour
 
         to.x = Mathf.Clamp(to.x, minX, maxX);
         to.y = Mathf.Clamp(to.y, minY, maxY);
-
 
         float smoothX = Mathf.Lerp(transform.position.x, to.x, smoothingTime / 10.0f);
         float smoothY = Mathf.Lerp(transform.position.y, to.y, smoothingTime / 4.0f);
