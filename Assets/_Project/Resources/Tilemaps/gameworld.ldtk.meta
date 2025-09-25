@@ -14,15 +14,15 @@ ScriptedImporter:
   _customLevelPrefab: {fileID: 7874543209285077572, guid: 977d5de36872d4c4ab7e26310caa1c50, type: 3}
   _intGridValueColorsVisible: 0
   _useCompositeCollider: 1
-  _geometryType: 0
+  _geometryType: 1
   _createBackgroundColor: 0
   _createLevelBoundsTrigger: 1
   _useParallax: 1
   _scaleEntities: 1
   _intGridValues:
-  - _key: IntGrid_1
+  - _key: Walls_1
     _asset: {instanceID: 0}
-  - _key: IntGrid_2
+  - _key: Walls_2
     _asset: {instanceID: 0}
   _entities:
   - _key: Atlas

@@ -7,19 +7,19 @@
     },
     "IntGridValueColorsVisible": false,
     "UseCompositeCollider": true,
-    "GeometryType": 0,
+    "GeometryType": 1,
     "CreateBackgroundColor": false,
     "CreateLevelBoundsTrigger": true,
     "UseParallax": true,
     "IntGridValues": [
         {
-            "_key": "IntGrid_1",
+            "_key": "Walls_1",
             "_asset": {
                 "instanceID": 0
             }
         },
         {
-            "_key": "IntGrid_2",
+            "_key": "Walls_2",
             "_asset": {
                 "instanceID": 0
             }

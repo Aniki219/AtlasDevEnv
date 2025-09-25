@@ -8,6 +8,14 @@ public class LevelManager : MonoBehaviour, IGameManager
     public GameObject levelObject;
     public GameObject cameraPrefab;
 
+    private void Awake()
+    {
+        if (cameraPrefab == null)
+        {
+            Debug.LogError("Camera prefab not assigned to LevelManager");
+        }
+    }
+
     public Task Init()
     {
         if (Instance != null && Instance != this)
@@ -20,20 +28,24 @@ public class LevelManager : MonoBehaviour, IGameManager
         return Task.CompletedTask;
     }
 
-    public bool SetLevelObject(int x, int y, out GameObject levelObject)
+    public GameObject InstantiateLevel(int x, int y)
     {
-        levelObject = Resources.Load<GameObject>($"Tilemaps/gameworld/Level_{x}_{y}");
+        var levelPrefab = Resources.Load<GameObject>($"Tilemaps/gameworld/Level_{x}_{y}");
 
-        if (levelObject) return true;
+        if (!levelPrefab)
+        {
+            Debug.LogWarning($"Failed to load Level_{x}_{y}");
+            return null;
+        }
 
-        Debug.LogWarning($"Failed to load Level_{x}_{y}");
-        return false;
-    }
+        // Clean up previous level properly
+        if (levelObject != null)
+        {
+            DestroyImmediate(levelObject);
+            levelObject = null;
+        }
 
-    public GameObject InstantiateLevel(GameObject level)
-    {
-        Destroy(levelObject);
-        levelObject = Instantiate(level, transform);
+        levelObject = Instantiate(levelPrefab, transform);
 
         var cameraObject = Instantiate(cameraPrefab, levelObject.transform);
         if (levelObject.TryGetComponent<PolygonCollider2D>(out var levelBoundsPoly))

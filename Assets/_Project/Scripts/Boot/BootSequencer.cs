@@ -43,10 +43,21 @@ public class BootSequencer : MonoBehaviour
 
     private async Task InstantiatePlayer()
     {
-        var playerManager = GetManager<PlayerManager>(); // Using a helper method
+        if (!playerRef)
+        {
+            throw new Exception("No player prefab reference defined in BootSequencer!");
+        }
+
         player = await InstantiateSingleAsync(playerRef);
-        player.name = "Atlas";
-        player.SetActive(false);
+        if (player)
+        {
+            player.name = "Atlas";
+            player.SetActive(false);
+        }
+        else
+        {
+            throw new Exception("No player object instiantiated from prefab reference!");
+        }
     }
 
     // Helper method to make manager access cleaner
@@ -67,16 +78,26 @@ public class BootSequencer : MonoBehaviour
 
     private async Task SetupInitialRoom()
     {
-        //await SceneManager.LoadSceneAsync(baseSceneName, LoadSceneMode.Additive);
         var levelManager = GetManager<LevelManager>();
-        if (levelManager.SetLevelObject(0, 0, out var level))
+        var levelObject = levelManager.InstantiateLevel(0, 0);
+
+        if (!levelObject)
         {
-            levelManager.InstantiateLevel(level);
-            Transform playerSpawnPoint = GameObject.FindGameObjectWithTag("PlayerSpawner")?.transform;
-            player.transform.position = playerSpawnPoint.position;
-            player.transform.SetParent(levelManager.levelObject.transform, true);
-            DestroyImmediate(playerSpawnPoint?.gameObject);
+            throw new Exception("Failed to load initial level");
         }
+
+        var spawnPoint = GameObject.FindGameObjectWithTag("PlayerSpawner");
+        if (spawnPoint == null)
+        {
+            player.transform.position = new Vector3(15, 8, 0);
+        }
+        else
+        {
+            player.transform.position = spawnPoint.transform.position;
+            player.transform.SetParent(levelManager.levelObject.transform, true);
+            DestroyImmediate(spawnPoint);
+        }
+
         await Task.CompletedTask;
     }
 
