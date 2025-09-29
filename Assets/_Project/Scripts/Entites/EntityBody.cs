@@ -166,7 +166,7 @@ public class EntityBody : MonoBehaviour
 
         vel += momentum;
 
-        vel = (vel + additionalVelocity) * Time.deltaTime;
+        vel = (vel + additionalVelocity) * Time.fixedDeltaTime;
 
         if (!collisions.isTangible())
         {
