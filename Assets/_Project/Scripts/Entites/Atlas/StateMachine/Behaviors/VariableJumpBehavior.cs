@@ -13,7 +13,7 @@ public class VariableJumpBehavior : StateBehavior, IStateBehavior
 
     public void UpdateState()
     {
-        if (!jumpReleased && Jump.Released() && body.velocity.y > 1)
+        if (!jumpReleased && !Jump.Held() && body.velocity.y > 1)
         {
             body.velocity.y /= 4;
             jumpReleased = true;

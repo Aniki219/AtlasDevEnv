@@ -6,10 +6,6 @@ public class MoveBehavior : StateBehavior, IStateBehavior
     [SerializeField] bool canTurnAround = true;
     [SerializeField] float moveSpeed = 4.0f;
     [SerializeField] float msMod = 1.0f;
-    [SerializeField] float AccelerationTime = 0.1f;
-    [SerializeField] float DeccelerationTime = 0.04f;
-
-    float xVelocitySmoothing;
 
     public void StartState()
     {
@@ -20,12 +16,7 @@ public class MoveBehavior : StateBehavior, IStateBehavior
     {
         float targetVelocityX = input.X * msMod * moveSpeed;
         changeFacingDirection();
-
-        bool isAccelerating = SameSign(body.velocity.x, targetVelocityX) &&
-                              Mathf.Abs(targetVelocityX) >= Mathf.Abs(body.velocity.x);
-
-        float smoothTime = isAccelerating ? AccelerationTime : DeccelerationTime;
-        body.velocity.x = Mathf.SmoothDamp(body.velocity.x, targetVelocityX, ref xVelocitySmoothing, smoothTime);
+        body.targetVelocity = targetVelocityX * Vector2.right;
     }
 
     private void changeFacingDirection()

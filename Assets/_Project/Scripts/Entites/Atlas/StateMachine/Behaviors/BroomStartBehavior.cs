@@ -10,12 +10,14 @@ public class BroomStartBehavior : StateBehavior, IStateBehavior
     {
         speed = broomBehavior.initialThrust;
         body.canGravity = false;
+        body.isFlying = true;
     }
 
     public void UpdateState()
     {
         float t = state.GetNomalizedTime(state.stateAnimation.length);
-        body.SetForwardVelocity(velocityProfile.Evaluate(t) * speed);
+        body.SetTargetVelocity(velocityProfile.Evaluate(t) * speed * Vector2.right * entity.facing);
+        body.velocity.y = 0;
         if (t >= 1)
         {
             state.MarkComplete();
@@ -30,6 +32,10 @@ public class BroomStartBehavior : StateBehavior, IStateBehavior
         broomBehavior.thrust = broomBehavior.initialThrust;
         broomBehavior.lift = broomBehavior.initialThrust;
         broomBehavior.pitchLerper = new RateLerper();
-        body.canGravity = true;
+        if (!toState.isA(stateMachine.stateRegistry, StateType.su_Broom))
+        {
+            body.canGravity = true;
+            body.isFlying = false;
+        }
     }
 }

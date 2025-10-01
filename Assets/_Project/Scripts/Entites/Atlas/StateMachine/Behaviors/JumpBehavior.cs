@@ -11,13 +11,20 @@ public class JumpBehavior : StateBehavior, IStateBehavior
         float g = body.GetGravity();
         float viy = Mathf.Sqrt(-2 * apex * g);
         float apexTime = viy / -g;
-        float vix = jumpDistance / (2 * apexTime);
+        float vix = jumpDistance / (2 * apexTime) * entity.facing;
 
-        body.velocity.y = viy;
-        if (vix > 0) body.SetForwardVelocity(vix);
+        //body.AddForce(viy * Vector2.up / Time.fixedDeltaTime);
+        //if (vix > 0) body.SetTargetForwardVelocity(vix);
+        body.AddForce(new Vector2(vix, viy) / Time.fixedDeltaTime);
     }
 
-    public void UpdateState() { }
+    public void UpdateState()
+    {
+        if (!body.IsGrounded())
+        {
+            state.MarkComplete();
+        }
+    }
 
     public void FixedUpdateState() { }
 

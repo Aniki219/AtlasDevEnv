@@ -1,6 +1,9 @@
 using UnityEngine;
 using System;
 using UnityEngine.Events;
+using UnityEngine.PlayerLoop;
+using UnityEditor.Experimental.GraphView;
+using static AtlasHelpers;
 
 public class EntityBody : MonoBehaviour
 {
@@ -13,17 +16,16 @@ public class EntityBody : MonoBehaviour
     public bool showSafetyCheck = false;
     public bool highlightGrounded = false;
 
-    [Header("Momentum")]
-    public Vector3 momentum;
-    public Vector3 initialMomentum;
-    public float momentumStartTime;
-    public float momentumHangTime;
-    public float momentumDecayTime = 1.0f;
-
-    [Header("Velocity")]
+    [Header("Movement")]
+    public Vector3 acceleration;
     public Vector3 velocity;
-    public Vector3 velocityOut { get; private set; }
-    [SerializeField] Vector3 additionalVelocity;
+    public Vector3 targetVelocity;
+    public float groundedFriction;
+    public float airFriction;
+
+    public bool isFlying = false;
+
+    private float xVelocitySmoothing;
 
     [Header("Control")]
     public bool lockPosition = false;
@@ -63,7 +65,6 @@ public class EntityBody : MonoBehaviour
     public bool bonkCeiling = false;
     public UnityEvent OnBonkCeiling;
 
-
     public bool hasLandingEvent = false;
     public UnityEvent OnLanding;
 
@@ -77,12 +78,14 @@ public class EntityBody : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //Keep track of "justLanded" and "justHeadBonked"
         UpdateBoundaryPoints();
+
+        //Keep track of "justLanded" and "justHeadBonked"
         if (canMove)
         {
-            Move(velocity);
+            Move();
 
+            //TODO: Make CanGravity a method. Remove this if statement
             if (canGravity)
             {
                 doGravity();
@@ -96,9 +99,24 @@ public class EntityBody : MonoBehaviour
 
     private void LateUpdate()
     {
-        BoxCollider2D collider = colliderManager.getCollider();
+        DebugBody();
+    }
+
+    public void AddForce(Vector2 force)
+    {
+        acceleration += (Vector3)force;
+    }
+
+    private void ResetAcceleration()
+    {
+        acceleration = Vector3.zero;
+    }
+
+    private void DebugBody()
+    {
         if (debug)
         {
+            BoxCollider2D collider = colliderManager.getCollider();
             UpdateBoundaryPoints();
             //GetComponentInChildren<SpriteRenderer>().material.color = Color.white.WithAlphaSetTo(0.75f);
             if (showCollisionResolution) debugBoundaryCollisions();
@@ -113,7 +131,6 @@ public class EntityBody : MonoBehaviour
             if (showVelocityNormal)
             {
                 Debug.DrawLine(collider.bounds.center, collider.bounds.center + velocity.normalized, Color.grey);
-                Debug.DrawLine(collider.bounds.center, collider.bounds.center + velocityOut.normalized, Color.white);
             }
         }
     }
@@ -127,11 +144,11 @@ public class EntityBody : MonoBehaviour
         }
         else
         {
-            currentGravity = gravity * Time.fixedDeltaTime * gravityMod * (velocity.y > 0 ? 1 : 1.25f);
+            currentGravity = gravity * gravityMod * (velocity.y > 0 ? 1 : 1.25f);
             velocity.y = Mathf.Max(velocity.y, termVel);
         }
 
-        velocity.y += currentGravity;
+        AddForce(currentGravity * Vector2.up);
     }
 
     public void ResetGravity()
@@ -149,69 +166,139 @@ public class EntityBody : MonoBehaviour
         return boundaryPoints.bottomLeft.y;
     }
 
-    public void Move(Vector3 vel)
+    public void Move()
     {
+        // If the player is not inputting a direction maintain momentum...
 
-        float my = initialMomentum.y * Mathf.Clamp01(
-                    Mathf.Lerp(1, 0, Mathf.Max(Time.time - momentumStartTime - momentumHangTime, 0) / momentumDecayTime)
-                );
-        float mx = initialMomentum.x * Mathf.Clamp01(
-                    Mathf.Lerp(1, 0, Mathf.Max(Time.time - momentumStartTime - momentumHangTime, 0) / momentumDecayTime / 2)
-                );
-        if (IsGrounded())
+        LerpToTargetVelocity();
+
+        velocity += acceleration * Time.fixedDeltaTime;
+        ResetAcceleration();
+
+        velocity.y = Mathf.Max(velocity.y, termVel);
+
+        if (velocity.sqrMagnitude < 0.1)
         {
-            mx = my = 0;
+            velocity = Vector2.zero;
         }
-        momentum = new Vector2(mx, my);
 
-        vel += momentum;
+        Vector3 dp = velocity * Time.fixedDeltaTime;
 
-        vel = (vel + additionalVelocity) * Time.deltaTime;
-
+        // Skip collision checks if intangible
         if (!collisions.isTangible())
         {
-            transform.position += vel;
+            transform.position += dp;
             return;
         }
 
-        if (collisions.hasNormWhere(norm => norm.y > 0) &&
-            collisions.hasNormWhere(norm => norm.y < 0.75f) &&
-            vel.y <= 0)
-        {
-            vel *= 0.8f;
-        }
-
+        // Is this the right place? Is this needed?
         if (lockPosition) { return; }
 
-        collisions.Reset();
-
-        Vector3 oldPosition = transform.position * 1.0f;
-
-        Vector3 d = (Vector3)resolveCollision(vel);
-
-        transform.position += d;
-        CheckGrounded();
-
-        if (canDescendRamps)
+        // Modify speed on slopes to maintain overall horizontal speed
+        if (collisions.hasNormWhere(norm => norm.y > 0) &&
+            collisions.hasNormWhere(norm => norm.y < 0.75f) &&
+            velocity.y <= 0)
         {
-            DescendRamp(vel);
+            velocity *= 0.8f;
         }
 
-        velocityOut = transform.position - oldPosition;
+        collisions.Reset();
+        dp = ResolveCollision(dp);
+
+        transform.position += dp;
+
+        CheckGrounded();
+        if (canDescendRamps)
+        {
+            DescendRamp();
+        }
     }
+    public float groundAcceleration = 50;
+    public float groundDeceleration = 60;
+    public float airAcceleration = 30;
+    public float airDeceleration = 30;
+    public float flyingAcceleration = 30;
+    public float flyingDeceleration = 30;
+    public float momentumCutoffVelocity = 12;
+    public float momentumCutoffSharpness = 10;
+    public float stopThreshold = 0.1f;
+
+    private void LerpToTargetVelocity()
+    {
+        Vector2 velocityDiff;
+    
+        if (isFlying)
+        {
+            // When flying, match both x and y to target
+            velocityDiff = targetVelocity - velocity;
+        }
+        else
+        {
+            // When not flying, only match x component
+            velocityDiff = new Vector2(targetVelocity.x - velocity.x, 0);
+        }
+        
+        if (velocityDiff.magnitude < 0.01f) return;
+        
+        float mag = velocityDiff.magnitude;
+        Vector2 dir = velocityDiff.normalized;
+        
+        bool isAccelerating = Vector2.Dot(velocityDiff, velocity) > 0;
+        
+        float maxForce = CalculateCorrectiveForce() * MovespeedMod();
+        float maxChangeNeeded = mag / Time.fixedDeltaTime;
+        float actualForce = Mathf.Min(maxForce, maxChangeNeeded);
+        
+        Vector2 dv = actualForce * dir;
+        AddForce(dv);
+
+        float CalculateCorrectiveForce()
+        {
+            if (isFlying)
+            {
+                return isAccelerating ? flyingAcceleration : flyingDeceleration;
+            }
+            else if (IsGrounded())
+            {
+                return isAccelerating ? groundAcceleration : groundDeceleration;
+            }
+            else
+            {
+                return isAccelerating ? airAcceleration : airDeceleration;
+            }
+        };
+
+        float MovespeedMod()
+        {
+            // Returns a value from 1.0 (full control) down to minControlAuthority (reduced control)
+            // as velocity increases past the cutoff
+            
+            float minControlAuthority = 0.2f; // At very high speeds, retain 20% control
+            
+            if (velocity.magnitude <= momentumCutoffVelocity)
+            {
+                return 1f; // Full control below cutoff
+            }
+            
+            // Exponential falloff above cutoff
+            float excessSpeed = velocity.magnitude - momentumCutoffVelocity;
+            float falloff = Mathf.Exp(-excessSpeed / momentumCutoffSharpness);
+            
+            // Interpolate from 1.0 down to minControlAuthority
+            return Mathf.Lerp(minControlAuthority, 1f, falloff);
+        }
+    }
+
     [Range(5, 100)]
     public float slopeDetectRange = 5;
 
-    private Vector2 resolveCollision(Vector2 vel, bool canSlide = true)
+    private Vector2 ResolveCollision(Vector2 dp, bool canSlide = true)
     {
-        Vector2 dp = vel;
-
         int tries = 0;
         while (tries <= 8)
         {
             CollisionData collisionData = DetectCollision(dp);
 
-            //TODO: seems wrong af??
             if (!canSlide)
             {
                 collisionData.normal = Vector2.up;
@@ -219,12 +306,7 @@ public class EntityBody : MonoBehaviour
 
             if (collisionData.hit)
             {
-                dp += collisionData.normal * (Mathf.Abs(collisionData.distance) + 0.002f);
-
-                //TODO: what is this? step up??
-                // if (Vector2.Dot(vel, collisionData.normal) > 0) {
-                //     dp = collisionData.normal * vel.magnitude;
-                // }
+                dp += collisionData.normal * (Mathf.Abs(collisionData.separation) + 0.002f);
             }
             else
             {
@@ -235,15 +317,23 @@ public class EntityBody : MonoBehaviour
         return Vector2.zero;
     }
 
-    private void DescendRamp(Vector2 vel)
+    private void DescendRamp()
     {
-        if (collisions.wasGrounded && !collisions.isGrounded() && vel.y <= 0)
+        if (!isFlying && collisions.wasGrounded && !IsGrounded() && velocity.y <= 0)
         {
-            CollisionData checkDown = DetectCollision(slopeDetectRange * Time.deltaTime * Vector2.down);
+            // Check further down if moving faster horizontally
+            float horizontalSpeed = Mathf.Abs(velocity.x);
+            float baseCheckDistance = 0.5f; // Base distance to check
+            float speedBasedExtra = horizontalSpeed * Time.fixedDeltaTime * 1.5f; // Extra based on speed
+            float totalCheckDistance = baseCheckDistance + speedBasedExtra;
+
+            CollisionData checkDown = DetectCollision(totalCheckDistance * Vector2.down);
+
             if (checkDown.hit)
             {
-                float dist = Mathf.Abs(checkDown.distance);
-                transform.position += (Vector3)resolveCollision(dist * Vector3.down, false);
+                float dist = Mathf.Abs(checkDown.separation);
+                Vector2 dp = dist * Vector2.down;
+                transform.position += (Vector3)ResolveCollision(dp, false);
                 CheckGrounded();
             }
         }
@@ -272,11 +362,14 @@ public class EntityBody : MonoBehaviour
 
         if (boxhitCollider)
         {
-            ColliderDistance2D colliderDistance = boxhitCollider.Distance(collider);
+            ColliderDistance2D separationDistance = boxhitCollider.Distance(collider);
 
             returnData.hit = true;
-            returnData.distance = colliderDistance.distance;
-            returnData.normal = new Vector2(Mathf.Round(colliderDistance.normal.x * 100f) / 100f, Mathf.Round(colliderDistance.normal.y * 100f) / 100f);
+            returnData.separation = separationDistance.distance;
+            returnData.normal = new Vector2(
+                Mathf.Round(separationDistance.normal.x * 100f) / 100f,
+                Mathf.Round(separationDistance.normal.y * 100f) / 100f
+            );
 
             returnData.collider = collider;
             returnData.otherCollider = boxhitCollider;
@@ -284,19 +377,24 @@ public class EntityBody : MonoBehaviour
 
             collisions.setCollisionInfo(returnData);
 
+            // Bonk Ceiling
             if (Mathf.Approximately(returnData.normal.y, -1) && velocity.y > 0)
             {
-                OnBonkCeiling.Invoke();
+                //OnBonkCeiling.Invoke();
             }
 
-            //Land on slopes as if they were horizontal
+            // Land on slopes as if they were horizontal
             if (returnData.normal.y >= maxSlope)
             {
                 returnData.normal = Vector2.up;
             }
 
-            //Walk into steep walls as if they were vertical ->/ => ->|
-            if (collisions.wasGrounded && returnData.normal.y < maxSlope && Mathf.Sign(returnData.normal.x) != Mathf.Sign(velocity.x))
+            // Walk into steep walls as if they were vertical ->/ => ->|
+            if (
+                collisions.wasGrounded &&
+                returnData.normal.y < maxSlope &&
+                !SameSign(returnData.normal.x, velocity.x)
+            )
             {
                 returnData.normal.y = 0;
                 returnData.normal.Normalize();
@@ -310,9 +408,11 @@ public class EntityBody : MonoBehaviour
 
     public CollisionData CheckGrounded()
     {
+        
         CollisionData data = DetectCollision(Vector2.up * (-groundedCheckRange));
         if (!collisions.isGrounded() && data.hit) OnLanding.Invoke();
         if (velocity.y <= 0) collisions.setGroundSlope(data.normal);
+
         collisions.setGrounded(velocity.y <= 0 && data.hit);
 
         return data;
@@ -340,20 +440,24 @@ public class EntityBody : MonoBehaviour
             collisions.hasNormWhere(norm => Mathf.Abs(Vector2.Dot(norm, velocity.normalized)) > 0.8f, true);
     }
 
-    public void AddVelocity(Vector3 amount)
+    // public void SetForwardVelocity(float vel)
+    // {
+    //     velocity.x = Mathf.Abs(vel) * entity.facing;
+    // }
+
+    // public void SetVelocity(Vector2 vel)
+    // {
+    //     velocity = vel;
+    // }
+
+    public void SetTargetVelocity(Vector2 vel)
     {
-        if (!collisions.isTangible()) { return; }
-        additionalVelocity += amount;
+        targetVelocity = vel;
     }
 
-    public void SetForwardVelocity(float vel)
+    public void SetTargetForwardVelocity(float vel)
     {
-        velocity.x = Mathf.Abs(vel) * entity.facing;
-    }
-
-    public void SetVelocity(Vector2 vel)
-    {
-        velocity = vel;
+        targetVelocity.x = Mathf.Abs(vel) * entity.facing;
     }
 
     public bool CheckVertDist(float dist)

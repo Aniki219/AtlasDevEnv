@@ -151,7 +151,10 @@ public partial class AtlasTransitionManager
             [Jab1] = Can(),
             [Jab2] = Can(),
             [Jab3] = Can(),
-            [Jump] = Can(Fall),
+            [Jump] = Can(
+                Fall,
+                OnComplete(Walk) // Once Atlas has left the ground
+            ),
             [RisingNair] = Can(),
             [Slide] = Can(
                 SpinJump,

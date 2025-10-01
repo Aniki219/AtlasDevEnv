@@ -626,7 +626,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   to: {fileID: 0}
   angleWrapCutoff: 270
-  breakpointThreshold: 0.8
+  breakpointThreshold: 0.5
   _bh_Broom: {fileID: 0}
 --- !u!1 &1135304515499783985
 GameObject:
@@ -679,13 +679,12 @@ MonoBehaviour:
   showCollisionResolution: 0
   showSafetyCheck: 0
   highlightGrounded: 0
-  momentum: {x: 0, y: 0, z: 0}
-  initialMomentum: {x: 0, y: 0, z: 0}
-  momentumStartTime: 0
-  momentumHangTime: 0
-  momentumDecayTime: 1
+  acceleration: {x: 0, y: 0, z: 0}
   velocity: {x: 0, y: 0, z: 0}
-  additionalVelocity: {x: 0, y: 0, z: 0}
+  targetVelocity: {x: 0, y: 0, z: 0}
+  groundedFriction: 1
+  airFriction: 1
+  isFlying: 0
   lockPosition: 0
   canMove: 1
   canGravity: 1
@@ -720,6 +719,15 @@ MonoBehaviour:
   OnLanding:
     m_PersistentCalls:
       m_Calls: []
+  groundAcceleration: 50
+  groundDeceleration: 25
+  airAcceleration: 15
+  airDeceleration: 15
+  flyingAcceleration: 50
+  flyingDeceleration: 60
+  momentumCutoffVelocity: 4.5
+  momentumCutoffSharpness: 2
+  stopThreshold: 0.1
   slopeDetectRange: 5
   groundedCheckRange: 0.008
 --- !u!1 &1354089241073498814
@@ -7138,7 +7146,7 @@ MonoBehaviour:
         m_CallState: 2
   thrust: 0
   lift: 0
-  thrustRate: 8
+  thrustRate: 6
   initialThrust: 6
   maxThrust: 10
   pitchRate: 160
@@ -8727,7 +8735,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4133489992781873460, guid: df9f55b1654d2474db11d2525873eb1d, type: 3}
       propertyPath: jumpDistance
-      value: 5.5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4133489992781873460, guid: df9f55b1654d2474db11d2525873eb1d, type: 3}
       propertyPath: velocityCurve.m_Curve.Array.size
