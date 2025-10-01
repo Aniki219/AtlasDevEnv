@@ -319,13 +319,20 @@ public class EntityBody : MonoBehaviour
 
     private void DescendRamp()
     {
-        if (collisions.wasGrounded && !collisions.isGrounded() && velocity.y <= 0)
+        if (!isFlying && collisions.wasGrounded && !IsGrounded() && velocity.y <= 0)
         {
-            CollisionData checkDown = DetectCollision(slopeDetectRange * Time.fixedDeltaTime * Vector2.down);
+            // Check further down if moving faster horizontally
+            float horizontalSpeed = Mathf.Abs(velocity.x);
+            float baseCheckDistance = 0.5f; // Base distance to check
+            float speedBasedExtra = horizontalSpeed * Time.fixedDeltaTime * 1.5f; // Extra based on speed
+            float totalCheckDistance = baseCheckDistance + speedBasedExtra;
+
+            CollisionData checkDown = DetectCollision(totalCheckDistance * Vector2.down);
+
             if (checkDown.hit)
             {
                 float dist = Mathf.Abs(checkDown.separation);
-                Vector2 dp = dist * Vector3.down * Time.fixedDeltaTime;
+                Vector2 dp = dist * Vector2.down;
                 transform.position += (Vector3)ResolveCollision(dp, false);
                 CheckGrounded();
             }
@@ -373,7 +380,7 @@ public class EntityBody : MonoBehaviour
             // Bonk Ceiling
             if (Mathf.Approximately(returnData.normal.y, -1) && velocity.y > 0)
             {
-                OnBonkCeiling.Invoke();
+                //OnBonkCeiling.Invoke();
             }
 
             // Land on slopes as if they were horizontal
@@ -401,9 +408,11 @@ public class EntityBody : MonoBehaviour
 
     public CollisionData CheckGrounded()
     {
+        
         CollisionData data = DetectCollision(Vector2.up * (-groundedCheckRange));
         if (!collisions.isGrounded() && data.hit) OnLanding.Invoke();
         if (velocity.y <= 0) collisions.setGroundSlope(data.normal);
+
         collisions.setGrounded(velocity.y <= 0 && data.hit);
 
         return data;

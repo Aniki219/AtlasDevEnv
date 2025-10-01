@@ -691,12 +691,11 @@ MonoBehaviour:
   canCrouch: 0
   canDescendRamps: 1
   collisions:
-    normals:
-    - {x: 0, y: 1}
-    groundSlope: {x: 0, y: 1}
-    grounded: 1
-    tangible: 1
-    collidable: 1
+    normals: []
+    groundSlope: {x: 0, y: 0}
+    grounded: 0
+    tangible: 0
+    collidable: 0
   collisionMask:
     serializedVersion: 2
     m_Bits: 8
@@ -705,13 +704,13 @@ MonoBehaviour:
     m_Bits: 0
   termVel: -10
   gravityMod: 1
-  gravity: -17.6
+  gravity: 0
   currentGravity: 0
   maxGravity: 8
   maxSlope: 0.5
-  colliderManager: {fileID: 0}
-  transform: {fileID: 0}
-  entity: {fileID: 0}
+  colliderManager: {fileID: 2850815076681961386}
+  transform: {fileID: 536989159156229736}
+  entity: {fileID: 180565255095774622}
   bonkCeiling: 0
   OnBonkCeiling:
     m_PersistentCalls:
@@ -726,8 +725,8 @@ MonoBehaviour:
   airDeceleration: 15
   flyingAcceleration: 50
   flyingDeceleration: 60
-  momentumCutoffVelocity: 5
-  momentumCutoffSharpness: 5
+  momentumCutoffVelocity: 4.5
+  momentumCutoffSharpness: 2
   stopThreshold: 0.1
   slopeDetectRange: 5
   groundedCheckRange: 0.008
@@ -7147,7 +7146,7 @@ MonoBehaviour:
         m_CallState: 2
   thrust: 0
   lift: 0
-  thrustRate: 8
+  thrustRate: 6
   initialThrust: 6
   maxThrust: 10
   pitchRate: 160
@@ -8736,7 +8735,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4133489992781873460, guid: df9f55b1654d2474db11d2525873eb1d, type: 3}
       propertyPath: jumpDistance
-      value: 5.5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4133489992781873460, guid: df9f55b1654d2474db11d2525873eb1d, type: 3}
       propertyPath: velocityCurve.m_Curve.Array.size
