@@ -679,13 +679,12 @@ MonoBehaviour:
   showCollisionResolution: 0
   showSafetyCheck: 0
   highlightGrounded: 0
-  momentum: {x: 0, y: 0, z: 0}
-  initialMomentum: {x: 0, y: 0, z: 0}
-  momentumStartTime: 0
-  momentumHangTime: 0
-  momentumDecayTime: 1
+  acceleration: {x: 0, y: 0, z: 0}
   velocity: {x: 0, y: 0, z: 0}
-  additionalVelocity: {x: 0, y: 0, z: 0}
+  targetVelocity: {x: 0, y: 0, z: 0}
+  groundedFriction: 1
+  airFriction: 1
+  isFlying: 0
   lockPosition: 0
   canMove: 1
   canGravity: 1
@@ -720,6 +719,13 @@ MonoBehaviour:
   OnLanding:
     m_PersistentCalls:
       m_Calls: []
+  testAmount: 500
+  groundAcceleration: 50
+  groundDeceleration: 25
+  airAcceleration: 10
+  airDeceleration: 10
+  groundMaxSpeed: 5
+  stopThreshold: 0.1
   slopeDetectRange: 5
   groundedCheckRange: 0.008
 --- !u!1 &1354089241073498814

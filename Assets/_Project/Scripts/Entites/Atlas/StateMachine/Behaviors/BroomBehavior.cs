@@ -23,8 +23,6 @@ public class BroomBehavior : StateBehavior, IStateBehavior
     public RateLerper pitchLerper;
     public float pitchRate;
     public bool pitchSpriteAngle = true;
-    //dPitch = +/-k1
-    //dThrust = k2 * pitch . right
 
     public float yAngle = 0;
     [field: SerializeField] public float pitch { get; private set; }
@@ -96,7 +94,7 @@ public class BroomBehavior : StateBehavior, IStateBehavior
         Vector2 yRotationMatrix = new Vector2(Cos(yAngle * Deg2Rad), 1);
         Vector2 rotatedThrustVector = Vector2.Scale(thrustVector, yRotationMatrix);
 
-        body.SetVelocity(rotatedThrustVector);
+        body.SetTargetVelocity(rotatedThrustVector);
 
         SetSprite();
         SetSliders();

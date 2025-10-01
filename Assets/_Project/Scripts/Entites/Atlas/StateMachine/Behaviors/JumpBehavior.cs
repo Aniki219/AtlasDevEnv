@@ -13,8 +13,9 @@ public class JumpBehavior : StateBehavior, IStateBehavior
         float apexTime = viy / -g;
         float vix = jumpDistance / (2 * apexTime);
 
-        body.velocity.y = viy;
-        if (vix > 0) body.SetForwardVelocity(vix);
+        //body.AddForce(viy * Vector2.up / Time.fixedDeltaTime);
+        //if (vix > 0) body.SetTargetForwardVelocity(vix);
+        body.AddForce(new Vector2(vix, viy) / Time.fixedDeltaTime);
     }
 
     public void UpdateState() { }

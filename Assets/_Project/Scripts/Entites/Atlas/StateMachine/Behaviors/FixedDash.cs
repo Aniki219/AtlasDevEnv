@@ -17,7 +17,7 @@ public class FixedDash : StateBehavior, IStateBehavior
     public void UpdateState()
     {
         float t = state.GetNomalizedTime(duration);
-        body.SetForwardVelocity(velocityProfile.Evaluate(t * duration));
+        body.SetTargetForwardVelocity(velocityProfile.Evaluate(t * duration));
         if (t >= 1)
         {
             state.MarkComplete();
