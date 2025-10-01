@@ -40,6 +40,7 @@ public class BroomBehavior : StateBehavior, IStateBehavior
     public void StartState()
     {
         body.canGravity = false;
+        body.isFlying = true;
     }
 
     /*
@@ -112,6 +113,7 @@ public class BroomBehavior : StateBehavior, IStateBehavior
             pitchLerper = new RateLerper();
             spriteTransform.eulerAngles = Vector3.zero;
             body.canGravity = true;
+            body.isFlying = false;
         }
     }
 

@@ -10,6 +10,7 @@ public class BroomStartBehavior : StateBehavior, IStateBehavior
     {
         speed = broomBehavior.initialThrust;
         body.canGravity = false;
+        body.isFlying = true;
     }
 
     public void UpdateState()
@@ -31,6 +32,10 @@ public class BroomStartBehavior : StateBehavior, IStateBehavior
         broomBehavior.thrust = broomBehavior.initialThrust;
         broomBehavior.lift = broomBehavior.initialThrust;
         broomBehavior.pitchLerper = new RateLerper();
-        body.canGravity = true;
+        if (!toState.isA(stateMachine.stateRegistry, StateType.su_Broom))
+        {
+            body.canGravity = true;
+            body.isFlying = false;
+        }
     }
 }

@@ -79,7 +79,6 @@ public class EntityBody : MonoBehaviour
     private void FixedUpdate()
     {
         UpdateBoundaryPoints();
-        ApplyFriction();
 
         //Keep track of "justLanded" and "justHeadBonked"
         if (canMove)
@@ -101,18 +100,6 @@ public class EntityBody : MonoBehaviour
     private void LateUpdate()
     {
         DebugBody();
-    }
-
-    private void ApplyFriction()
-    {
-        if (Mathf.Approximately(velocity.x, 0)) return; 
-    
-        float friction = IsGrounded() ? groundedFriction : airFriction;
-        
-        // Friction opposes velocity direction and scales with speed
-        Vector2 frictionForce = -friction * velocity.x * Vector2.right;
-
-        AddForce(frictionForce);
     }
 
     public void AddForce(Vector2 force)
@@ -182,15 +169,18 @@ public class EntityBody : MonoBehaviour
     public void Move()
     {
         // If the player is not inputting a direction maintain momentum...
-        if (IsGrounded() || !Mathf.Approximately(targetVelocity.x, 0))
-        {
-            LerpToTargetVelocity();
-        }
+
+        LerpToTargetVelocity();
 
         velocity += acceleration * Time.fixedDeltaTime;
         ResetAcceleration();
 
         velocity.y = Mathf.Max(velocity.y, termVel);
+
+        if (velocity.sqrMagnitude < 0.1)
+        {
+            velocity = Vector2.zero;
+        }
 
         Vector3 dp = velocity * Time.fixedDeltaTime;
 
@@ -227,36 +217,75 @@ public class EntityBody : MonoBehaviour
     public float groundDeceleration = 60;
     public float airAcceleration = 30;
     public float airDeceleration = 30;
-    public float groundMaxSpeed = 5f;
+    public float flyingAcceleration = 30;
+    public float flyingDeceleration = 30;
+    public float momentumCutoffVelocity = 12;
+    public float momentumCutoffSharpness = 10;
     public float stopThreshold = 0.1f;
 
     private void LerpToTargetVelocity()
     {
-        float velocityDiff = targetVelocity.x - velocity.x;
-
-        // Choose acceleration or deceleration rate
-        float rate;
-        if (SameSign(velocityDiff, targetVelocity.x))
+        Vector2 velocityDiff;
+    
+        if (isFlying)
         {
-            // Accelerating toward target
-            rate = IsGrounded() ? groundAcceleration : airAcceleration;
+            // When flying, match both x and y to target
+            velocityDiff = targetVelocity - velocity;
         }
         else
         {
-            // Turning around
-            rate = IsGrounded() ? groundDeceleration : airDeceleration;
+            // When not flying, only match x component
+            velocityDiff = new Vector2(targetVelocity.x - velocity.x, 0);
         }
+        
+        if (velocityDiff.magnitude < 0.01f) return;
+        
+        float mag = velocityDiff.magnitude;
+        Vector2 dir = velocityDiff.normalized;
+        
+        bool isAccelerating = Vector2.Dot(velocityDiff, velocity) > 0;
+        
+        float maxForce = CalculateCorrectiveForce() * MovespeedMod();
+        float maxChangeNeeded = mag / Time.fixedDeltaTime;
+        float actualForce = Mathf.Min(maxForce, maxChangeNeeded);
+        
+        Vector2 dv = actualForce * dir;
+        AddForce(dv);
 
-        // Apply the control force
-        float maxChange = rate * Time.fixedDeltaTime;
-        float change = Mathf.Clamp(velocityDiff, -maxChange, maxChange);
-
-        velocity.x += change;
-
-        // Snap to zero when stopping
-        if (Mathf.Abs(velocity.x) < stopThreshold && Mathf.Approximately(targetVelocity.x, 0))
+        float CalculateCorrectiveForce()
         {
-            velocity.x = 0;
+            if (isFlying)
+            {
+                return isAccelerating ? flyingAcceleration : flyingDeceleration;
+            }
+            else if (IsGrounded())
+            {
+                return isAccelerating ? groundAcceleration : groundDeceleration;
+            }
+            else
+            {
+                return isAccelerating ? airAcceleration : airDeceleration;
+            }
+        };
+
+        float MovespeedMod()
+        {
+            // Returns a value from 1.0 (full control) down to minControlAuthority (reduced control)
+            // as velocity increases past the cutoff
+            
+            float minControlAuthority = 0.2f; // At very high speeds, retain 20% control
+            
+            if (velocity.magnitude <= momentumCutoffVelocity)
+            {
+                return 1f; // Full control below cutoff
+            }
+            
+            // Exponential falloff above cutoff
+            float excessSpeed = velocity.magnitude - momentumCutoffVelocity;
+            float falloff = Mathf.Exp(-excessSpeed / momentumCutoffSharpness);
+            
+            // Interpolate from 1.0 down to minControlAuthority
+            return Mathf.Lerp(minControlAuthority, 1f, falloff);
         }
     }
 

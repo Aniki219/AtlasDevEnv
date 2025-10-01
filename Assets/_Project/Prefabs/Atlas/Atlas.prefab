@@ -691,11 +691,12 @@ MonoBehaviour:
   canCrouch: 0
   canDescendRamps: 1
   collisions:
-    normals: []
-    groundSlope: {x: 0, y: 0}
-    grounded: 0
-    tangible: 0
-    collidable: 0
+    normals:
+    - {x: 0, y: 1}
+    groundSlope: {x: 0, y: 1}
+    grounded: 1
+    tangible: 1
+    collidable: 1
   collisionMask:
     serializedVersion: 2
     m_Bits: 8
@@ -704,13 +705,13 @@ MonoBehaviour:
     m_Bits: 0
   termVel: -10
   gravityMod: 1
-  gravity: 0
+  gravity: -17.6
   currentGravity: 0
   maxGravity: 8
   maxSlope: 0.5
-  colliderManager: {fileID: 2850815076681961386}
-  transform: {fileID: 536989159156229736}
-  entity: {fileID: 180565255095774622}
+  colliderManager: {fileID: 0}
+  transform: {fileID: 0}
+  entity: {fileID: 0}
   bonkCeiling: 0
   OnBonkCeiling:
     m_PersistentCalls:
@@ -719,12 +720,14 @@ MonoBehaviour:
   OnLanding:
     m_PersistentCalls:
       m_Calls: []
-  testAmount: 500
   groundAcceleration: 50
   groundDeceleration: 25
-  airAcceleration: 10
-  airDeceleration: 10
-  groundMaxSpeed: 5
+  airAcceleration: 15
+  airDeceleration: 15
+  flyingAcceleration: 50
+  flyingDeceleration: 60
+  momentumCutoffVelocity: 5
+  momentumCutoffSharpness: 5
   stopThreshold: 0.1
   slopeDetectRange: 5
   groundedCheckRange: 0.008
