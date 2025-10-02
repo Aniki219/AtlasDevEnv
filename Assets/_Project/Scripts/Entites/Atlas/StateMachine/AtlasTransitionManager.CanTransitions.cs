@@ -34,6 +34,7 @@ public partial class AtlasTransitionManager
         CanTransitions = new Dictionary<StateType, List<StateTypeWrapper>>()
         {
             [Straight] = Can(
+                PU_Full,
                 HoldBack,
                 PU_Rising,
                 PD_Falling

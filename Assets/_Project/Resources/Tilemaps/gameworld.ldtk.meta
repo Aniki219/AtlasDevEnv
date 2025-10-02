@@ -31,6 +31,8 @@ ScriptedImporter:
     _asset: {instanceID: 0}
   - _key: SeedBomber
     _asset: {instanceID: 0}
+  - _key: Target
+    _asset: {fileID: 7959811907256454544, guid: 971edb23320526645885e964c36b2554, type: 3}
   _enumGenerate: 0
   _enumPath: 
   _enumNamespace: 

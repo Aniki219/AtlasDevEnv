@@ -685,6 +685,7 @@ MonoBehaviour:
   groundedFriction: 1
   airFriction: 1
   isFlying: 0
+  dismount: 0
   lockPosition: 0
   canMove: 1
   canGravity: 1
@@ -719,12 +720,15 @@ MonoBehaviour:
   OnLanding:
     m_PersistentCalls:
       m_Calls: []
+  dismountTime: 0.5
   groundAcceleration: 50
   groundDeceleration: 25
   airAcceleration: 15
   airDeceleration: 15
   flyingAcceleration: 50
   flyingDeceleration: 60
+  dismountMomentumCutoffVelocity: 1
+  dismountMomentumCutoffSharpness: 1
   momentumCutoffVelocity: 4.5
   momentumCutoffSharpness: 2
   stopThreshold: 0.1
@@ -9399,7 +9403,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 627615390489866204, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2549968508848951391, guid: ec87d28f2d9785742bb0f68a9435ff45, type: 3}
       propertyPath: m_TagString
