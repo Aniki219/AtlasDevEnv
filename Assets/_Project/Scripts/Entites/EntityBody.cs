@@ -4,6 +4,7 @@ using UnityEngine.Events;
 using UnityEngine.PlayerLoop;
 using UnityEditor.Experimental.GraphView;
 using static AtlasHelpers;
+using System.Threading.Tasks;
 
 public class EntityBody : MonoBehaviour
 {
@@ -24,6 +25,7 @@ public class EntityBody : MonoBehaviour
     public float airFriction;
 
     public bool isFlying = false;
+    public bool dismount = false;
 
     private float xVelocitySmoothing;
 
@@ -74,6 +76,14 @@ public class EntityBody : MonoBehaviour
     {
         gravity = -17.6f; //gameManager.Instance.gravity;
         collisions.Init();
+    }
+
+    [Range(0, 4)]
+    public float dismountTime = 0.5f;
+    public async void ClearDismountStatus(float t)
+    {
+        await Task.Delay((int)(t * dismountTime * 1000));
+        dismount = false;
     }
 
     private void FixedUpdate()
@@ -219,6 +229,8 @@ public class EntityBody : MonoBehaviour
     public float airDeceleration = 30;
     public float flyingAcceleration = 30;
     public float flyingDeceleration = 30;
+    public float dismountMomentumCutoffVelocity = 1;
+    public float dismountMomentumCutoffSharpness = 1;
     public float momentumCutoffVelocity = 12;
     public float momentumCutoffSharpness = 10;
     public float stopThreshold = 0.1f;
@@ -274,15 +286,17 @@ public class EntityBody : MonoBehaviour
             // as velocity increases past the cutoff
             
             float minControlAuthority = 0.2f; // At very high speeds, retain 20% control
+            var cutoff = dismount ? dismountMomentumCutoffVelocity : momentumCutoffVelocity;
+            var sharpness = dismount ? dismountMomentumCutoffSharpness : momentumCutoffSharpness;
             
-            if (velocity.magnitude <= momentumCutoffVelocity)
+            if (velocity.x <= cutoff)
             {
                 return 1f; // Full control below cutoff
             }
             
             // Exponential falloff above cutoff
-            float excessSpeed = velocity.magnitude - momentumCutoffVelocity;
-            float falloff = Mathf.Exp(-excessSpeed / momentumCutoffSharpness);
+            float excessSpeed = velocity.magnitude - cutoff;
+            float falloff = Mathf.Exp(-excessSpeed / sharpness);
             
             // Interpolate from 1.0 down to minControlAuthority
             return Mathf.Lerp(minControlAuthority, 1f, falloff);
@@ -414,6 +428,11 @@ public class EntityBody : MonoBehaviour
         if (velocity.y <= 0) collisions.setGroundSlope(data.normal);
 
         collisions.setGrounded(velocity.y <= 0 && data.hit);
+
+        if (collisions.isGrounded())
+        {
+            dismount = false;
+        }
 
         return data;
     }

@@ -114,6 +114,12 @@ public class BroomBehavior : StateBehavior, IStateBehavior
             spriteTransform.eulerAngles = Vector3.zero;
             body.canGravity = true;
             body.isFlying = false;
+
+            if (!body.IsGrounded())
+            {
+                body.dismount = true;
+                body.ClearDismountStatus(Abs(body.velocity.x * 0.1f));
+            }
         }
     }
 
