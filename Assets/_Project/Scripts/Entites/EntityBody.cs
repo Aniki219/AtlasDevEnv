@@ -5,6 +5,8 @@ using UnityEngine.PlayerLoop;
 using UnityEditor.Experimental.GraphView;
 using static AtlasHelpers;
 using System.Threading.Tasks;
+using UnityEngine.EventSystems;
+using static UnityEngine.Mathf;
 
 public class EntityBody : MonoBehaviour
 {
@@ -289,7 +291,7 @@ public class EntityBody : MonoBehaviour
             var cutoff = dismount ? dismountMomentumCutoffVelocity : momentumCutoffVelocity;
             var sharpness = dismount ? dismountMomentumCutoffSharpness : momentumCutoffSharpness;
             
-            if (velocity.x <= cutoff)
+            if (Abs(velocity.x) <= cutoff)
             {
                 return 1f; // Full control below cutoff
             }

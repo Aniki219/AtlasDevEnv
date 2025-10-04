@@ -9,7 +9,7 @@ public class Resetters : StateBehavior, IStateBehavior
     public void StartState()
     {
         if (resetGravity) body.ResetGravity();
-        if (resetVelocity) body.velocity = Vector2.zero;
+        if (resetVelocity) body.SetTargetVelocity(Vector2.zero);
     }
 
     public void UpdateState() { }
